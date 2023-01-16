@@ -12,7 +12,7 @@ function Header() {
           <div className="navbar-nav ms-auto">
             <Link className="nav-link" to="/">Home</Link>
             <a className="nav-link" href="#">Temp</a>
-            <a className="nav-link" href="#">Temp</a>
+            <a className="nav-link" href="#">Login</a>
           </div>
         </div>
       </div>
