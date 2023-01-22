@@ -4,6 +4,8 @@ from rest_framework import generics
 from rest_framework import permissions
 from .models import Hello, Listing, User, Review, Address
 from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer
+import jwt, datetime
+from rest_framework.exceptions import AuthenticationFailed
 
 class HelloView(generics.ListAPIView):
     queryset = Hello.objects.all()
@@ -21,10 +23,19 @@ class ListingDetailView(generics.RetrieveAPIView):
     # permission_classes = [permissions.AllowAny]
 
 
-class UserView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    # permission_classes = [permissions.AllowAny]
+class UserView(generics.ListAPIView):
+    def get(self, request):
+        token = request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
 
 class ReviewView(generics.ListCreateAPIView):
     queryset = Review.objects.all()
@@ -36,3 +47,48 @@ class AddressView(generics.ListCreateAPIView):
     serializer_class = AddressSerializer
     # permission_classes = [permissions.AllowAny]
 
+class RegisterView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+class LoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+        user = User.objects.filter(email=email).first()
+        if user is None:
+            return Response({"error": "Email or password is incorrect"}, status=400)
+        if not user.check_password(password):
+            return Response({"error": "Email or password is incorrect"}, status=400)
+        
+        payload = {
+            "id": user.id,
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            "iat": datetime.datetime.utcnow()
+        }
+        token = jwt.encode(payload, "secret", algorithm="HS256")
+        response = Response()
+        response.set_cookie(key="jwt", value=token, httponly=True)
+        response.data = {
+            "jwt": token
+        }
+
+        return response
+
+class LogoutView(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        response = Response()
+        response.delete_cookie("jwt")
+        response.data = {
+            "message": "success"
+        }
+        return response

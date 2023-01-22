@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
@@ -33,20 +34,23 @@ class Listing(models.Model):
     is_published = models.BooleanField(default=True)
     list_date = models.DateTimeField(default=datetime.now, blank=True)
     photo_main = models.ImageField(upload_to="photos/%Y/%m/%d/")
-    photo_1 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
-    photo_2 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
-    photo_3 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
-    photo_4 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
-    photo_5 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
-    photo_6 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
+    photo_1 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
+    photo_2 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
+    photo_3 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
+    photo_4 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
+    photo_5 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
+    photo_6 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
 
     def __str__(self):
         return self.title
 
-class User(models.Model):
-    name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+class User(AbstractUser):
+    username = models.CharField(max_length=255, unique=True)
+    email = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.name

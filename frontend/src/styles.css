@@ -5,4 +5,120 @@
 
 .listing--card {
   width: 18em;
+  margin-bottom: 2em;
+}
+
+.form--container {
+  margin: auto;
+  max-width: 400px;
+  width: 100%;
+  background-color: white;
+  padding: 25px 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.Login {
+  margin: auto;
+  max-width: 400px;
+  width: 100%;
+  background-color: white;
+  padding: 25px 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.Login h1 {
+  text-align: center;
+  font-size: 24px;
+}
+
+.Login form {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  padding: 10px;
+}
+
+.Login form div {
+  margin: 10px 0;
+}
+
+.Login form label {
+  font-size: 18px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.Login form input {
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.Login .error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+}
+
+.Login .link {
+  text-decoration: none;
+}
+
+
+.Register {
+  margin: auto;
+  max-width: 400px;
+  width: 100%;
+  background-color: white;
+  padding: 25px 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.Register h1 {
+  text-align: center;
+  font-size: 24px;
+}
+
+.Register form {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  padding: 10px;
+}
+
+.Register form div {
+  margin: 10px 0;
+}
+
+.Register form label {
+  font-size: 18px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.Register form input {
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.Register .error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+}
+
+.Register .link {
+  text-decoration: none;
+}
+
+
+.create--listing--form label {
+  font-size: 18px;
+  margin-bottom: 5px;
+  display: block;
 }
