@@ -29,7 +29,7 @@ function Register() {
   };
 
   return (
-    <div className="Register mt-4">
+    <div className="Register">
         <h1>Register</h1>
         {errors && Object.keys(errors).map((error, index) => (
             <p key={index} className="text-danger">{errors[error]}</p>

@@ -29,6 +29,7 @@ function ListingDetails() {
         <div className="container mt-4">
             <h1>{ listingData.title }</h1>
             <img src={ listingData.photo_main } alt="listing" />
+            <p><b>Owner Name: </b> { listingData.owner_name } </p>
             <p><b>Address: </b> { listingData.address }</p>
             <p><b>Zipcode: </b> { listingData.zipcode }</p>
             <p><b>Property Type: </b>{ getPropertyType(listingData.property_type) }</p>

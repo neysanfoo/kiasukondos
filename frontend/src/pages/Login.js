@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'react-cookies';
 
 const baseURL = 'http://127.0.0.1:8000/api'
 
@@ -90,7 +89,7 @@ function Login() {
     }
 
   return (
-    <div className="Login mt-4">
+    <div className="Login ">
       <h1>Login</h1>
       {error && <p className="error">{error}</p>}
       <form onSubmit={submitForm}>

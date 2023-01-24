@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import ListingCard from '../components/ListingCard'
+import SearchBar from '../components/SearchBar'
 import { Link } from 'react-router-dom'
 const baseURL="http://127.0.0.1:8000/api"
 
@@ -21,7 +22,8 @@ function Home() {
 
 
   return (
-    <div className='container mt-4'>
+    <div className='container mt-2'>
+      <SearchBar />
       <div className="row">
         {listing.map((item) => (
             <div className='col-md-auto'>
