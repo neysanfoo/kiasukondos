@@ -35,7 +35,7 @@ function Tabs({ myListings, myPurchases }) {
         <div
           className={toggleState === 1 ? "content  active-content" : "content"}
         >
-          {myListings.map((item) => (
+          {myListings.length == 0 ? <h1>You do not have any listings yet</h1> : myListings.map((item) => (
               <ListingCard
                 id={item.id}
                 photo_main={item.photo_main}
@@ -61,7 +61,7 @@ function Tabs({ myListings, myPurchases }) {
         <div
           className={toggleState === 3 ? "content  active-content" : "content"}
         >
-          {myPurchases.map((item) => (
+          {myPurchases.length == 0 ? <h1>You have not made any purchases yet</h1> :myPurchases.map((item) => (
             <div className="row">
               <div className="col-3">
                 <ListingCard

@@ -13,7 +13,6 @@ function Logout() {
         axios(config)
         .then(function (response) {
           console.log(JSON.stringify(response.data));
-          localStorage.removeItem('jwt')
           window.location.href = "/login"
         })
         .catch(function (error) {

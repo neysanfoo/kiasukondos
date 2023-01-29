@@ -6,6 +6,22 @@ const baseURL="http://127.0.0.1:8000/api"
 
 function EditListing() {
     const listing_id = useParams().listing_id;
+    const [owner, setOwner] = useState(null)
+
+    const [formData, setFormData] = useState({
+        title: '',
+        address: '',
+        zipcode: '',
+        property_type: 1,
+        sale_or_rent: 1,
+        description: '',
+        price: '',
+        bedrooms: '',
+        bathrooms: '',
+        garage: '',
+        sqmeters: '',
+        is_published: true,
+    });
 
     useEffect(() => {
         var config = {
@@ -31,6 +47,7 @@ function EditListing() {
                 sqmeters: res.sqmeters,
                 is_published: res.is_published, 
             })
+            setOwner(res.owner)
         })
         .catch(function (error) {
             console.log(error);
@@ -47,30 +64,19 @@ function EditListing() {
         
         axios(config)
         .then(function (response) {
+            // Check if the current user is the owner of this listing
+            if (owner && response.data.id !== owner) {
+                window.location.href = "/"
+            } 
         })
         .catch(function (error) {
             console.log(error);
         });
         
-    }, []);
-
-    const [formData, setFormData] = useState({
-        title: '',
-        address: '',
-        zipcode: '',
-        property_type: 1,
-        sale_or_rent: 1,
-        description: '',
-        price: '',
-        bedrooms: '',
-        bathrooms: '',
-        garage: '',
-        sqmeters: '',
-        is_published: true,
-    });
+    }, [formData]);
 
 
-    console.log(formData)
+
 
     const handleChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
