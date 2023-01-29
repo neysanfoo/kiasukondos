@@ -1,19 +1,39 @@
+import { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'
+import axios from 'axios'
 
 function Header() {
   let headerContent;
-  if (localStorage.getItem('jwt')) {
+  const [auth, setAuth] = useState(false)
+
+  useEffect(() => {
+    var config = {
+        method: 'get',
+        url: 'http://localhost:8000/api/user/',
+        withCredentials: true
+    };
+    
+    axios(config)
+    .then(function (response) {
+        setAuth(response.data)
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+  }, [])
+
+  if (auth) {
     headerContent = (
       <>
-        <Link className="nav-link" to="#">Buy</Link>
-        <Link className="nav-link" to="#">Rent</Link>
         <Link className="nav-link" to="/create-listing">Sell</Link>
+        <Link className="nav-link" to="#">Messages</Link>
         <li className="nav-item dropdown">
           <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             User
           </a>
             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
+              <li><Link className="dropdown-item" to="/dashboard">Dashboard</Link></li>
               <li><Link className="dropdown-item" to="/logout">Logout</Link></li>
             </ul>
         </li>
@@ -22,8 +42,7 @@ function Header() {
   } else {
     headerContent = (
       <>
-        <Link className="nav-link" to="#">Buy</Link>
-        <Link className="nav-link" to="#">Rent</Link>
+        <Link className="nav-link" to="#"></Link>
         <li className="nav-item dropdown">
           <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             User

@@ -41,6 +41,11 @@ class Listing(models.Model):
     photo_5 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
     photo_6 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
 
+    def owner_name(self):
+        for user in User.objects.all():
+            if user.id == self.owner.id:
+                return user.username
+
     def __str__(self):
         return self.title
 

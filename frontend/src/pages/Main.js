@@ -7,13 +7,18 @@ import Login from './Login'
 import Logout from './Logout'
 import Register from './Register'
 import CreateListing from './CreateListing'
+import Dashboard from './Dashboard'
 
+
+
+import ProtectedRoute from '../utils/ProtectedRoute'
 
 import '../styles.css'
 
 import {Routes, Route} from 'react-router-dom'
 
 function Main() {
+
   return (
     <div>
       <Header />
@@ -23,7 +28,10 @@ function Main() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/create-listing" element={<CreateListing />} />
+        <Route path="/" element={<ProtectedRoute />} >
+          <Route path="/create-listing" element={<CreateListing />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
       </Routes>
     </div>
 

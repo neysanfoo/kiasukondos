@@ -9,13 +9,25 @@ function Login() {
         "email": "",
         "password": ""
     })
-    const [redirect, setRedirect] = useState(false)
+    const [auth, setAuth] = useState({})
+
     const [error, setError] = useState('')
 
     useEffect(() => {
-        if (localStorage.getItem('jwt')) {
-            setRedirect(true)
-        }
+        var config = {
+            method: 'get',
+            url: 'http://localhost:8000/api/user/',
+            withCredentials: true
+        };
+        
+        axios(config)
+        .then(function (response) {
+          window.location.href = "/"
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+  
 
     }, [])
 
@@ -47,8 +59,7 @@ function Login() {
 
       axios(config)
       .then(function (response) {
-        localStorage.setItem('jwt', response.data.jwt)
-        setRedirect(true)
+        window.location.href = "/"
       })
       .catch(function (error) {
         setError(error.response.data.error)
@@ -84,9 +95,6 @@ function Login() {
     //     )
     // }
 
-    if (redirect) {
-        window.location.href = "/"
-    }
 
   return (
     <div className="Login ">

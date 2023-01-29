@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import Cookies from 'react-cookies';
 const baseURL="http://127.0.0.1:8000/api"
 
 function CreateListing() {
-    const [redirect, setRedirect] = useState(false)
-    const [owner, setOwner] = useState('')
-
-    if (redirect) {
-        window.location.href = "/login"
-    }
-    
-
     useEffect(() => {
         var config = {
             method: 'get',
@@ -22,20 +13,16 @@ function CreateListing() {
         
         axios(config)
         .then(function (response) {
-            setFormData({ ...formData, owner: response.data.id });
+            setFormData({ ...formData, owner: response.data.username });
         })
         .catch(function (error) {
-            setRedirect(true)
             console.log(error);
         });
         
     }, []);
 
 
-
-
     const [formData, setFormData] = useState({
-        owner: '',
         title: '',
         address: '',
         zipcode: '',

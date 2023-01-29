@@ -23,6 +23,19 @@ class ListingDetailView(generics.RetrieveAPIView):
     # permission_classes = [permissions.AllowAny]
 
 
+
+class SearchListingView(generics.ListAPIView):
+    queryset = Listing.objects.all()
+    serializer_class = ListingSerializer
+    # permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = Listing.objects.all()
+        search = self.request.query_params.get('search', None)
+        if search is not None:
+            queryset = queryset.filter(title__icontains=search)
+        return queryset
+
 class UserView(generics.ListAPIView):
     def get(self, request):
         token = request.COOKIES.get("jwt")
