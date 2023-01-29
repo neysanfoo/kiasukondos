@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import permissions
-from .models import Hello, Listing, User, Review, Address
-from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer
+from .models import Hello, Listing, User, Review, Address, UserPurchases
+from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer
 import jwt, datetime
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -17,10 +17,10 @@ class ListingView(generics.ListCreateAPIView):
     serializer_class = ListingSerializer
     # permission_classes = [permissions.AllowAny]
 
-class ListingDetailView(generics.RetrieveAPIView):
+class ListingDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
-    # permission_classes = [permissions.AllowAny]
+
 
 
 
@@ -105,3 +105,38 @@ class LogoutView(generics.ListAPIView):
             "message": "success"
         }
         return response
+
+
+class UserPurchasesView(generics.ListAPIView):
+    queryset=UserPurchases.objects.all()
+    serializer_class=UserPurchasesSerializer
+
+    def get_queryset(self):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        queryset = UserPurchases.objects.filter(user=user)
+        return queryset
+
+class ListingByUserView(generics.ListAPIView):
+    queryset=Listing.objects.all()
+    serializer_class=ListingSerializer
+
+    def get_queryset(self):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        queryset = Listing.objects.filter(owner=user)
+        return queryset

@@ -1,6 +1,7 @@
 import { useState } from "react";
+import ListingCard from "./ListingCard";
 
-function Tabs() {
+function Tabs({ myListings, myPurchases }) {
   const [toggleState, setToggleState] = useState(1);
 
   const toggleTab = (index) => {
@@ -34,15 +35,23 @@ function Tabs() {
         <div
           className={toggleState === 1 ? "content  active-content" : "content"}
         >
-          <h2>My Listings</h2>
-          <hr />
+          {myListings.map((item) => (
+              <ListingCard
+                id={item.id}
+                photo_main={item.photo_main}
+                title={item.title}
+                address={item.address}
+                price={item.price}
+                bedrooms={item.bedrooms}
+                bathrooms={item.bathrooms}
+                sqmeters={item.sqmeters}
+              />
+          ))}
         </div>
 
         <div
           className={toggleState === 2 ? "content  active-content" : "content"}
         >
-          <h2>Favourites</h2>
-          <hr />
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
             voluptatum qui adipisci.
@@ -52,16 +61,23 @@ function Tabs() {
         <div
           className={toggleState === 3 ? "content  active-content" : "content"}
         >
-          <h2>My Purchases</h2>
-          <hr />
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos sed
-            nostrum rerum laudantium totam unde adipisci incidunt modi alias!
-            Accusamus in quia odit aspernatur provident et ad vel distinctio
-            recusandae totam quidem repudiandae omnis veritatis nostrum
-            laboriosam architecto optio rem, dignissimos voluptatum beatae
-            aperiam voluptatem atque. Beatae rerum dolores sunt.
-          </p>
+          {myPurchases.map((item) => (
+            <div className="row">
+              <div className="col-3">
+                <ListingCard
+                  id={item.listing.id}
+                  photo_main={item.listing.photo_main}
+                  title={item.listing.title}
+                  address={item.listing.address}
+                  price={item.listing.price}
+                  bedrooms={item.listing.bedrooms}
+                  bathrooms={item.listing.bathrooms}
+                  sqmeters={item.listing.sqmeters}
+                />
+              </div>
+            </div>
+          ))
+                }
         </div>
       </div>
     </div>

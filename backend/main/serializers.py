@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hello, Listing, User, Review, Address
+from .models import Hello, Listing, User, Review, Address, UserPurchases
 
 class HelloSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,3 +39,16 @@ class AddressSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class UserPurchasesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPurchases
+        fields = ["id", "user", "listing", "date"] 
+
+    def __init__(self, *args, **kwargs):
+        super(UserPurchasesSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 0
+        if request and request.method == "GET":
+            self.Meta.depth = 2
+
+    

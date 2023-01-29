@@ -1,10 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 const baseURL="http://127.0.0.1:8000/api"
 
-function CreateListing() {
+function EditListing() {
+    const listing_id = useParams().listing_id;
+
     useEffect(() => {
+        var config = {
+            method: 'get',
+            url: 'http://localhost:8000/api/listings/' + listing_id + '/',
+            withCredentials: true
+        };
+        
+        axios(config)
+        .then(function (response) {
+            const res = response.data
+            setFormData({
+                title: res.title,
+                address: res.address,
+                zipcode: res.zipcode,
+                property_type: res.property_type,
+                sale_or_rent: res.sale_or_rent,
+                description: res.description,
+                price: res.price,
+                bedrooms: res.bedrooms,
+                bathrooms: res.bathrooms,
+                garage: res.garage,
+                sqmeters: res.sqmeters,
+                is_published: res.is_published, 
+            })
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        
+    }, []);
+
+    useEffect (() => {
         var config = {
             method: 'get',
             url: 'http://localhost:8000/api/user/',
@@ -13,14 +47,12 @@ function CreateListing() {
         
         axios(config)
         .then(function (response) {
-            setFormData({ ...formData, owner: response.data.id });
         })
         .catch(function (error) {
             console.log(error);
         });
         
     }, []);
-
 
     const [formData, setFormData] = useState({
         title: '',
@@ -35,17 +67,11 @@ function CreateListing() {
         garage: '',
         sqmeters: '',
         is_published: true,
-        list_date: '',
-        photo_main: null,
-        photo_1: null,
-        photo_2: null,
-        photo_3: null,
-        photo_4: null,
-        photo_5: null,
-        photo_6: null,
     });
 
+
     console.log(formData)
+
     const handleChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -56,7 +82,7 @@ function CreateListing() {
 
     const handleSubmit = e => {
         e.preventDefault();
-        axios.post(baseURL + "/listings/", formData, {
+        axios.patch(baseURL + "/listings/" + listing_id + "/", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -68,8 +94,8 @@ function CreateListing() {
         )
     };
 
-  return (
-    <div className='container'>
+    return (
+        <div className='container'>
         <form className='create--listing--form' onSubmit={handleSubmit}>
             <label htmlFor="title">Title:</label>
             <input
@@ -185,15 +211,6 @@ function CreateListing() {
             />
             
             
-            <label htmlFor="list_date">List Date:</label>
-            <input
-                type="date"
-                id="list_date"
-                name="list_date"
-                onChange={handleChange}
-                value={formData.list_date}
-            />
-            
             <label htmlFor="photo_main">Main Photo:</label>
             <input
                 type="file"
@@ -241,10 +258,11 @@ function CreateListing() {
                 onChange={handleFileChange}
             />
             
-            <button type="submit">Submit</button>
+            <button type="submit">Update</button>
         </form>
-    </div>
-  );
+        </div>
+    )
+
 }
 
-export default CreateListing;
+export default EditListing;

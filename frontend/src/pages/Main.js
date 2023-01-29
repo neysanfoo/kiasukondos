@@ -7,6 +7,7 @@ import Login from './Login'
 import Logout from './Logout'
 import Register from './Register'
 import CreateListing from './CreateListing'
+import EditListing from './EditListing'
 import Dashboard from './Dashboard'
 
 
@@ -24,12 +25,13 @@ function Main() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/listing/:id" element={<ListingDetails />} />
+        <Route path="/listing/:listing_id" element={<ListingDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<ProtectedRoute />} >
           <Route path="/create-listing" element={<CreateListing />} />
+          <Route path="/edit-listing/:listing_id" element={<EditListing />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
