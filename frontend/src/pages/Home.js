@@ -6,13 +6,26 @@ import { Link } from 'react-router-dom'
 const baseURL="http://127.0.0.1:8000/api"
 
 function Home() {
-  const [data, setData] = useState([])
   const [listing, setListing] = useState([])
+  const [userId, setUserId] = useState([])
 
   useEffect(() => {
-    axios.get(baseURL + "/hello/").then((response) => {
-      setData(response.data)
-    })
+    // Get the current user's data
+    var config = {
+      method: 'get',
+      url: 'http://localhost:8000/api/user/',
+      withCredentials: true
+    };
+    axios(config)
+    .then(function (response) {
+        setUserId(response.data.id)
+        console.log("HI")
+        console.log(response.data.id)
+    }
+    ).catch(function (error) {
+        console.log(error);
+    }
+    );
     axios.get(baseURL + "/listings/").then((response) => {
       setListing(response.data)
     })
@@ -29,6 +42,7 @@ function Home() {
             <div className='col-md-auto'>
             <ListingCard 
               id = {item.id}
+              current_user_id = {userId}
               photo_main={item.photo_main}
               title={item.title}
               address={item.address}

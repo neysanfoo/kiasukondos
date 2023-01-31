@@ -35,6 +35,22 @@
   height: 3em;
 }
 
+.card--footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.listing--card--link{
+  text-decoration: none;
+  color: black;
+}
+
+.listing--card--like--button {
+  position: relative;
+  bottom: 1em;
+}
+
 
 /* .listing--card {
 	display: flex;
@@ -269,3 +285,24 @@
   flex-wrap: wrap;
   overflow-y: scroll;
 }
+
+
+.heart{
+  font-size: 35px;
+  color:rgb(182, 173, 173);
+  margin-top: 7px;
+  width: 70px;
+  outline: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.heart:hover{
+  color: rgb(192, 39, 39);
+}
+
+.heart.active{
+  color: red;
+}
+

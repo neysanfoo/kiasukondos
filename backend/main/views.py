@@ -2,9 +2,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import permissions
-from .models import Hello, Listing, User, Review, Address, UserPurchases
-from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like
+from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer
 import jwt, datetime
+from rest_framework.decorators import api_view
+
+
 from rest_framework.exceptions import AuthenticationFailed
 
 class HelloView(generics.ListAPIView):
@@ -140,3 +143,59 @@ class ListingByUserView(generics.ListAPIView):
         user = User.objects.filter(id=payload["id"]).first()
         queryset = Listing.objects.filter(owner=user)
         return queryset
+
+class LikeView(generics.ListCreateAPIView):
+    queryset=Like.objects.all()
+    serializer_class=LikeSerializer
+    
+    def post(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        listing = Listing.objects.filter(id=request.data.get("listing")).first()
+        like = Like.objects.filter(user=user, listing=listing).first()
+        if like:
+            like.delete()
+            return Response({"message": "Like removed"})
+        else:
+            Like.objects.create(user=user, listing=listing)
+            return Response({"message": "Like added"})
+
+    def get_queryset(self):
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        # Return all likes for the user
+        user = User.objects.filter(id=payload["id"]).first()
+        queryset = Like.objects.filter(user=user)
+        return queryset
+
+@api_view(["GET"])
+def fetch_like_status(request, listing_id):
+    token = request.COOKIES.get("jwt")
+    if not token:
+        raise AuthenticationFailed("Unauthenticated")
+    try:
+        payload = jwt.decode(token, "secret", algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        raise AuthenticationFailed("Unauthenticated")
+    user = User.objects.filter(id=payload["id"]).first()
+    listing = Listing.objects.filter(id=listing_id).first()
+    like = Like.objects.filter(user=user, listing=listing).first()
+    if like:
+        return Response({"liked": True})
+    else:
+        return Response({"liked": False})
+
+
+

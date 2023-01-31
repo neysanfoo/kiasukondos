@@ -40,6 +40,7 @@ class Listing(models.Model):
     photo_4 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
     photo_5 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
     photo_6 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
+    likes = models.ManyToManyField("User", blank=True)
 
     def owner_name(self):
         for user in User.objects.all():
@@ -48,6 +49,10 @@ class Listing(models.Model):
 
     def __str__(self):
         return self.title
+
+class Like(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="likes")
+    listing = models.ForeignKey("Listing", on_delete=models.CASCADE, related_name="listing_likes")
 
 class User(AbstractUser):
     username = models.CharField(max_length=255, unique=True)

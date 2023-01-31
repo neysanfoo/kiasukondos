@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hello, Listing, User, Review, Address, UserPurchases
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like
 
 class HelloSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,7 +10,7 @@ class ListingSerializer(serializers.ModelSerializer):
     owner_name = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Listing
-        fields = ['id', 'owner', 'owner_name', 'title', 'address', 'zipcode', 'property_type', 'sale_or_rent', 'description', 'price', 'bedrooms', 'bathrooms', 'garage', 'sqmeters', 'is_published', 'list_date', 'photo_main', 'photo_1', 'photo_2', 'photo_3', 'photo_4', 'photo_5', 'photo_6']
+        fields = ['id', 'owner', 'owner_name', 'title', 'address', 'zipcode', 'property_type', 'sale_or_rent', 'description', 'price', 'bedrooms', 'bathrooms', 'garage', 'sqmeters', 'is_published', 'list_date', 'photo_main', 'photo_1', 'photo_2', 'photo_3', 'photo_4', 'photo_5', 'photo_6', 'likes']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,4 +51,13 @@ class UserPurchasesSerializer(serializers.ModelSerializer):
         if request and request.method == "GET":
             self.Meta.depth = 2
 
-    
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ["id", "listing"]
+    def __init__(self, *args, **kwargs):
+        super(LikeSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 0
+        if request and request.method == "GET":
+            self.Meta.depth = 2

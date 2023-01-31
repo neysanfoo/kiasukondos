@@ -14,4 +14,6 @@ urlpatterns = [
     path("logout/", views.LogoutView.as_view()),
     path("search/", views.SearchListingView.as_view()),
     path("purchases/", views.UserPurchasesView.as_view()),
+    path("likes/", views.LikeView.as_view()),
+    path("fetch-like-status/<int:listing_id>", views.fetch_like_status),
 ]

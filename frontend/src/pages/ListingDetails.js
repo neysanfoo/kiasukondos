@@ -2,11 +2,13 @@ import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import LikeButton from '../components/LikeButton'
 const baseURL="http://127.0.0.1:8000/api"
 
 function ListingDetails() {
     const [listingData, setListingData] = useState([])
     const [isOwner, setIsOwner] = useState(false)
+    const [user_id, setUserId] = useState(null)
     const { listing_id } = useParams()
 
     useEffect(() => {
@@ -28,6 +30,7 @@ function ListingDetails() {
         .then(function (response) {
             if (response.data.id === listingData.owner) {
                 setIsOwner(true)
+                setUserId(response.data.id)
             }
         }
         ).catch(function (error) {
@@ -55,11 +58,13 @@ function ListingDetails() {
             return "Rent"
         }
     }
-    console.log(listingData)
-
 
     return(
         <div className="container mt-4">
+            <LikeButton
+                user_id={user_id}
+                listing_id={listing_id}
+             />
             {isOwner &&
                 <div>
                 <Link to={'/edit-listing/' + listing_id}>

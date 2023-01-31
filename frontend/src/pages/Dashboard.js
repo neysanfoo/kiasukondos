@@ -7,6 +7,7 @@ function Dashboard() {
 
     const [myPurchases, setMyPurchases] = useState([])
     const [myListings, setMyListings] = useState([])
+    const [myLikes, setMyLikes] = useState([])
 
     useEffect(() => {
         var config = {
@@ -34,6 +35,18 @@ function Dashboard() {
         }).catch(function (error) {
             console.log(error);
         });
+
+        config = {
+            method: 'get',
+            url: 'http://localhost:8000/api/likes/',
+            withCredentials: true,
+        };
+        axios(config)
+        .then(function (response) {
+            setMyLikes(response.data.map((like) => like.listing))
+        }).catch(function (error) {
+            console.log(error);
+        });
     }, [])
       
 
@@ -46,6 +59,7 @@ function Dashboard() {
                 <div className="col-9">
                     <Tabs
                         myListings={myListings}
+                        myLikes={myLikes}
                         myPurchases={myPurchases}
                      />
                 </div>

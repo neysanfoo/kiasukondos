@@ -1,12 +1,14 @@
 import { useState } from "react";
 import ListingCard from "./ListingCard";
 
-function Tabs({ myListings, myPurchases }) {
+function Tabs({ myListings, myLikes, myPurchases }) {
   const [toggleState, setToggleState] = useState(1);
 
   const toggleTab = (index) => {
     setToggleState(index);
   };
+
+  console.log(myLikes)
 
   return (
     <div>
@@ -21,7 +23,7 @@ function Tabs({ myListings, myPurchases }) {
           className={toggleState === 2 ? "tabs active-tabs tab-button" : "tabs tab-button"}
           onClick={() => toggleTab(2)}
         >
-          Favourites
+          My Likes
         </button>
         <button
           className={toggleState === 3 ? "tabs active-tabs tab-button" : "tabs tab-button"}
@@ -52,10 +54,24 @@ function Tabs({ myListings, myPurchases }) {
         <div
           className={toggleState === 2 ? "content  active-content" : "content"}
         >
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            voluptatum qui adipisci.
-          </p>
+          {
+            myLikes.length == 0 ? <h1>You have not liked any listings yet</h1> : myLikes.map((item) => (
+              <div className="row">
+                <div className="col-3">
+                  <ListingCard
+                    id={item.id}
+                    photo_main={item.photo_main}
+                    title={item.title}
+                    address={item.address}
+                    price={item.price}
+                    bedrooms={item.bedrooms}
+                    bathrooms={item.bathrooms}
+                    sqmeters={item.sqmeters}
+                  />
+                </div>
+              </div>
+            ))
+          }
         </div>
 
         <div
