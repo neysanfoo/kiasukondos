@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ListingCard from "./ListingCard";
 
-function Tabs({ myListings, myLikes, myPurchases }) {
+function Tabs({ current_user_id, myListings, myLikes, myPurchases }) {
   const [toggleState, setToggleState] = useState(1);
 
   const toggleTab = (index) => {
@@ -40,6 +40,7 @@ function Tabs({ myListings, myLikes, myPurchases }) {
           {myListings.length == 0 ? <h1>You do not have any listings yet</h1> : myListings.map((item) => (
               <ListingCard
                 id={item.id}
+                current_user_id={current_user_id}
                 photo_main={item.photo_main}
                 title={item.title}
                 address={item.address}
@@ -60,6 +61,7 @@ function Tabs({ myListings, myLikes, myPurchases }) {
                 <div className="col-3">
                   <ListingCard
                     id={item.id}
+                    current_user_id={current_user_id}
                     photo_main={item.photo_main}
                     title={item.title}
                     address={item.address}
@@ -82,6 +84,7 @@ function Tabs({ myListings, myLikes, myPurchases }) {
               <div className="col-3">
                 <ListingCard
                   id={item.listing.id}
+                  current_user_id={current_user_id}
                   photo_main={item.listing.photo_main}
                   title={item.listing.title}
                   address={item.listing.address}
@@ -93,7 +96,7 @@ function Tabs({ myListings, myLikes, myPurchases }) {
               </div>
             </div>
           ))
-                }
+          }
         </div>
       </div>
     </div>

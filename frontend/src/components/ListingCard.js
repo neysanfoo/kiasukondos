@@ -14,29 +14,24 @@ function ListingCard({ id, current_user_id, photo_main, title, address, price, b
 
   return(
     <div className='listing--card'>
-    <Link to={"/listing/" + id}>
+    <Link to={"/listing/" + id} className="listing--card--link">
       <img className="listing--card--image" src={photo_main} alt="Card image cap" />
-    </Link>
       <div className="card-body">
-        <Link to={"/listing/" + id} className="listing--card--link">
-        <h5 className="card-title">{truncate(title,30)}</h5>
-        <p className="card-text listing--card--address"><FontAwesomeIcon icon={ faLocationDot } /> {truncate(address,80)} </p>
-        </Link>
-        <div className='card--footer'>
+        <div>
+          <h5 className="card-title">{truncate(title,30)}</h5>
+          <p className="card-text listing--card--address"><FontAwesomeIcon icon={ faLocationDot } /> {truncate(address,80)} </p>
+        </div>
+      </div>
+    </Link>
+        <div className='card--footer '>
         <div className='card--icons'>
           <p><FontAwesomeIcon icon={ faDollarSign } /> {price}</p>
           <p><FontAwesomeIcon icon={ faBed } /> {bedrooms}</p>
           <p><FontAwesomeIcon icon={ faBath } /> {bathrooms}</p>
         </div>
           <div className='listing--card--like--button'>
-            <LikeButton
-              user_id={current_user_id}
-              listing_id={id} 
-            />
+            { current_user_id ? <LikeButton user_id={current_user_id} listing_id={id} /> : null }
           </div>
-        </div>
-        {/* <p className="card-text">{sqmeters} Square Meters</p> */}
-        {/* <Link to={"/listing/" + id} className="btn btn-primary">See Listing</Link> */}
       </div>
     </div>
   )

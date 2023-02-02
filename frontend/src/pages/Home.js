@@ -7,7 +7,7 @@ const baseURL="http://127.0.0.1:8000/api"
 
 function Home() {
   const [listing, setListing] = useState([])
-  const [userId, setUserId] = useState([])
+  const [userId, setUserId] = useState(null)
 
   useEffect(() => {
     // Get the current user's data

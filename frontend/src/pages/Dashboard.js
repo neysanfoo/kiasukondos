@@ -8,6 +8,7 @@ function Dashboard() {
     const [myPurchases, setMyPurchases] = useState([])
     const [myListings, setMyListings] = useState([])
     const [myLikes, setMyLikes] = useState([])
+    const [user, setUser] = useState(null)
 
     useEffect(() => {
         var config = {
@@ -47,6 +48,19 @@ function Dashboard() {
         }).catch(function (error) {
             console.log(error);
         });
+
+        config = {
+            method: 'get',
+            url: 'http://localhost:8000/api/user/',
+            withCredentials: true,
+        };
+        axios(config)
+        .then(function (response) {
+            setUser(response.data.id)
+        }).catch(function (error) {
+            console.log(error);
+        });
+
     }, [])
       
 
@@ -58,6 +72,7 @@ function Dashboard() {
                 </div>
                 <div className="col-9">
                     <Tabs
+                        current_user_id={user}
                         myListings={myListings}
                         myLikes={myLikes}
                         myPurchases={myPurchases}

@@ -61,10 +61,12 @@ function ListingDetails() {
 
     return(
         <div className="container mt-4">
+            { user_id && listing_id && 
             <LikeButton
                 user_id={user_id}
                 listing_id={listing_id}
              />
+            }
             {isOwner &&
                 <div>
                 <Link to={'/edit-listing/' + listing_id}>

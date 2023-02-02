@@ -39,6 +39,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .listing--card--link{
@@ -48,7 +50,7 @@
 
 .listing--card--like--button {
   position: relative;
-  bottom: 1em;
+  bottom: .5em;
 }
 
 
@@ -288,14 +290,10 @@
 
 
 .heart{
-  font-size: 35px;
+  font-size: 25px;
   color:rgb(182, 173, 173);
-  margin-top: 7px;
-  width: 70px;
   outline: none;
-  text-transform: uppercase;
   cursor: pointer;
-  font-weight: bold;
 }
 
 .heart:hover{
