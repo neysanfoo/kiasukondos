@@ -41,7 +41,7 @@ The system uses a dataset to suggest pricing based on the average price of house
 1. Clone the repository `git clone git@github.com:neysanfoo/kiasukondos.git`
 2. Go to backend directory `cd kiasukondos/backend`
 3. Install requirements `pip install -r requirements.txt` (You should do this in a virtual envrionment)
-4. Run migrations `python manage.py migrate`
+4. Run migrations `python manage.py migrate main` and `python manage.py migrate`
 5. Start the server on localhost:8000 `python manage.py runserver`
 
 ## Frontend
