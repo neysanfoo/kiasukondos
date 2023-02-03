@@ -30,8 +30,8 @@ function ListingDetails() {
         .then(function (response) {
             if (response.data.id === listingData.owner) {
                 setIsOwner(true)
-                setUserId(response.data.id)
             }
+            setUserId(response.data.id)
         }
         ).catch(function (error) {
             console.log(error);
@@ -58,6 +58,7 @@ function ListingDetails() {
             return "Rent"
         }
     }
+    console.log(user_id, listing_id)
 
     return(
         <div className="container mt-4">
