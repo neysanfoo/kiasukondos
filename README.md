@@ -14,21 +14,16 @@ KiasuKondos is a marketplace app for renting and buying houses. It utilizes the 
 - Search function with advanced options (location, price, bedrooms, bathrooms, square metres, type of property)
 - Filtering and sorting listings based on price or flat size
 - Liking listings
-- Suggested pricing based on location, bedrooms, bathrooms, and square footage.
 
 ## How We Use the data.gov.sg Dataset
-- Suggested pricing for buyers and sellers for a listing based on the dataset.
+- Average pricing based on location, bedrooms, bathrooms, and square footage (and any other parameters).
 - Regression analysis to predict market trends for a property.
-- (TODO: Add one more)
+- Suggested pricing for buyers and sellers for a listing based on the dataset.
 
 ## Technology Stack
 - Backend: Django Rest Framework
 - Frontend: React.js
 - Database: SQLite
-
-## Average House Prices Grouped by Location, Bedrooms, Bathrooms, and Square Footage
-The system uses a dataset to suggest pricing based on the average price of houses grouped by the location, bedrooms, bathrooms, and square footage.
-
 
 # Installation
 
