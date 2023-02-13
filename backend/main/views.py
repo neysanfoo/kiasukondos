@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import permissions
-from .models import Hello, Listing, User, Review, Address, UserPurchases, Like
-from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer
+from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer, OfferSerializer
 import jwt, datetime
 from rest_framework.decorators import api_view
 
@@ -198,4 +198,19 @@ def fetch_like_status(request, listing_id):
         return Response({"liked": False})
 
 
+class OfferView(generics.ListCreateAPIView):
+    queryset=Offer.objects.all()
+    serializer_class=OfferSerializer
 
+    def get_queryset(self):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        queryset = Offer.objects.filter(user=user)
+        return queryset

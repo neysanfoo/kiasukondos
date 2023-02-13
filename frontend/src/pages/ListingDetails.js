@@ -10,6 +10,7 @@ function ListingDetails() {
     const [isOwner, setIsOwner] = useState(false)
     const [user_id, setUserId] = useState(null)
     const { listing_id } = useParams()
+    const [offer, setOffer] = useState(0)
 
     useEffect(() => {
         axios.get(baseURL + "/listings/" + listing_id + "/").then((response) => {
@@ -51,6 +52,36 @@ function ListingDetails() {
         }
     }
 
+    function makeOffer() {
+        var data = JSON.stringify({
+            "user": user_id,
+            "listing": listing_id,
+            "offer": offer
+        });
+        var config = {
+            method: 'post',
+            url: 'http://localhost:8000/api/offers/',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data : data,
+            withCredentials: true
+        };
+        axios(config)
+        .then(function (response) {
+            console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        {/* TODO: Redirect to chat app with the offer after offer is made */}
+    }
+
+    function handleChange(e) {
+        setOffer(e.target.value)
+    }
+    
+
     function getSaleOrRent() {
         if (listingData.sale_or_rent === 1) {
             return "Sale"
@@ -87,6 +118,8 @@ function ListingDetails() {
             <p><b>Bathrooms: </b> { listingData.bathrooms }</p>
             <p><b>Size: </b>{ listingData.sqmeters } Square Meters</p>
             <p><b>Description: </b>{ listingData.description }</p>
+            <input name="offer" value={offer} onChange={handleChange} type="number" />
+            <button type="button" onClick={makeOffer}>Make Offer</button>
         </div>
     )
 }

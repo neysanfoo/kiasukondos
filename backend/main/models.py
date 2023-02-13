@@ -83,6 +83,17 @@ class Address(models.Model):
 
     def __str__(self):
         return self.address
+    
+class Offer(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="offers")
+    listing = models.ForeignKey("Listing", on_delete=models.CASCADE, related_name="offers")
+    offer = models.IntegerField()
+    is_accepted = models.BooleanField(default=False)
+    is_declined = models.BooleanField(default=False)
+    is_pending = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.offer
 
 class UserPurchases(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="user_purchases")

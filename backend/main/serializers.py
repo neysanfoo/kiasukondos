@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hello, Listing, User, Review, Address, UserPurchases, Like
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer
 
 class HelloSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,6 +38,11 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
         fields = "__all__"
 
+
+class OfferSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Offer
+        fields = "__all__"
 
 class UserPurchasesSerializer(serializers.ModelSerializer):
     class Meta:
