@@ -2,3 +2,305 @@
   box-shadow: 0px 3px 7.5px rgba(0, 0, 0, 0.1);
   background-color: var(--header-bg-color);
 }
+
+.listing--card {
+	width: 24em;
+	height: 20em;
+  margin-bottom: 2em;
+  text-decoration: none;
+  display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	border-radius: 20px;
+	text-decoration: none;
+  color: black;
+	margin: 0.5em;
+	box-shadow: 0 1.5em 2.5em -0.5em rgba(0, 0, 0, .1);
+	transition: transform 0.45s ease, background 0.45s ease;
+}
+
+.listing--card:hover {
+  transform: scale(1.01);
+  transition: 400ms;
+}
+
+
+.listing--card--image {
+  width: 100%;
+  height: 10em;
+  object-fit: cover;
+}
+
+.listing--card--address {
+  height: 3em;
+}
+
+.card--footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.listing--card--link{
+  text-decoration: none;
+  color: black;
+}
+
+.listing--card--like--button {
+  position: relative;
+  bottom: .5em;
+}
+
+
+/* .listing--card {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	border: 2px solid black;
+	border-radius: 20px;
+	text-decoration: none;
+	margin: 1em;
+	padding: 2.75em 2em;
+	box-shadow: 0 1.5em 2.5em -0.5em rgba(0, 0, 0, .1);
+	transition: transform 0.45s ease, background 0.45s ease;
+} */
+
+.card--icons {
+  display: flex;
+}
+
+.card--icons p {
+  margin-right: 1em;
+}
+
+.form--container {
+  margin: auto;
+  max-width: 400px;
+  width: 100%;
+  background-color: white;
+  padding: 25px 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.Login {
+  margin: 4em auto;
+
+  max-width: 400px;
+  width: 100%;
+  background-color: white;
+  padding: 25px 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.Login h1 {
+  text-align: center;
+  font-size: 24px;
+}
+
+.Login form {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  padding: 10px;
+}
+
+.Login form div {
+  margin: 10px 0;
+}
+
+.Login form label {
+  font-size: 18px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.Login form input {
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.Login .error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+}
+
+.Login .link {
+  text-decoration: none;
+}
+
+
+.Register {
+  margin: 2em auto;
+  max-width: 400px;
+  width: 100%;
+  background-color: white;
+  padding: 25px 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.Register h1 {
+  text-align: center;
+  font-size: 24px;
+}
+
+.Register form {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  padding: 10px;
+}
+
+.Register form div {
+  margin: 10px 0;
+}
+
+.Register form label {
+  font-size: 18px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.Register form input {
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.Register .error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+}
+
+.Register .link {
+  text-decoration: none;
+}
+
+
+.create--listing--form label {
+  font-size: 18px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.search--bar--and--filters--container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1em;
+  border-radius: 25px;
+}
+
+.search--bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 50%;
+  min-width: 300px;
+  padding: 5px;
+  background-color: #f5f5f5;
+  border: 2px solid black;
+  border-radius: 10px;
+}
+
+.search--bar input {
+  font-size: 18px;
+  border: none;
+  background-color: transparent;
+  color: #333;
+  outline: none;
+}
+
+.search--select {
+  font-size: 18px;
+  min-width: 10em;
+  margin-left: 1em;
+}
+
+.search--bar button[type="submit"] {
+  color: black;
+  font-size: 18px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+
+
+.bloc-tabs {
+  display: flex;
+}
+.tabs {
+  padding: 5px;
+  text-align: center;
+  width: 140px;
+  background: white;
+  cursor: pointer;
+  box-sizing: content-box;
+  position: relative;
+  outline: none;
+  overflow: hidden;
+}
+
+
+.active-tabs  {
+  background: white;
+  font-weight: 700;
+}
+
+
+.tab-button{
+  border: 2px solid black;
+}
+
+.content-tabs {
+  flex-grow : 1;
+}
+.content {
+  background: white;
+  padding: 20px;
+  width: 100%;
+  height: 80vh;
+  display: none;
+  border: 2px solid black;
+}
+.content h2 {
+  padding: 0px 0 5px 0px;
+}
+.content hr {
+  width: 100px;
+  height: 2px;
+  background: #222;
+  margin-bottom: 5px;
+}
+.active-content {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+}
+
+
+.heart{
+  font-size: 25px;
+  color:rgb(182, 173, 173);
+  outline: none;
+  cursor: pointer;
+}
+
+.heart:hover{
+  color: rgb(192, 39, 39);
+}
+
+.heart.active{
+  color: red;
+}
+
