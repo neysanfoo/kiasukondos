@@ -118,8 +118,12 @@ function ListingDetails() {
             <p><b>Bathrooms: </b> { listingData.bathrooms }</p>
             <p><b>Size: </b>{ listingData.sqmeters } Square Meters</p>
             <p><b>Description: </b>{ listingData.description }</p>
-            <input name="offer" value={offer} onChange={handleChange} type="number" />
-            <button type="button" onClick={makeOffer}>Make Offer</button>
+            { user_id && listing_id && 
+            <div>
+                <input name="offer" value={offer} onChange={handleChange} type="number" />
+                <button type="button" onClick={makeOffer}>Make Offer</button>
+            </div>
+            }
         </div>
     )
 }
