@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message
 
 class HelloSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,7 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username", "email", "password"]
         extra_kwargs = {"password": {"write_only": True}}
-        
     
     def create(self, validated_data):
         password = validated_data.pop("password")
@@ -66,3 +65,10 @@ class LikeSerializer(serializers.ModelSerializer):
         self.Meta.depth = 0
         if request and request.method == "GET":
             self.Meta.depth = 2
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ["sender", "receiver", "message", "date", "receiver_name", "sender_name"]
+    
+    

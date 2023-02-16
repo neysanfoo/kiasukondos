@@ -27,7 +27,7 @@ function Header() {
     headerContent = (
       <>
         <Link className="nav-link" to="/create-listing">Sell</Link>
-        <Link className="nav-link" to="#">Messages</Link>
+        <Link className="nav-link" to="/chat">Messages</Link>
         <li className="nav-item dropdown">
           <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             User

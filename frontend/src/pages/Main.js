@@ -9,6 +9,7 @@ import Register from './Register'
 import CreateListing from './CreateListing'
 import EditListing from './EditListing'
 import Dashboard from './Dashboard'
+import Chat from './Chat'
 
 
 
@@ -33,6 +34,7 @@ function Main() {
           <Route path="/create-listing" element={<CreateListing />} />
           <Route path="/edit-listing/:listing_id" element={<EditListing />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/chat" element={<Chat />} />
         </Route>
       </Routes>
     </div>

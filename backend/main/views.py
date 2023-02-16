@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import permissions
-from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer
-from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer, OfferSerializer
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message
+from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer, OfferSerializer, MessageSerializer
 import jwt, datetime
 from rest_framework.decorators import api_view
 
@@ -214,3 +214,44 @@ class OfferView(generics.ListCreateAPIView):
         user = User.objects.filter(id=payload["id"]).first()
         queryset = Offer.objects.filter(user=user)
         return queryset
+    
+class MessageView(generics.ListCreateAPIView):
+    queryset=Message.objects.all()
+    serializer_class=MessageSerializer
+
+    def post(self, request):
+        # Check the jwt
+        token = self.request.data.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        # user = User.objects.filter(id=payload["id"]).first()
+        # queryset = Message.objects.filter(sender=user) | Message.objects.filter(receiver=user)
+        user = User.objects.filter(id=payload["id"]).first()
+        queryset = Message.objects.filter(sender=user) | Message.objects.filter(receiver=user)
+
+        response = Response()
+        response.data = {
+            "messages": MessageSerializer(queryset, many=True).data
+        }
+        return response
+
+class AddMessage(generics.ListCreateAPIView):
+    queryset=Message.objects.all()
+    serializer_class=MessageSerializer
+
+    def post(self, request):
+        user = User.objects.filter(id=request.data.get("sender")).first()
+        receiver = User.objects.filter(id=request.data.get("receiver")).first()
+        # add the message to the db
+        Message.objects.create(sender=user, receiver=receiver, message=request.data.get("message"))
+        # return all the messages where sender=user and receiver=receiver or sender=receiver and receiver=user
+        queryset = Message.objects.filter(sender=user, receiver=receiver) | Message.objects.filter(sender=receiver, receiver=user)
+        response = Response()
+        response.data = {
+            "messages": MessageSerializer(queryset, many=True).data
+        }
+        return response

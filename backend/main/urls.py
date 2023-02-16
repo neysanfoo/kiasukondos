@@ -17,4 +17,6 @@ urlpatterns = [
     path("likes/", views.LikeView.as_view()),
     path("fetch-like-status/<int:listing_id>", views.fetch_like_status),
     path("offers/", views.OfferView.as_view()),
+    path("messages/", views.MessageView.as_view()),
+    path("add_message/", views.AddMessage.as_view())
 ]

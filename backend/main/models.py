@@ -102,3 +102,23 @@ class UserPurchases(models.Model):
 
     def __str__(self):
         return self.listing.title
+    
+
+class Message(models.Model):
+    sender = models.ForeignKey("User", on_delete=models.CASCADE, related_name="sent_messages")
+    receiver = models.ForeignKey("User", on_delete=models.CASCADE, related_name="received_messages")
+    message = models.TextField()
+    date = models.DateTimeField(default=datetime.now, blank=True)
+
+    def receiver_name(self):
+        for user in User.objects.all():
+            if user.id == self.receiver.id:
+                return user.username
+            
+    def sender_name(self):
+        for user in User.objects.all():
+            if user.id == self.sender.id:
+                return user.username
+
+    def __str__(self):
+        return self.message
