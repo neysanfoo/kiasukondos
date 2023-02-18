@@ -10,6 +10,7 @@ import CreateListing from './CreateListing'
 import EditListing from './EditListing'
 import Dashboard from './Dashboard'
 import Chat from './Chat'
+import TestSocket from './TestSocket'
 
 
 
@@ -35,6 +36,7 @@ function Main() {
           <Route path="/edit-listing/:listing_id" element={<EditListing />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/test-socket" element={<TestSocket />} />
         </Route>
       </Routes>
     </div>

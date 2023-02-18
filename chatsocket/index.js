@@ -44,13 +44,112 @@ function parseCookies (request) {
   return list;
 }
 
-app.get("/messages", (req, res) => {
+// app.get("/messages", (req, res) => {
+//   // Get the jwt 
+//   const cookies = parseCookies(req);
+//   const jwt = cookies.jwt;
+//   var config = {
+//     method: 'post',
+//     url: 'http://localhost:8000/api/messages/',
+//     headers: {
+//       'Content-Type': 'application/json', 
+//     },
+//     data: {
+//       'jwt': jwt
+//     }
+//   };
+
+//   axios(config)
+//   .then(function (response) {
+//         res.status(200).send(response.data);
+//   }).catch(function (error) {
+//     console.log(error);
+//   });
+// });
+
+// app.post("/offer", (req, res) => {
+//   // Get the jwt 
+//   const cookies = parseCookies(req);
+//   const jwt = cookies.jwt;
+//   var config = {
+//     method: 'post',
+//     url: 'http://localhost:8000/api/offers/',
+//     headers: {
+//       'Content-Type': 'application/json', 
+//     },
+//     data: {
+//       'jwt': jwt,
+//       'listing': req.body.listing,
+//       'offer': req.body.offer
+//     }
+//   };
+
+//   axios(config)
+//   .then(function (response) {
+//     console.log(response.data)
+//     res.status(200).send(response.data);
+//   }).catch(function (error) {
+//     console.log(error);
+//   });
+// })
+
+
+
+
+// app.post("/server", (req, res) => {
+//   io.emit("command", req.body);
+//   console.log(req.body)
+//   res.status(201).json({ status: "reached" });
+// });
+
+// io.on("connection", (socket) => {
+//   console.log(`User connected ${socket.id}`);
+
+//   socket.on("join", function (room) {
+//     console.log("user joined " + room);
+//     socket.join(room);
+//   })
+
+
+//   socket.on("message", function (data) {
+//     // save the message in the django backend
+//     var config = {
+//       method: 'post',
+//       url: 'http://localhost:8000/api/add_message/',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       data: {
+//         'sender': data.sender,
+//         'receiver': data.receiver,
+//         'message': data.body,
+//       }
+//     };
+//     axios(config)
+//     .then(
+//       function (response) {
+//         response.data.chatId = data.chatId;
+//         io.to(data.chatId).emit("message", response.data);
+//       }
+//     ).catch(function (error) {
+//       console.log(error);
+//     }
+//     );
+//   })
+
+//   socket.on('disconnect', () => {
+//     console.log('user disconnected');
+//   });
+// });
+
+
+app.get("/chats", (req, res) => {
   // Get the jwt 
   const cookies = parseCookies(req);
   const jwt = cookies.jwt;
   var config = {
     method: 'post',
-    url: 'http://localhost:8000/api/messages/',
+    url: 'http://localhost:8000/api/fetch-chats-of-user/',
     headers: {
       'Content-Type': 'application/json', 
     },
@@ -61,32 +160,39 @@ app.get("/messages", (req, res) => {
 
   axios(config)
   .then(function (response) {
-        res.status(200).send(response.data);
+        let modifiedChatData = []
+        const current_user = response.data.user.id
+        response.data.chats.forEach(chat => {
+          let interlocutor = chat.users.filter(user => user.id !== current_user)[0]
+          let modifiedChat = {
+            chatId: chat.chatId,
+            interlocutor: interlocutor.id,
+            interlocutor_name: interlocutor.username,
+            last_accessed: chat.lastAccessed,
+            messages: chat.messages
+
+          }
+          modifiedChatData.push(modifiedChat)
+        })
+        console.log(modifiedChatData[0].messages)
+        res.status(200).send(modifiedChatData);
   }).catch(function (error) {
     console.log(error);
   });
-});
-
-
-
-
-app.post("/server", (req, res) => {
-  io.emit("command", req.body);
-  console.log(req.body)
-  res.status(201).json({ status: "reached" });
-});
+})
 
 io.on("connection", (socket) => {
-  console.log('a user connected');
 
-  socket.on("join", function (room) {
-    console.log("user joined " + room);
-    socket.join(room);
+  console.log(`User connected ${socket.id}`);
+
+  socket.on("test_message", (data) => {
+      console.log(data);
+      socket.broadcast.emit("receive_message", data)
   })
 
-
-  socket.on("message", function (data) {
-    // save the message in the django backend
+  socket.on("message", (data) => {
+    console.log(data);
+    // Send the message to the django backend
     var config = {
       method: 'post',
       url: 'http://localhost:8000/api/add_message/',
@@ -94,27 +200,27 @@ io.on("connection", (socket) => {
         'Content-Type': 'application/json',
       },
       data: {
+        'chatId': data.room,
         'sender': data.sender,
-        'receiver': data.receiver,
-        'message': data.body,
+        'receiver': data.interlocutor,
+        'message': data.message,
       }
-    };
+    }
     axios(config)
     .then(
       function (response) {
-        response.data.chatId = data.chatId;
-        io.to(data.chatId).emit("message", response.data);
+        io.emit("receive_message", response.data);
+        console.log(response.data);
       }
     ).catch(function (error) {
       console.log(error);
-    }
-    );
+    });
   })
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-});
+    console.log(`User disconnected ${socket.id}`);
+  })
+})
 
 server.listen(port, () => {
   console.log(`Server started on port ${port}`);

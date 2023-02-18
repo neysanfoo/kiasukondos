@@ -2,10 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import permissions
-from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message
-from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer, OfferSerializer, MessageSerializer
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message, Chat
+from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer, OfferSerializer, MessageSerializer, ChatSerializer
 import jwt, datetime
 from rest_framework.decorators import api_view
+from django.db.models import Q
 
 
 from rest_framework.exceptions import AuthenticationFailed
@@ -212,8 +213,23 @@ class OfferView(generics.ListCreateAPIView):
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed("Unauthenticated")
         user = User.objects.filter(id=payload["id"]).first()
-        queryset = Offer.objects.filter(user=user)
+        # show all the offers which are either made by the user or made on the users listing
+        queryset = Offer.objects.filter(Q(user=user) | Q(listing__owner=user))
         return queryset
+
+    def post(self, request):
+        # Check the jwt
+        token = self.request.data.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        listing = Listing.objects.filter(id=request.data.get("listing")).first()
+        Offer.objects.create(user=user, listing=listing, offer=request.data.get("offer"))
+        return Response({"message": "Offer created"})
     
 class MessageView(generics.ListCreateAPIView):
     queryset=Message.objects.all()
@@ -240,18 +256,82 @@ class MessageView(generics.ListCreateAPIView):
         return response
 
 class AddMessage(generics.ListCreateAPIView):
+    # Gets a request of 
+    # {chatId, sender, receiver, message}
+    # Save this message in the chat
     queryset=Message.objects.all()
     serializer_class=MessageSerializer
 
     def post(self, request):
-        user = User.objects.filter(id=request.data.get("sender")).first()
-        receiver = User.objects.filter(id=request.data.get("receiver")).first()
-        # add the message to the db
-        Message.objects.create(sender=user, receiver=receiver, message=request.data.get("message"))
-        # return all the messages where sender=user and receiver=receiver or sender=receiver and receiver=user
-        queryset = Message.objects.filter(sender=user, receiver=receiver) | Message.objects.filter(sender=receiver, receiver=user)
+        print(
+            request.data.get("chatId"),
+            request.data.get("sender"),
+            request.data.get("receiver"),
+            request.data.get("message")
+        )
+        # First create a message
+        message = Message.objects.create(
+            sender_id=request.data.get("sender"),
+            receiver_id=request.data.get("receiver"),
+            message=request.data.get("message")
+        )
+        # Then add this message to the chat
+        chatId = request.data.get("chatId")
+        chat = Chat.objects.filter(chatId=chatId).first()
+        chat.messages.add(message)
+ 
+        chat.save()
+
+        # return message
         response = Response()
         response.data = {
-            "messages": MessageSerializer(queryset, many=True).data
+            "message": MessageSerializer(message).data
         }
         return response
+
+
+
+
+class CreateChatView(generics.ListCreateAPIView):
+    queryset=Chat.objects.all()
+    serializer_class=ChatSerializer
+
+    def post(self, request):
+        chatId = request.data.get("chatId")
+        chat = Chat.objects.filter(chatId=chatId).first()
+        user1 = User.objects.filter(id=request.data.get("user1")).first()
+        user2 = User.objects.filter(id=request.data.get("user2")).first()
+
+        
+        if chat:
+            return Response({"message": "Chat already exists"})
+        else:
+            print(user1,user2)
+            chat = Chat.objects.create(chatId=chatId)
+            chat.users.add(user1)
+            chat.users.add(user2)
+            chat.save()
+            return Response({"message": "Chat created"})
+    
+
+@api_view(["POST"])
+def fetch_chats_of_user(request):
+    token = request.data.get("jwt")
+    if not token:
+        raise AuthenticationFailed("Unauthenticated")
+    try:
+        payload = jwt.decode(token, "secret", algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        raise AuthenticationFailed("Unauthenticated")
+    user = User.objects.filter(id=payload["id"]).first()
+    chat = Chat.objects.filter(users=user)
+    response = Response()
+    response.data = {
+        "user": UserSerializer(user).data,
+        "chats": ChatSerializer(chat, many=True).data
+    }
+    return response
+
+
+
+        

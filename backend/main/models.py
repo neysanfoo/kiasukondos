@@ -91,6 +91,7 @@ class Offer(models.Model):
     is_accepted = models.BooleanField(default=False)
     is_declined = models.BooleanField(default=False)
     is_pending = models.BooleanField(default=True)
+    date = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return self.offer
@@ -109,6 +110,10 @@ class Message(models.Model):
     receiver = models.ForeignKey("User", on_delete=models.CASCADE, related_name="received_messages")
     message = models.TextField()
     date = models.DateTimeField(default=datetime.now, blank=True)
+    isOffer = models.BooleanField(default=False)
+    isOfferAndAccepted = models.BooleanField(default=False)
+    isOfferAndDeclined = models.BooleanField(default=False)
+    isOfferAndPending = models.BooleanField(default=False)
 
     def receiver_name(self):
         for user in User.objects.all():
@@ -119,6 +124,25 @@ class Message(models.Model):
         for user in User.objects.all():
             if user.id == self.sender.id:
                 return user.username
+            
+    def chatId(self):
+        return "-".join(sorted([str(self.sender.id), str(self.receiver.id)]))
 
     def __str__(self):
         return self.message
+    
+
+class Chat(models.Model):
+    chatId = models.CharField(max_length=255)
+    messages = models.ManyToManyField("Message", blank=True)
+    users = models.ManyToManyField("User", blank=True)
+    timeCreated = models.DateTimeField(default=datetime.now, blank=True)
+
+    def lastAccessed(self):
+        if len(self.messages.all()) == 0:
+            return self.timeCreated
+        else:
+            return self.messages.all().order_by("-date")[0].date
+
+    def __str__(self):
+        return self.chatId

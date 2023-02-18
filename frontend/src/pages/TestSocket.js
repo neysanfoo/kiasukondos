@@ -61,7 +61,7 @@ const test_data = [
     }
 ]
 
-function Chat() {
+function TestSocket() {
     //This will connect your socket connection first time and it will disconnect when the component ejects.
     // This is to prevent multiple connections on the same page
     useEffect(() => {
@@ -185,14 +185,12 @@ function Chat() {
     };
 
     function convertTime(date) {
-        // Give time in hh:mm with am/pm, 12am instead of 00
-        const time = new Date(date);
-        const hours = time.getHours();
-        const minutes = time.getMinutes();
-        const ampm = hours >= 12 ? 'pm' : 'am';
-        const hours12 = hours % 12 || 12;
-        const minutes0 = minutes < 10 ? '0' : '';
-        return `${hours12}:${minutes0}${minutes} ${ampm}`;
+        var date = new Date(date);
+        var hours = date.getHours();
+        var minutes = "0" + date.getMinutes();
+        var seconds = "0" + date.getSeconds();
+        var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+        return formattedTime;
     }
 
     function acceptOffer(offer) {
@@ -270,4 +268,4 @@ function Chat() {
     )
 }
 
-export default Chat;
+export default TestSocket;
