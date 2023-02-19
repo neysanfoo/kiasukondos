@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import ListingCard from '../components/ListingCard'
-import SearchBar1 from '../components/SearchBar1'
+import SearchBar from '../components/SearchBar'
 import { Link } from 'react-router-dom'
 const baseURL="http://127.0.0.1:8000/api"
 
@@ -36,7 +36,7 @@ function Home() {
 
   return (
     <div className='container mt-4'>
-      <SearchBar1
+      <SearchBar
         setListing={setListing}
        />
       <div className="listing--container">
@@ -52,6 +52,7 @@ function Home() {
               bedrooms={item.bedrooms}
               bathrooms={item.bathrooms}
               sqmeters={item.sqmeters}
+              sale_or_rent={item.sale_or_rent}
             />
             </div>
         ))}

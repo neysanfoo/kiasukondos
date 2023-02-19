@@ -1,108 +1,79 @@
-import React, { useState } from 'react';
-import Select from 'react-select';
+import React, { useState } from "react";
+import axios from "axios";
 
-const tempOptions = [
-    { name: "Option 1", url: "/option1" },
-    { name: "Option 2", url: "/option2" },
-    { name: "Option 3", url: "/option3" },
-    { name: "Option 4", url: "/option4" }
-];
+function SearchContainer({ setListing }) {
+  const [searchInput, setSearchInput] = useState("");
+  const [numBedrooms, setNumBedrooms] = useState("");
+  const [sortingOrder, setSortingOrder] = useState("");
+  const [saleType, setSaleType] = useState("");
 
-const options = [
-    { value: 'price-asc', label: 'Price: Low to High' },
-    { value: 'price-desc', label: 'Price: High to Low' },
-    { value: 'rating', label: 'Rating' },
-    { value: 'category', label: 'Category' },
-];
+  const handleSearch = () => {
+    const queryParams = {
+      searchInput,
+      numBedrooms,
+      sortingOrder,
+      saleType,
+    };
+    // create the queryString with params which are not empty string
+    const queryString = Object.keys(queryParams)
+      .filter((key) => queryParams[key] !== "")
+      .map((key) => `${key}=${queryParams[key]}`)
+      .join("&");
 
-const roomsOptions = [
-    { value: '1', label: '1 Room' },
-    { value: '2', label: '2 Rooms' },
-    { value: '3', label: '3 Rooms' },
-    { value: '4', label: '4 Rooms' },
-    { value: '5', label: '5 Rooms' },
-    { value: '6', label: '6 Rooms' },
-];
+    axios.get(`http://localhost:8000/api/search/?${queryString}`)
+      .then((response) => {
+        setListing(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
-const bedroomsOptions = [
-    { value: '1', label: '1 Bedroom' },
-    { value: '2', label: '2 Bedrooms' },
-    { value: '3', label: '3 Bedrooms' },
-    { value: '4', label: '4 Bedrooms' },
-    { value: '5', label: '5 Bedrooms' },
-];
 
-const typeOptions = [
-    { value: 'rent', label: 'Rent' },
-    { value: 'sale', label: 'Sale' },
-];
-
-const squareMetersOptions = [
-    { value: '50', label: '50 sqm' },
-    { value: '100', label: '100 sqm' },
-    { value: '150', label: '150 sqm' },
-    { value: '200', label: '200 sqm' },
-    { value: '250', label: '250 sqm' },
-];
-
-const SearchBar = () => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedOption, setSelectedOption] = useState(options[0]);
-    const [selectedRoomsOption, setSelectedRoomsOption] = useState(roomsOptions[0]);
-    const [selectedBedroomsOption, setSelectedBedroomsOption] = useState(bedroomsOptions[0]);
-    const [selectedTypeOption, setSelectedTypeOption] = useState(typeOptions[0]);
-    const [selectedSquareMetersOption, setSelectedSquareMetersOption] = useState(squareMetersOptions[0]);
-
-    const handleChange = (e) => {
-        setSearchQuery(e.target.value);
-    }
-
-    const handleSelectChange = (selectedOption) => {
-        setSelectedOption(selectedOption);
-    }
-
-    const handleRoomsSelectChange = (selectedRoomsOption) => {
-        setSelectedRoomsOption(selectedRoomsOption);
-    }
-
-    const handleBedroomsSelectChange = (selectedBedroomsOption) => {
-        setSelectedBedroomsOption(selectedBedroomsOption);
-    }
-
-    const handleTypeSelectChange = (selectedTypeOption) => {
-        setSelectedTypeOption(selectedTypeOption);
-    }
-
-    const handleSquareMetersSelectChange = (selectedSquareMetersOption) => {
-        setSelectedSquareMetersOption(selectedSquareMetersOption);
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    }
-
-    return (
-        <div>
-        <div className='search--bar--and--filters--container'>
-            <form className='search--bar' onSubmit={handleSubmit}>
-                <input type="text" placeholder="Search..." value={searchQuery} onChange={handleChange} />
-                <button type="submit"><i class="bi bi-search"></i></button>
-            </form>
-            <Select className='search--select' options={options} value={selectedOption} onChange={handleSelectChange} />
-            <Select className='search--select' options={roomsOptions} value={selectedRoomsOption} onChange={handleRoomsSelectChange} />
-
-            <Select className='search--select' options={typeOptions} value={selectedTypeOption} onChange={handleTypeSelectChange} />
-
-        </div>
-        {/* <div className='search--bar--filters--container'>
-            <Select className='search--select' options={options} value={selectedOption} onChange={handleSelectChange} />
-            <Select className='search--select' options={roomsOptions} value={selectedRoomsOption} onChange={handleRoomsSelectChange} />
-            <Select className='search--select' options={bedroomsOptions} value={selectedBedroomsOption} onChange={handleBedroomsSelectChange} />
-            <Select className='search--select' options={typeOptions} value={selectedTypeOption} onChange={handleTypeSelectChange} />
-            <Select className='search--select' options={squareMetersOptions} value={selectedSquareMetersOption} onChange={handleSquareMetersSelectChange} />
-        </div> */}
-        </div>
-    );
+  return (
+    <div className="search-container">
+      <input
+        type="text"
+        placeholder="Search"
+        value={searchInput}
+        onChange={(event) => setSearchInput(event.target.value)}
+        className="search-input"
+      />
+      <select
+        value={numBedrooms}
+        onChange={(event) => setNumBedrooms(event.target.value)}
+        className="num-rooms-select"
+      >
+        <option value="">Number of Bedrooms</option>
+        <option value="1">1 Bedroom</option>
+        <option value="2">2 Bedrooms</option>
+        <option value="3">3 Bedrooms</option>
+        <option value="3">4 Bedrooms</option>
+      </select>
+      <select
+        value={sortingOrder}
+        onChange={(event) => setSortingOrder(event.target.value)}
+        className="sorting-order-select"
+      >
+        <option value="">Sort By</option>
+        <option value="priceHighToLow">Price: High to Low</option>
+        <option value="priceLowToHigh">Price: Low to High</option>
+        <option value="newestListings">Newest Listings</option>
+      </select>
+      <select
+        value={saleType}
+        onChange={(event) => setSaleType(event.target.value)}
+        className="sale-type-select"
+      >
+        <option value="">Sale Type</option>
+        <option value="forSale">For Sale</option>
+        <option value="forRent">For Rent</option>
+      </select>
+      <button onClick={handleSearch} className="search-button">
+        Search
+      </button>
+    </div>
+  );
 }
 
-export default SearchBar;
+export default SearchContainer;

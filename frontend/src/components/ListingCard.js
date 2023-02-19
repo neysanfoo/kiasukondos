@@ -6,7 +6,7 @@ import { faDollarSign, faBath, faBed, faLocationDot } from '@fortawesome/free-so
 import LikeButton from '../components/LikeButton'
 const baseURL = 'http://127.0.0.1:8000/api'
 
-function ListingCard({ id, current_user_id, photo_main, title, address, price, bedrooms, bathrooms, sqmeters}) {
+function ListingCard({ id, current_user_id, photo_main, title, address, price, bedrooms, bathrooms, sqmeters, sale_or_rent}) {
   function truncate(str, n){
     return (str.length > n) ? str.substr(0, n-1) + '...' : str;
   }
@@ -25,7 +25,13 @@ function ListingCard({ id, current_user_id, photo_main, title, address, price, b
     </Link>
         <div className='card--footer '>
         <div className='card--icons'>
-          <p><FontAwesomeIcon icon={ faDollarSign } /> {price}</p>
+          {
+            // if for rent?
+            sale_or_rent == 1 ? 
+            <p><FontAwesomeIcon icon={ faDollarSign } /> {price}</p>
+            :
+            <p><FontAwesomeIcon icon={ faDollarSign } /> {price} / mth</p>
+          }
           <p><FontAwesomeIcon icon={ faBed } /> {bedrooms}</p>
           <p><FontAwesomeIcon icon={ faBath } /> {bathrooms}</p>
         </div>
