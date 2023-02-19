@@ -79,7 +79,6 @@ const SearchBar = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // make API call to search endpoint with searchQuery, selectedOption, selectedRoomsOption, selectedBedroomsOption, selectedTypeOption, and selectedSquareMetersOption
     }
 
     return (

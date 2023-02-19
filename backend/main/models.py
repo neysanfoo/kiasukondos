@@ -87,10 +87,7 @@ class Address(models.Model):
 class Offer(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="offers")
     listing = models.ForeignKey("Listing", on_delete=models.CASCADE, related_name="offers")
-    offer = models.IntegerField()
-    is_accepted = models.BooleanField(default=False)
-    is_declined = models.BooleanField(default=False)
-    is_pending = models.BooleanField(default=True)
+    price = models.IntegerField()
     date = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
@@ -110,10 +107,6 @@ class Message(models.Model):
     receiver = models.ForeignKey("User", on_delete=models.CASCADE, related_name="received_messages")
     message = models.TextField()
     date = models.DateTimeField(default=datetime.now, blank=True)
-    isOffer = models.BooleanField(default=False)
-    isOfferAndAccepted = models.BooleanField(default=False)
-    isOfferAndDeclined = models.BooleanField(default=False)
-    isOfferAndPending = models.BooleanField(default=False)
 
     def receiver_name(self):
         for user in User.objects.all():
@@ -135,14 +128,25 @@ class Message(models.Model):
 class Chat(models.Model):
     chatId = models.CharField(max_length=255)
     messages = models.ManyToManyField("Message", blank=True)
+    offers = models.ManyToManyField("Offer", blank=True)
     users = models.ManyToManyField("User", blank=True)
     timeCreated = models.DateTimeField(default=datetime.now, blank=True)
 
     def lastAccessed(self):
-        if len(self.messages.all()) == 0:
+        # if no messages and no offers the the lastAccessed is the timeCreated
+        if len(self.messages.all()) == 0 and len(self.offers.all()) == 0:
             return self.timeCreated
-        else:
+        elif len(self.messages.all()) > 0 and len(self.offers.all()) == 0:
             return self.messages.all().order_by("-date")[0].date
+        elif len(self.messages.all()) == 0 and len(self.offers.all()) > 0:
+            return self.offers.all().order_by("-date")[0].date
+        else:
+            lastMessage = self.messages.all().order_by("-date")[0].date
+            lastOffer = self.offers.all().order_by("-date")[0].date
+            if lastMessage > lastOffer:
+                return lastMessage
+            else:
+                return lastOffer
 
     def __str__(self):
         return self.chatId

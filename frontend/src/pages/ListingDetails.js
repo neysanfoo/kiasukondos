@@ -55,13 +55,12 @@ function ListingDetails() {
 
     function makeOffer() {
         var data = JSON.stringify({
-            "user": user_id,
             "listing": listing_id,
-            "offer": offer
+            "price": offer
         });
         var config = {
             method: 'post',
-            url: 'http://localhost:9000/offer',
+            url: 'http://localhost:8000/api/add-offer/',
             headers: {
                 'Content-Type': 'application/json'
             },

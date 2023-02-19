@@ -164,23 +164,36 @@ app.get("/chats", (req, res) => {
         const current_user = response.data.user.id
         response.data.chats.forEach(chat => {
           let interlocutor = chat.users.filter(user => user.id !== current_user)[0]
+
+          chat.offers.forEach(offer => {
+            let offer_message = {
+              chatId: offer.chatId,
+              sender: offer.user,
+              receiver: offer.listing.owner,
+              price: offer.price,
+              listing: offer.listing,
+              date: offer.date,
+              isOffer: true
+            }
+            chat.messages.push(offer_message)
+          })
+            
           let modifiedChat = {
             chatId: chat.chatId,
             interlocutor: interlocutor.id,
             interlocutor_name: interlocutor.username,
             last_accessed: chat.lastAccessed,
-            messages: chat.messages
-
+            messages: chat.messages,
+            offers: chat.offers
           }
           modifiedChatData.push(modifiedChat)
         })
-        console.log(modifiedChatData[0].messages)
+        console.log(modifiedChatData)
         res.status(200).send(modifiedChatData);
   }).catch(function (error) {
     console.log(error);
   });
 })
-
 io.on("connection", (socket) => {
 
   console.log(`User connected ${socket.id}`);
@@ -195,7 +208,7 @@ io.on("connection", (socket) => {
     // Send the message to the django backend
     var config = {
       method: 'post',
-      url: 'http://localhost:8000/api/add_message/',
+      url: 'http://localhost:8000/api/add-message/',
       headers: {
         'Content-Type': 'application/json',
       },

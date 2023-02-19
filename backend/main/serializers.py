@@ -87,7 +87,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class ChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chat
-        fields = ["chatId", "messages", "users", "lastAccessed"]
+        fields = ["chatId", "messages","offers", "users", "lastAccessed"]
     def __init__(self, *args, **kwargs):
         super(ChatSerializer, self).__init__(*args, **kwargs)
         request = self.context.get('request')

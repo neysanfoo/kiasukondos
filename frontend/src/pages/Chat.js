@@ -120,10 +120,17 @@ function Chat() {
 
             axios(config)
             .then(function (response) {
-                // sort by last_access
-                response.data.sort((a, b) => {
-                    return new Date(b.last_access) - new Date(a.last_access);
+                // sort messages by time
+                response.data.forEach((chat) => {
+                    chat.messages.sort((a, b) => {
+                        return new Date(a.date) - new Date(b.date);
+                    })
                 })
+                // sort by last_access (newest first)
+                response.data.sort((a, b) => {
+                    return new Date(b.last_accessed) - new Date(a.last_accessed);
+                })
+
                 setChatData(response.data);
                 setCurrentRoom(response.data[0].chatId);
                 setInterlocutorId(response.data[0].interlocutor);
@@ -159,8 +166,7 @@ function Chat() {
                     chat.messages.push(incomingMessageData);
                 }
                 return chat;
-            }
-            )
+            })
             setChatData(newChatData);
         }
     }, [incomingMessageData])
@@ -185,7 +191,6 @@ function Chat() {
     };
 
     function convertTime(date) {
-        // Give time in hh:mm with am/pm, 12am instead of 00
         const time = new Date(date);
         const hours = time.getHours();
         const minutes = time.getMinutes();
@@ -207,9 +212,7 @@ function Chat() {
         });
     }
 
-    console.log(
-        messageData
-    )
+    console.log(chatData)
 
     return (
         <div className='outer--container'>
@@ -220,9 +223,15 @@ function Chat() {
                 {chatData.map((chat) => {
                     return (
                         <div className='chat--sidebar--users' >
-                            <div className='chat--sidebar--user' onClick={()=>joinChat(chat.interlocutor)}>
-                                <h3>{chat.interlocutor_name}</h3>
-                            </div>
+                            {
+                                chat.interlocutor === interlocutorId ?
+                                <div className='chat--sidebar--user--active'>
+                                    <h3>{chat.interlocutor_name}</h3>
+                                </div> :
+                                <div className='chat--sidebar--user' onClick={()=>joinChat(chat.interlocutor)}>
+                                    <h3>{chat.interlocutor_name}</h3>
+                                </div>
+                            }
                         </div>
                 )})}
             </div>
@@ -233,18 +242,36 @@ function Chat() {
                         {chat.interlocutor === interlocutorId ?  
                         <>
                             <div className='chat--main--header'>
-                                <h2>{chat.inteculator_name}</h2>
+                                <h2>{chat.interlocutor_name}</h2>
                             </div> 
                             <div className='chat--main--messages'>
                             <div className='wrapper--to--start--at--bottom'>
                                 {
                                     chat.messages.map((message) => {
                                         return (
-                                            <div className='chat--main--message'>
-                                                <h3>{message.sender.username}</h3>
-                                                <p>{message.message}</p>
-                                                <p>{convertTime(message.date)}</p>
-                                                <hr />
+                                            message.isOffer ?
+                                            // is the current user the one sending or receiving offer?
+                                            message.sender.id === userId ?
+                                                <>
+                                                <div className='chat--main--offer--message'>
+                                                    <b>Your have offered ${message.price} for <Link to={"/listing/" + message.listing.id}>{message.listing.title}</Link></b>
+                                                </div> 
+                                                    <p>{convertTime(message.date)}</p>
+                                                    <hr />
+                                                 </> :
+                                                <>
+                                                <div className='chat--main--offer--message'>
+                                                    <b>{message.sender.username} has offered you ${message.price} for <Link to={"/listing/" + message.listing.id}>{message.listing.title}</Link></b>
+                                                    <button type="button" onClick={()=>acceptOffer(message)}>Accept</button>
+                                                </div>
+                                                    <p>{convertTime(message.date)}</p>
+                                                    <hr />
+                                                </> :
+                                                <div className='chat--main--message'>
+                                                    <h3>{message.sender.username}</h3>
+                                                    <p>{message.message}</p>
+                                                    <p>{convertTime(message.date)}</p>
+                                                    <hr />
                                             </div>
                                         )
                                     }

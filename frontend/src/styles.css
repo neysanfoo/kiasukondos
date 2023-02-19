@@ -3,6 +3,16 @@
   background-color: var(--header-bg-color);
 }
 
+.listing--container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+
+  grid-gap: 1rem;
+  margin: 1rem;
+}
+
+
+
 .listing--card {
 	width: 24em;
 	height: 20em;
@@ -19,11 +29,24 @@
 	transition: transform 0.45s ease, background 0.45s ease;
 }
 
+
+@media only screen and (max-width: 992px) {
+  .listing--card {
+    width: 40em;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .listing--card {
+    width: 30em;
+  }
+}
+
+
 .listing--card:hover {
   transform: scale(1.01);
   transition: 400ms;
 }
-
 
 .listing--card--image {
   width: 100%;
@@ -348,6 +371,15 @@
   border-bottom: 1px solid #ccc;
 }
 
+.chat--sidebar--user--active {
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+
+}
+
 .chat--sidebar--user:hover {
   background-color: #f5f5f5;
 }
@@ -463,4 +495,72 @@
   background-color: #888;
 }
 
+.search-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
+.search-input,
+.num-rooms-select,
+.sorting-order-select,
+.sale-type-select {
+  height: 36px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 6px 12px;
+  font-size: 14px;
+  margin-bottom: 6px;
+  margin-right: 12px;
+  flex-basis: 100%;
+}
+
+.search-button {
+  height: 36px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #0062cc;
+}
+
+@media (max-width: 767px) {
+  .num-rooms-select,
+  .sorting-order-select,
+  .sale-type-select {
+    flex-basis: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .num-rooms-select,
+  .sorting-order-select,
+  .sale-type-select {
+    flex-basis: 31.45%;
+  }
+}
+
+@media (min-width: 992px) {
+  .search-container {
+    flex-wrap: nowrap;
+  }
+
+  .search-input {
+    flex-basis: 30%;
+  }
+
+  .num-rooms-select,
+  .sorting-order-select,
+  .sale-type-select {
+    flex-basis: 20%;
+  }
+}

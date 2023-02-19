@@ -29,16 +29,34 @@ class ListingDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class SearchListingView(generics.ListAPIView):
-    queryset = Listing.objects.all()
+    # ?searchInput=hi&numBedrooms=1&sortingOrder=priceHighToLow&saleType=forRent
     serializer_class = ListingSerializer
-    # permission_classes = [permissions.AllowAny]
-
     def get_queryset(self):
-        queryset = Listing.objects.all()
-        search = self.request.query_params.get('search', None)
-        if search is not None:
-            queryset = queryset.filter(title__icontains=search)
+        searchInput = self.request.query_params.get("searchInput", None)
+        numBedrooms = self.request.query_params.get("numBedrooms", None)
+        sortingOrder = self.request.query_params.get("sortingOrder", None)
+        saleType = self.request.query_params.get("saleType", None)
+        if searchInput is not None:
+            queryset = Listing.objects.filter(Q(title__icontains=searchInput) | Q(description__icontains=searchInput))
+        else:
+            queryset = Listing.objects.all()
+        if numBedrooms is not None:
+            queryset = queryset.filter(bedrooms=numBedrooms)
+        if saleType is not None:
+            if saleType == "forSale":
+                saleType = 1
+            elif saleType == "forRent":
+                saleType = 2
+            queryset = queryset.filter(sale_or_rent=saleType)
+        if sortingOrder is not None:
+            if sortingOrder == "priceLowToHigh":
+                queryset = queryset.order_by("price")
+            elif sortingOrder == "priceHighToLow":
+                queryset = queryset.order_by("-price")
+            elif sortingOrder == "newestListings":
+                queryset = queryset.order_by("-list_date")
         return queryset
+
 
 class UserView(generics.ListAPIView):
     def get(self, request):
@@ -335,3 +353,33 @@ def fetch_chats_of_user(request):
 
 
         
+class AddOffer(generics.ListCreateAPIView):
+    queryset=Offer.objects.all()
+    serializer_class=OfferSerializer
+
+    def post(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        
+        user = User.objects.filter(id=payload["id"]).first()
+        listing = Listing.objects.filter(id=request.data.get("listing")).first()
+        offer = Offer.objects.create(user=user, listing=listing, price=request.data.get("price"))
+
+        chatId = "-".join(sorted([str(user.id), str(listing.owner.id)]))
+
+        chat = Chat.objects.filter(chatId=chatId).first()
+        if not chat:
+            chat = Chat.objects.create(chatId=chatId)
+            chat.users.add(user)
+            chat.users.add(listing.owner)
+            chat.save()
+        chat.offers.add(offer)
+        chat.save()
+        return Response({"message": "Offer created"})
+    
