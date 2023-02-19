@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import ListingCard from '../components/ListingCard'
-import SearchBar from '../components/SearchBar'
+import SearchBar1 from '../components/SearchBar1'
 import { Link } from 'react-router-dom'
 const baseURL="http://127.0.0.1:8000/api"
 
@@ -35,11 +35,13 @@ function Home() {
 
 
   return (
-    <div className='container mt-2'>
-      <SearchBar />
-      <div className="row">
+    <div className='container mt-4'>
+      <SearchBar1
+        setListing={setListing}
+       />
+      <div className="listing--container">
         {listing.map((item) => (
-            <div className='col-md-auto'>
+            <div className='listing--in--container'>
             <ListingCard 
               id = {item.id}
               current_user_id = {userId}

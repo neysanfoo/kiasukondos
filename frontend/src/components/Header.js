@@ -27,7 +27,7 @@ function Header() {
     headerContent = (
       <>
         <Link className="nav-link" to="/create-listing">Sell</Link>
-        <Link className="nav-link" to="#">Messages</Link>
+        <Link className="nav-link" to="/chat">Messages</Link>
         <li className="nav-item dropdown">
           <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             User
@@ -59,7 +59,7 @@ function Header() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light ">
       <div className="container">
-        <Link className="navbar-brand" to="/">KiasuKondos</Link>
+        <a className="navbar-brand" href="/">KiasuKondos</a>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>

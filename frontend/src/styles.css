@@ -3,6 +3,16 @@
   background-color: var(--header-bg-color);
 }
 
+.listing--container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+
+  grid-gap: 1rem;
+  margin: 1rem;
+}
+
+
+
 .listing--card {
 	width: 24em;
 	height: 20em;
@@ -19,11 +29,24 @@
 	transition: transform 0.45s ease, background 0.45s ease;
 }
 
+
+@media only screen and (max-width: 992px) {
+  .listing--card {
+    width: 40em;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .listing--card {
+    width: 30em;
+  }
+}
+
+
 .listing--card:hover {
   transform: scale(1.01);
   transition: 400ms;
 }
-
 
 .listing--card--image {
   width: 100%;
@@ -304,3 +327,240 @@
   color: red;
 }
 
+.outer--container {
+	display: table;
+	width: 100%;
+  height: 94vh;
+}
+
+.chat--sidebar {
+  display: table-cell;
+	width: 30%;
+	vertical-align: top;
+  border-right: 1px solid #ccc;
+}
+
+.chat--sidebar--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.chat--sidebar--header h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.chat--sidebar--users {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  cursor: pointer;
+}
+
+.chat--sidebar--users h3 {
+  padding: 10px 20px;
+}
+
+.chat--sidebar--user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+}
+
+.chat--sidebar--user--active {
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+
+}
+
+.chat--sidebar--user:hover {
+  background-color: #f5f5f5;
+}
+
+.chat--main {
+  display: table-cell;
+  width: 85%;
+  height: 80vh;
+  vertical-align: top;
+}
+
+.chat--main--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.chat--main--header h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.chat--main--messages {
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 10px 20px;
+  width:100%;
+  height:70vh;
+  overflow-y: scroll;
+}
+
+.chat--main--offer h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.chat--main--offer--message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  margin-bottom: 10px;
+}
+
+.chat--main--offer--message button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+
+.chat--main--message {
+}
+
+.chat--main--message h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.chat--main--message--body {
+  font-size: 14px;
+  margin: 0;
+  background-color: #ccc;
+}
+
+.chat--main--message--time {
+  font-size: 12px;
+  margin: 0;
+  color: #ccc;
+}
+
+.chat--main--input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-top: 1px solid #ccc;
+  position: fixed;
+  bottom: 0;
+  width: 60%;
+}
+
+.chat--main--input input {
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  margin-right: 1em;
+}
+
+.chat--main--input button {
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  width: 8em;
+  border: 1px solid #ccc;
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+.chat--main--input button:hover {
+  background-color: #aaa;
+}
+
+.chat--main--input button:active {
+  background-color: #888;
+}
+
+.search-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-input,
+.num-rooms-select,
+.sorting-order-select,
+.sale-type-select {
+  height: 36px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 6px 12px;
+  font-size: 14px;
+  margin-bottom: 6px;
+  margin-right: 12px;
+  flex-basis: 100%;
+}
+
+.search-button {
+  height: 36px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #0062cc;
+}
+
+@media (max-width: 767px) {
+  .num-rooms-select,
+  .sorting-order-select,
+  .sale-type-select {
+    flex-basis: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .num-rooms-select,
+  .sorting-order-select,
+  .sale-type-select {
+    flex-basis: 31.45%;
+  }
+}
+
+@media (min-width: 992px) {
+  .search-container {
+    flex-wrap: nowrap;
+  }
+
+  .search-input {
+    flex-basis: 30%;
+  }
+
+  .num-rooms-select,
+  .sorting-order-select,
+  .sale-type-select {
+    flex-basis: 20%;
+  }
+}

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message, Chat
 
 class HelloSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,7 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username", "email", "password"]
         extra_kwargs = {"password": {"write_only": True}}
-        
     
     def create(self, validated_data):
         password = validated_data.pop("password")
@@ -43,6 +42,12 @@ class OfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offer
         fields = "__all__"
+    def __init__(self, *args, **kwargs):
+        super(OfferSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 0
+        if request and request.method == "GET":
+            self.Meta.depth = 2
 
 class UserPurchasesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,3 +71,28 @@ class LikeSerializer(serializers.ModelSerializer):
         self.Meta.depth = 0
         if request and request.method == "GET":
             self.Meta.depth = 2
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ["sender", "receiver", "message", "date", "receiver_name", "sender_name", "chatId"]
+    def __init__(self, *args, **kwargs):
+        super(MessageSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 2
+        if request and request.method == "GET":
+            self.Meta.depth = 2
+    
+
+class ChatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chat
+        fields = ["chatId", "messages","offers", "users", "lastAccessed"]
+    def __init__(self, *args, **kwargs):
+        super(ChatSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 3
+        if request and request.method == "GET":
+            self.Meta.depth = 3
+    
+
