@@ -44,3 +44,7 @@ KiasuKondos is a marketplace app for renting and buying houses. It utilizes the 
 7. Install requirements `npm i`
 8. Start the server on localhost:3000 `npm start`
 
+## Socket
+9. Go to the socket directory `kiasukondos/chatsocket`
+10. Install requirements `npm i`
+11. Start the server on localhost:9000 `npm start`
