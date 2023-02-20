@@ -12,8 +12,8 @@ class Hello(models.Model):
 
 
 class Listing(models.Model):
-    owner = models.ForeignKey("User", on_delete=models.CASCADE, related_name="listings")
     title = models.CharField(max_length=255)
+    owner = models.ForeignKey("User", on_delete=models.CASCADE, related_name="listings")
     address = models.CharField(max_length=255)
     zipcode = models.CharField(max_length=255)
     property_type = models.IntegerField()
@@ -41,6 +41,10 @@ class Listing(models.Model):
     photo_5 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
     photo_6 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
     likes = models.ManyToManyField("User", blank=True)
+    is_sold = models.BooleanField(default=False)
+
+
+
 
     def owner_name(self):
         for user in User.objects.all():

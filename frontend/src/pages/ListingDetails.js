@@ -75,10 +75,6 @@ function ListingDetails() {
         .catch(function (error) {
             console.log(error);
         });
-        {/* TODO: Redirect to chat app with the offer after offer is made */}
-
-
-
     }
 
     function handleChange(e) {
@@ -148,13 +144,75 @@ function ListingDetails() {
         })
     }
 
+    const photos = [
+      listingData.photo_1,
+      listingData.photo_2,
+      listingData.photo_3,
+      listingData.photo_4,
+      listingData.photo_5,
+      listingData.photo_6,
+    ].filter((photo) => photo !== null);
+
     return(
-        <div className="container mt-4">
+        <div className='container mt-4'>
+            <h1 className='listing--details--title'>{ listingData.title }</h1>
+            <div className="listing--details">
+                {/* Carousel Start */}
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active"> 
+                        <img src={listingData.photo_main} class="d-block w-100" alt="..." />
+                    </div>
+                    {photos.map((photo, index) => (
+                        <div class="carousel-item">
+                            <img src={photo} class="d-block w-100" alt="..." />
+                        </div>
+                    ))}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                </div>
+                {/* Carousel End */}
+            <div className="listing--details--info">
+                <h2>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}</h2>
+                <p><b>Owner Name: </b> { listingData.owner_name } </p>
+                <p><b>Address: </b> { listingData.address }</p>
+                <p><b>Zipcode: </b> { listingData.zipcode }</p>
+                <p><b>Property Type: </b>{ getPropertyType(listingData.property_type) }</p>
+                <p><b>Sale or Rent: </b>{ getSaleOrRent(listingData.sale_or_rent) }</p>
+                <p><b>Price: </b> { listingData.price }</p>
+                <p><b>Bedrooms: </b> { listingData.bedrooms }</p>
+                <p><b>Bathrooms: </b> { listingData.bathrooms }</p>
+                <p><b>Size: </b>{ listingData.sqmeters } Square Meters</p>
+                <p><b>Description: </b>{ listingData.description }</p>
+                </div>
+            </div>
             { user_id && listing_id && 
             <LikeButton
                 user_id={user_id}
                 listing_id={listing_id}
              />
+            } 
+            { user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
+            <div>
+                <input name="offer" value={offer} onChange={handleChange} type="number" />
+                <button type="button" onClick={makeOffer}>Make Offer</button>
+            </div>
+            }
+            {
+                user_id && listing_id && listingData.owner && listingData.owner !== user_id &&
+                <button type="button" onClick={createChat}>Chat with Owner</button>
             }
             {isOwner &&
                 <div>
@@ -168,30 +226,8 @@ function ListingDetails() {
                 <button type="button" onClick={deleteListing}>Delete Listing</button>
                 </div>
             }
-            <h1>{ listingData.title }</h1>
-            <img src={ listingData.photo_main } alt="listing" />
-            <p><b>Owner Name: </b> { listingData.owner_name } </p>
-            <p><b>Address: </b> { listingData.address }</p>
-            <p><b>Zipcode: </b> { listingData.zipcode }</p>
-            <p><b>Property Type: </b>{ getPropertyType(listingData.property_type) }</p>
-            <p><b>Sale or Rent: </b>{ getSaleOrRent(listingData.sale_or_rent) }</p>
-            <p><b>Price: </b> { listingData.price }</p>
-            <p><b>Bedrooms: </b> { listingData.bedrooms }</p>
-            <p><b>Bathrooms: </b> { listingData.bathrooms }</p>
-            <p><b>Size: </b>{ listingData.sqmeters } Square Meters</p>
-            <p><b>Description: </b>{ listingData.description }</p>
-            { user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
-            <div>
-                <input name="offer" value={offer} onChange={handleChange} type="number" />
-                <button type="button" onClick={makeOffer}>Make Offer</button>
-            </div>
-            }
-            {
-                user_id && listing_id && listingData.owner && listingData.owner !== user_id &&
-                <button type="button" onClick={createChat}>Chat with Owner</button>
-            }
         </div>
     )
 }
 
-export default ListingDetails;
+export default ListingDetails
