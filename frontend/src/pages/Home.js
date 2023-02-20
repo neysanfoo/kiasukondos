@@ -53,6 +53,7 @@ function Home() {
               bathrooms={item.bathrooms}
               sqmeters={item.sqmeters}
               sale_or_rent={item.sale_or_rent}
+              is_sold={item.is_sold}
             />
             </div>
         ))}

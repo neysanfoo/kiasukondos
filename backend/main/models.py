@@ -41,6 +41,10 @@ class Listing(models.Model):
     photo_5 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
     photo_6 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
     likes = models.ManyToManyField("User", blank=True)
+    is_sold = models.BooleanField(default=False)
+
+
+
 
     def owner_name(self):
         for user in User.objects.all():

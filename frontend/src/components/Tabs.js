@@ -37,7 +37,10 @@ function Tabs({ current_user_id, myListings, myLikes, myPurchases }) {
         <div
           className={toggleState === 1 ? "content  active-content" : "content"}
         >
-          {myListings.length == 0 ? <h1>You do not have any listings yet</h1> : myListings.map((item) => (
+          {myListings.length == 0 ? <h1>You do not have any listings yet</h1> : 
+          <div className="listing--container">
+          {myListings.map((item) => (
+            <div className='listing--in--container'>
               <ListingCard
                 id={item.id}
                 current_user_id={current_user_id}
@@ -49,16 +52,19 @@ function Tabs({ current_user_id, myListings, myLikes, myPurchases }) {
                 bathrooms={item.bathrooms}
                 sqmeters={item.sqmeters}
               />
+            </div>
           ))}
+          </div>}
         </div>
 
         <div
           className={toggleState === 2 ? "content  active-content" : "content"}
         >
           {
-            myLikes.length == 0 ? <h1>You have not liked any listings yet</h1> : myLikes.map((item) => (
-              <div className="row">
-                <div className="col-3">
+            myLikes.length == 0 ? <h1>You have not liked any listings yet</h1> : 
+            <div className="listing--container">
+            { myLikes.map((item) => (
+                <div className='listing--in--container'>
                   <ListingCard
                     id={item.id}
                     current_user_id={current_user_id}
@@ -71,31 +77,32 @@ function Tabs({ current_user_id, myListings, myLikes, myPurchases }) {
                     sqmeters={item.sqmeters}
                   />
                 </div>
-              </div>
-            ))
-          }
+            ))}
+            </div>
+            }
         </div>
 
         <div
           className={toggleState === 3 ? "content  active-content" : "content"}
         >
-          {myPurchases.length == 0 ? <h1>You have not made any purchases yet</h1> :myPurchases.map((item) => (
-            <div className="row">
-              <div className="col-3">
-                <ListingCard
-                  id={item.listing.id}
-                  current_user_id={current_user_id}
-                  photo_main={item.listing.photo_main}
-                  title={item.listing.title}
-                  address={item.listing.address}
-                  price={item.listing.price}
-                  bedrooms={item.listing.bedrooms}
-                  bathrooms={item.listing.bathrooms}
-                  sqmeters={item.listing.sqmeters}
-                />
-              </div>
+          { myPurchases.length == 0 ? <h1>You have not made any purchases yet</h1> :
+            <div className="listing--container">
+            { myPurchases.map((item) => (
+                <div className='listing--in--container'>
+                  <ListingCard
+                    id={item.id}
+                    current_user_id={current_user_id}
+                    photo_main={item.photo_main}
+                    title={item.title}
+                    address={item.address}
+                    price={item.price}
+                    bedrooms={item.bedrooms}
+                    bathrooms={item.bathrooms}
+                    sqmeters={item.sqmeters}
+                  />
+                </div>
+            ))}
             </div>
-          ))
           }
         </div>
       </div>

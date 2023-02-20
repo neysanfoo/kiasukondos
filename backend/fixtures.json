@@ -64,7 +64,8 @@
       "list_date": "2022-02-19T16:30:00Z",
       "photo_main": "testPhotos/1.jpg",
       "photo_1": "testPhotos/2.jpg",
-      "photo_2": "testPhotos/3.jpg"
+      "photo_2": "testPhotos/3.jpg",
+      "is_sold": false
     }
   },
   {
@@ -87,7 +88,8 @@
         "list_date": "2022-02-18T10:00:00Z",
         "photo_main": "testPhotos/4.jpg",
         "photo_1": "testPhotos/5.jpg",
-        "photo_2": "testPhotos/6.jpg"
+        "photo_2": "testPhotos/6.jpg",
+        "is_sold": false
       }
     },
     {
@@ -110,7 +112,8 @@
         "list_date": "2022-02-19T16:30:00Z",
         "photo_main": "testPhotos/7.jpg",
         "photo_1": "testPhotos/8.jpg",
-        "photo_2": "testPhotos/9.jpg"
+        "photo_2": "testPhotos/9.jpg",
+        "is_sold": false
       }
     },
     {
@@ -133,7 +136,8 @@
         "list_date": "2022-02-18T10:00:00Z",
         "photo_main": "testPhotos/10.jpg",
         "photo_1": "testPhotos/11.jpg",
-        "photo_2": "testPhotos/12.jpg"
+        "photo_2": "testPhotos/12.jpg",
+        "is_sold": false
       }
     },
     {
@@ -156,7 +160,8 @@
         "list_date": "2022-02-19T16:30:00Z",
         "photo_main": "testPhotos/13.jpg",
         "photo_1": "testPhotos/14.jpg",
-        "photo_2": "testPhotos/15.jpg"
+        "photo_2": "testPhotos/15.jpg",
+        "is_sold": true
       }
     },
     {
@@ -179,7 +184,8 @@
         "list_date": "2022-02-18T10:00:00Z",
         "photo_main": "testPhotos/16.jpg",
         "photo_1": "testPhotos/17.jpg",
-        "photo_2": "testPhotos/18.jpg"
+        "photo_2": "testPhotos/18.jpg",
+        "is_sold": false
         }
     },
     {
@@ -202,7 +208,8 @@
         "list_date": "2022-02-19T16:30:00Z",
         "photo_main": "testPhotos/19.jpg",
         "photo_1": "testPhotos/20.jpg",
-        "photo_2": "testPhotos/21.jpg"
+        "photo_2": "testPhotos/21.jpg",
+        "is_sold": false
       }
     },
     {
@@ -225,7 +232,8 @@
         "list_date": "2022-02-18T10:00:00Z",
         "photo_main": "testPhotos/22.jpg",
         "photo_1": "testPhotos/23.jpg",
-        "photo_2": "testPhotos/24.jpg"
+        "photo_2": "testPhotos/24.jpg",
+        "is_sold": false
       }
     }
 ]
