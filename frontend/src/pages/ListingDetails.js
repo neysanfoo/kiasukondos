@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Link, Navigate } from 'react-router-dom'
 import LikeButton from '../components/LikeButton'
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 const baseURL="http://127.0.0.1:8000/api"
 
 function ListingDetails() {
@@ -75,10 +78,6 @@ function ListingDetails() {
         .catch(function (error) {
             console.log(error);
         });
-        {/* TODO: Redirect to chat app with the offer after offer is made */}
-
-
-
     }
 
     function handleChange(e) {
@@ -148,13 +147,68 @@ function ListingDetails() {
         })
     }
 
+    const settings = {
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      prevArrow: <button className="slick-prev"></button>,
+      nextArrow: <button className="slick-next"></button>,
+    };
+
+    const photos = [
+      listingData.photo_main,
+      listingData.photo_1,
+      listingData.photo_2,
+      listingData.photo_3,
+      listingData.photo_4,
+      listingData.photo_5,
+      listingData.photo_6,
+    ].filter((photo) => photo !== null);
+
     return(
-        <div className="container mt-4">
+        <div className='container mt-4'>
+            <h1 className='listing--details--title'>{ listingData.title }</h1>
+            <div className="listing--details">
+                <div className="listing--details--photos">
+                    <Slider {...settings}>
+                        {photos.map((photo, index) => (
+                        <div key={index}>
+                            <img className='listing--details--photo' src={photo} alt="Property" />
+                        </div>
+                        ))}
+                    </Slider>
+                </div>
+            <div className="listing--details--info">
+                <h2>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}</h2>
+                <p><b>Owner Name: </b> { listingData.owner_name } </p>
+                <p><b>Address: </b> { listingData.address }</p>
+                <p><b>Zipcode: </b> { listingData.zipcode }</p>
+                <p><b>Property Type: </b>{ getPropertyType(listingData.property_type) }</p>
+                <p><b>Sale or Rent: </b>{ getSaleOrRent(listingData.sale_or_rent) }</p>
+                <p><b>Price: </b> { listingData.price }</p>
+                <p><b>Bedrooms: </b> { listingData.bedrooms }</p>
+                <p><b>Bathrooms: </b> { listingData.bathrooms }</p>
+                <p><b>Size: </b>{ listingData.sqmeters } Square Meters</p>
+                <p><b>Description: </b>{ listingData.description }</p>
+                </div>
+            </div>
             { user_id && listing_id && 
             <LikeButton
                 user_id={user_id}
                 listing_id={listing_id}
              />
+            } 
+            { user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
+            <div>
+                <input name="offer" value={offer} onChange={handleChange} type="number" />
+                <button type="button" onClick={makeOffer}>Make Offer</button>
+            </div>
+            }
+            {
+                user_id && listing_id && listingData.owner && listingData.owner !== user_id &&
+                <button type="button" onClick={createChat}>Chat with Owner</button>
             }
             {isOwner &&
                 <div>
@@ -168,30 +222,8 @@ function ListingDetails() {
                 <button type="button" onClick={deleteListing}>Delete Listing</button>
                 </div>
             }
-            <h1>{ listingData.title }</h1>
-            <img src={ listingData.photo_main } alt="listing" />
-            <p><b>Owner Name: </b> { listingData.owner_name } </p>
-            <p><b>Address: </b> { listingData.address }</p>
-            <p><b>Zipcode: </b> { listingData.zipcode }</p>
-            <p><b>Property Type: </b>{ getPropertyType(listingData.property_type) }</p>
-            <p><b>Sale or Rent: </b>{ getSaleOrRent(listingData.sale_or_rent) }</p>
-            <p><b>Price: </b> { listingData.price }</p>
-            <p><b>Bedrooms: </b> { listingData.bedrooms }</p>
-            <p><b>Bathrooms: </b> { listingData.bathrooms }</p>
-            <p><b>Size: </b>{ listingData.sqmeters } Square Meters</p>
-            <p><b>Description: </b>{ listingData.description }</p>
-            { user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
-            <div>
-                <input name="offer" value={offer} onChange={handleChange} type="number" />
-                <button type="button" onClick={makeOffer}>Make Offer</button>
-            </div>
-            }
-            {
-                user_id && listing_id && listingData.owner && listingData.owner !== user_id &&
-                <button type="button" onClick={createChat}>Chat with Owner</button>
-            }
         </div>
     )
 }
 
-export default ListingDetails;
+export default ListingDetails
