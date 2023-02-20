@@ -3,9 +3,6 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Link, Navigate } from 'react-router-dom'
 import LikeButton from '../components/LikeButton'
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 const baseURL="http://127.0.0.1:8000/api"
 
 function ListingDetails() {
@@ -147,18 +144,7 @@ function ListingDetails() {
         })
     }
 
-    const settings = {
-      dots: true,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      prevArrow: <button className="slick-prev"></button>,
-      nextArrow: <button className="slick-next"></button>,
-    };
-
     const photos = [
-      listingData.photo_main,
       listingData.photo_1,
       listingData.photo_2,
       listingData.photo_3,
@@ -171,15 +157,33 @@ function ListingDetails() {
         <div className='container mt-4'>
             <h1 className='listing--details--title'>{ listingData.title }</h1>
             <div className="listing--details">
-                <div className="listing--details--photos">
-                    <Slider {...settings}>
-                        {photos.map((photo, index) => (
-                        <div key={index}>
-                            <img className='listing--details--photo' src={photo} alt="Property" />
-                        </div>
-                        ))}
-                    </Slider>
+                {/* Carousel Start */}
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
                 </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active"> 
+                        <img src={listingData.photo_main} class="d-block w-100" alt="..." />
+                    </div>
+                    {photos.map((photo, index) => (
+                        <div class="carousel-item">
+                            <img src={photo} class="d-block w-100" alt="..." />
+                        </div>
+                    ))}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                </div>
+                {/* Carousel End */}
             <div className="listing--details--info">
                 <h2>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}</h2>
                 <p><b>Owner Name: </b> { listingData.owner_name } </p>
