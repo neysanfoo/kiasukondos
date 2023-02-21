@@ -105,6 +105,20 @@ const EditProfile = () => {
     }
   };
 
+  // delete request to api/user-profile
+  const deleteAccount = async (e) => {
+    try {
+      const { data } = await axios.delete(
+        "http://localhost:8000/api/user-profile/",
+        { withCredentials: true }
+      );
+
+      window.location.href = "/";
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="container mt-4">
       <div className="row">
@@ -123,12 +137,15 @@ const EditProfile = () => {
             {formData.currentPictureUrl ? "Change photo" : "Upload photo"}
           </label>
             <input 
-                className="edit-profile__upload-input"
+                className="edit-profile__upload-btn"
                 type="file"
                 id="photo"
                 name="profilePicture"
                 onChange={handlePhotoChange}
             />
+        <button className="delete-profile__submit-btn" onClick={deleteAccount}>
+          Delete Account
+        </button>
         </div>
         <div className="col-md-8">
         {error && <p className="edit-profile__error">{error}</p>}
@@ -218,7 +235,7 @@ const EditProfile = () => {
                 />
               </div>
               <div className="edit-profile__form-group">
-                <button className="edit-profile__submit-btn">
+                <button className="edit-profile__submit-btn me-4">
                   Update Password
                 </button>
               </div>

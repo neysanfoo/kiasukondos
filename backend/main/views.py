@@ -448,7 +448,11 @@ class UserProfileView(generics.RetrieveUpdateDestroyAPIView):
         profile = UserProfile.objects.filter(user=user).first()
         profile.delete()
         user.delete()
-        return Response({"message": "User deleted"})
+        # Remove the cookies
+        response = Response()
+        response.delete_cookie("jwt")
+        response.delete_cookie("jwt_exp")
+        return response
 
 class ChangePasswordView(generics.RetrieveUpdateAPIView):
     queryset=User.objects.all()
