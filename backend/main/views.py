@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import permissions
-from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message, Chat
-from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer, OfferSerializer, MessageSerializer, ChatSerializer
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message, Chat, UserProfile
+from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer, OfferSerializer, MessageSerializer, ChatSerializer, UserProfileSerializer
 import jwt, datetime
 from rest_framework.decorators import api_view
 from django.db.models import Q
@@ -24,8 +24,6 @@ class ListingView(generics.ListCreateAPIView):
 class ListingDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
-
-
 
 
 class SearchListingView(generics.ListAPIView):
@@ -89,6 +87,12 @@ class RegisterView(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        # Create a userprofile
+        user = User.objects.filter(email=request.data["email"]).first()
+        userprofile = UserProfile.objects.create(user=user)
+        userprofile.save()
+
         return Response(serializer.data)
 
 class LoginView(APIView):
@@ -382,4 +386,91 @@ class AddOffer(generics.ListCreateAPIView):
         chat.offers.add(offer)
         chat.save()
         return Response({"message": "Offer created"})
+
+
+class UserProfileView(generics.RetrieveUpdateDestroyAPIView):
+    queryset=UserProfile.objects.all()
+    serializer_class=UserProfileSerializer
+
+    def get(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        profile = UserProfile.objects.filter(user=user).first()
+        response = Response()
+        response.data = {
+            "user": UserSerializer(user).data,
+            "profile": UserProfileSerializer(profile).data
+        }
+        return response
     
+    def patch(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        profile = UserProfile.objects.filter(user=user).first()
+        profile.phone_number = request.data.get("phone_number")
+        profile_picture = request.data.get("profile_picture")
+        if profile_picture != "null":
+            profile.profile_picture = profile_picture
+        profile.save()
+        user.username = request.data.get("username")
+        user.email = request.data.get("email")
+        if User.objects.filter(username=user.username).exclude(id=user.id).exists():
+            return Response({"message": "Username already taken"})
+        if User.objects.filter(email=user.email).exclude(id=user.id).exists():
+            return Response({"message": "Email already taken"})
+        user.save()
+        return Response({"message": "User updated"})
+    
+    def delete(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        profile = UserProfile.objects.filter(user=user).first()
+        profile.delete()
+        user.delete()
+        return Response({"message": "User deleted"})
+
+class ChangePasswordView(generics.RetrieveUpdateAPIView):
+    queryset=User.objects.all()
+    serializer_class=UserSerializer
+
+    def patch(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+
+        if not user.check_password(request.data.get("current_password")):
+            return Response({"message": "Current password is incorrect"})
+        
+        if request.data.get("new_password") != request.data.get("confirm_password"):
+            return Response({"message": "Passwords do not match"})
+        
+        user.set_password(request.data.get("password"))
+        user.save()
+        return Response({"message": "Password changed"})

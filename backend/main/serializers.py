@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message, Chat
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message, Chat, UserProfile
 
 class HelloSerializer(serializers.ModelSerializer):
     class Meta:
@@ -96,3 +96,13 @@ class ChatSerializer(serializers.ModelSerializer):
             self.Meta.depth = 3
     
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ["user", "profile_picture", "phone_number"]
+    def __init__(self, *args, **kwargs):
+        super(UserProfileSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 2
+        if request and request.method == "GET":
+            self.Meta.depth = 2

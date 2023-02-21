@@ -11,6 +11,7 @@ import EditListing from './EditListing'
 import Dashboard from './Dashboard'
 import Chat from './Chat'
 import TestSocket from './TestSocket'
+import EditProfile from './EditProfile'
 
 
 
@@ -37,6 +38,7 @@ function Main() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/test-socket" element={<TestSocket />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
         </Route>
       </Routes>
     </div>

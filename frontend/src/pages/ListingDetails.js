@@ -217,7 +217,7 @@ function ListingDetails() {
                 user_id && listing_id && listingData.owner && listingData.owner !== user_id &&
                 <button type="button" onClick={createChat}>Chat with Owner</button>
             }
-            {isOwner &&
+            { isOwner &&
                 <div>
                 <Link to={'/edit-listing/' + listing_id}>
                 <button type="button">Edit Listing</button>

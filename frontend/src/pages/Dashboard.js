@@ -9,6 +9,7 @@ function Dashboard() {
     const [myListings, setMyListings] = useState([])
     const [myLikes, setMyLikes] = useState([])
     const [user, setUser] = useState(null)
+    const [profilePic, setProfilePic] = useState(null)
 
     useEffect(() => {
         var config = {
@@ -51,24 +52,30 @@ function Dashboard() {
 
         config = {
             method: 'get',
-            url: 'http://localhost:8000/api/user/',
+            url: 'http://localhost:8000/api/user-profile/',
             withCredentials: true,
         };
         axios(config)
         .then(function (response) {
-            setUser(response.data.id)
+            setUser(response.data.user.id)
+            setProfilePic(`http://localhost:8000${response.data.profile.profile_picture}`)
         }).catch(function (error) {
             console.log(error);
         });
 
     }, [])
+
+
+
       
 
     return(
         <div className="container mt-4">
             <div className="row">
                 <div className="col-3">
-                    <UserInformation />
+                    <UserInformation
+                        profilePic={profilePic}
+                     />
                 </div>
                 <div className="col-9">
                     <Tabs
@@ -78,8 +85,6 @@ function Dashboard() {
                         myPurchases={myPurchases}
                      />
                 </div>
-
-           
             </div>
         </div>
 
