@@ -48,7 +48,7 @@ function SearchContainer({ setListing }) {
         <option value="1">1 Bedroom</option>
         <option value="2">2 Bedrooms</option>
         <option value="3">3 Bedrooms</option>
-        <option value="3">4 Bedrooms</option>
+        <option value="4">4 Bedrooms</option>
       </select>
       <select
         value={sortingOrder}
