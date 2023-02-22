@@ -423,7 +423,8 @@ class UserProfileView(generics.RetrieveUpdateDestroyAPIView):
         profile = UserProfile.objects.filter(user=user).first()
         profile.phone_number = request.data.get("phone_number")
         profile_picture = request.data.get("profile_picture")
-        if profile_picture != "null":
+        print(profile_picture)
+        if profile_picture != None:
             profile.profile_picture = profile_picture
         profile.save()
         user.username = request.data.get("username")
