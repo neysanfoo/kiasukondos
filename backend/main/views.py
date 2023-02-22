@@ -7,6 +7,8 @@ from .serializers import HelloSerializer, ListingSerializer, UserSerializer, Rev
 import jwt, datetime
 from rest_framework.decorators import api_view
 from django.db.models import Q
+from django.db.models import Case, When, IntegerField
+
 
 
 from rest_framework.exceptions import AuthenticationFailed
@@ -19,6 +21,7 @@ class HelloView(generics.ListAPIView):
 class ListingView(generics.ListCreateAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
+    queryset = Listing.objects.filter(is_sold=False)  # filter out sold listings
     # permission_classes = [permissions.AllowAny]
 
 class ListingDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -34,10 +37,11 @@ class SearchListingView(generics.ListAPIView):
         numBedrooms = self.request.query_params.get("numBedrooms", None)
         sortingOrder = self.request.query_params.get("sortingOrder", None)
         saleType = self.request.query_params.get("saleType", None)
+        queryset = Listing.objects.filter(is_sold=False)  # filter out sold listings
         if searchInput is not None:
-            queryset = Listing.objects.filter(Q(title__icontains=searchInput) | Q(description__icontains=searchInput))
+            queryset = queryset.filter(Q(title__icontains=searchInput) | Q(description__icontains=searchInput))
         else:
-            queryset = Listing.objects.all()
+            queryset = queryset.objects.all()
         if numBedrooms is not None:
             queryset = queryset.filter(bedrooms=numBedrooms)
         if saleType is not None:
@@ -252,6 +256,35 @@ class OfferView(generics.ListCreateAPIView):
         listing = Listing.objects.filter(id=request.data.get("listing")).first()
         Offer.objects.create(user=user, listing=listing, offer=request.data.get("offer"))
         return Response({"message": "Offer created"})
+    
+class AcceptOfferView(generics.ListCreateAPIView):
+    queryset=Offer.objects.all()
+    serializer_class=OfferSerializer
+
+    def post(self, request):
+        # Check the jwt
+        token = request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        offer = Offer.objects.filter(id=request.data.get("offer")).first()
+        listing = offer.listing
+        if listing.is_sold:
+            return Response({"message": "Listing already sold"})
+        listing.is_sold = True
+        listing.save()
+        offer.is_accepted = True
+        offer.save()
+        purchaser_id = Offer.objects.filter(id=request.data.get("offer")).first().user_id
+        purchaser = User.objects.filter(id=purchaser_id).first()
+
+        # Create a purchase object
+        UserPurchases.objects.create(user=purchaser, listing=listing)
+
+        return Response({"message": "Offer accepted"})
     
 class MessageView(generics.ListCreateAPIView):
     queryset=Message.objects.all()
@@ -479,3 +512,35 @@ class ChangePasswordView(generics.RetrieveUpdateAPIView):
         user.set_password(request.data.get("password"))
         user.save()
         return Response({"message": "Password changed"})
+    
+
+class ReviewUserView(generics.ListCreateAPIView):
+    queryset=Review.objects.all()
+    serializer_class=ReviewSerializer
+
+    def post(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        reviewee = User.objects.filter(id=request.data.get("reviewee")).first()
+        print(reviewee)
+        listing = Listing.objects.filter(id=request.data.get("listing")).first()
+        rating=request.data.get("rating")
+        review=request.data.get("review")
+        
+        # if is the owner making the review, listing.buyer_left_review true
+        if listing.owner == user:
+            listing.buyer_left_review = True
+            listing.save()
+        else:
+            listing.seller_left_review = True
+            listing.save()
+
+        Review.objects.create(reviewer=user, reviewee=reviewee, listing=listing, rating=rating, review=review)
+        return Response({"message": "Review created"})

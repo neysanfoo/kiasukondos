@@ -22,6 +22,8 @@ urlpatterns = [
     path("chat/", views.CreateChatView.as_view()),
     path("fetch-chats-of-user/", views.fetch_chats_of_user),
     path("add-offer/", views.AddOffer.as_view()),
+    path("offer/accept/", views.AcceptOfferView.as_view()),
     path("user-profile/", views.UserProfileView.as_view()),
     path("change-password/", views.ChangePasswordView.as_view()),
+    path("leave-review/", views.ReviewUserView.as_view())
 ]
