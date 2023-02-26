@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  socket:
+    build: .
+    command: npm start
+    container_name: frontend
+    restart: unless-stopped
+    volumes:
+      - .:/frontend
+      - /frontend/node_modules
+    ports:
+      - "3000:3000"
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge

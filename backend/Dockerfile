@@ -3,10 +3,10 @@ FROM python:3.9
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /backed
+RUN mkdir /kiasukondo_api
 
-WORKDIR /backend
+WORKDIR /kiasukondo_api
 
-COPY . /backend/
+COPY . /kiasukondo_api/
 
 RUN pip install --upgrade pip && pip install pip-tools && pip install -r requirements.txt 
