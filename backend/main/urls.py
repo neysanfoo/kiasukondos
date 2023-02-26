@@ -21,5 +21,10 @@ urlpatterns = [
     path("add-message/", views.AddMessage.as_view()),
     path("chat/", views.CreateChatView.as_view()),
     path("fetch-chats-of-user/", views.fetch_chats_of_user),
-    path("add-offer/", views.AddOffer.as_view())
+    path("add-offer/", views.AddOffer.as_view()),
+    path("offer/accept/", views.AcceptOfferView.as_view()),
+    path("user-profile/", views.UserProfileView.as_view()),
+    path("change-password/", views.ChangePasswordView.as_view()),
+    path("leave-review/", views.ReviewUserView.as_view()),
+    path("public-user-profile/<int:id>", views.fetch_public_profile)
 ]

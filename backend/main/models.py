@@ -42,6 +42,8 @@ class Listing(models.Model):
     photo_6 = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True)
     likes = models.ManyToManyField("User", blank=True)
     is_sold = models.BooleanField(default=False)
+    buyer_left_review = models.BooleanField(default=False)
+    seller_left_review = models.BooleanField(default=False)
 
 
 
@@ -68,12 +70,24 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField("User", on_delete=models.CASCADE, related_name="profile")
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    # profile picture, default if null is at photos/default/default_profile_picture.jpeg
+    profile_picture = models.ImageField(upload_to="photos/%Y/%m/%d/", default="photos/default/default_profile_picture.jpeg")
+    def __str__(self):
+        return self.name
 
 class Review(models.Model):
-    reviewer = models.ForeignKey("User", on_delete=models.CASCADE, related_name="reviews")
+    reviewer = models.ForeignKey("User", on_delete=models.CASCADE, related_name="reviewer")
+    reviewee = models.ForeignKey("User", on_delete=models.CASCADE, related_name="reviewee")
     listing = models.ForeignKey("Listing", on_delete=models.CASCADE, related_name="reviews")
     review = models.TextField()
     rating = models.IntegerField()
+
+    def reviewer_username(self):
+        return self.reviewer.username
 
     def __str__(self):
         return self.review
@@ -93,6 +107,8 @@ class Offer(models.Model):
     listing = models.ForeignKey("Listing", on_delete=models.CASCADE, related_name="offers")
     price = models.IntegerField()
     date = models.DateTimeField(default=datetime.now, blank=True)
+    is_accepted = models.BooleanField(default=False)
+    is_declined = models.BooleanField(default=False)
 
     def __str__(self):
         return self.offer

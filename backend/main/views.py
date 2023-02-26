@@ -2,11 +2,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import permissions
-from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message, Chat
-from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer, OfferSerializer, MessageSerializer, ChatSerializer
+from .models import Hello, Listing, User, Review, Address, UserPurchases, Like, Offer, Message, Chat, UserProfile
+from .serializers import HelloSerializer, ListingSerializer, UserSerializer, ReviewSerializer, AddressSerializer, UserPurchasesSerializer, LikeSerializer, OfferSerializer, MessageSerializer, ChatSerializer, UserProfileSerializer
 import jwt, datetime
 from rest_framework.decorators import api_view
 from django.db.models import Q
+from django.db.models import Case, When, IntegerField
+
 
 
 from rest_framework.exceptions import AuthenticationFailed
@@ -19,13 +21,12 @@ class HelloView(generics.ListAPIView):
 class ListingView(generics.ListCreateAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
+    queryset = Listing.objects.filter(is_sold=False)  # filter out sold listings
     # permission_classes = [permissions.AllowAny]
 
 class ListingDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
-
-
 
 
 class SearchListingView(generics.ListAPIView):
@@ -36,10 +37,11 @@ class SearchListingView(generics.ListAPIView):
         numBedrooms = self.request.query_params.get("numBedrooms", None)
         sortingOrder = self.request.query_params.get("sortingOrder", None)
         saleType = self.request.query_params.get("saleType", None)
+        queryset = Listing.objects.filter(is_sold=False)  # filter out sold listings
         if searchInput is not None:
-            queryset = Listing.objects.filter(Q(title__icontains=searchInput) | Q(description__icontains=searchInput))
+            queryset = queryset.filter(Q(title__icontains=searchInput) | Q(description__icontains=searchInput))
         else:
-            queryset = Listing.objects.all()
+            queryset = queryset.all()
         if numBedrooms is not None:
             queryset = queryset.filter(bedrooms=numBedrooms)
         if saleType is not None:
@@ -89,6 +91,12 @@ class RegisterView(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        # Create a userprofile
+        user = User.objects.filter(email=request.data["email"]).first()
+        userprofile = UserProfile.objects.create(user=user)
+        userprofile.save()
+
         return Response(serializer.data)
 
 class LoginView(APIView):
@@ -249,6 +257,35 @@ class OfferView(generics.ListCreateAPIView):
         Offer.objects.create(user=user, listing=listing, offer=request.data.get("offer"))
         return Response({"message": "Offer created"})
     
+class AcceptOfferView(generics.ListCreateAPIView):
+    queryset=Offer.objects.all()
+    serializer_class=OfferSerializer
+
+    def post(self, request):
+        # Check the jwt
+        token = request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        offer = Offer.objects.filter(id=request.data.get("offer")).first()
+        listing = offer.listing
+        if listing.is_sold:
+            return Response({"message": "Listing already sold"})
+        listing.is_sold = True
+        listing.save()
+        offer.is_accepted = True
+        offer.save()
+        purchaser_id = Offer.objects.filter(id=request.data.get("offer")).first().user_id
+        purchaser = User.objects.filter(id=purchaser_id).first()
+
+        # Create a purchase object
+        UserPurchases.objects.create(user=purchaser, listing=listing)
+
+        return Response({"message": "Offer accepted"})
+    
 class MessageView(generics.ListCreateAPIView):
     queryset=Message.objects.all()
     serializer_class=MessageSerializer
@@ -382,4 +419,149 @@ class AddOffer(generics.ListCreateAPIView):
         chat.offers.add(offer)
         chat.save()
         return Response({"message": "Offer created"})
+
+
+class UserProfileView(generics.RetrieveUpdateDestroyAPIView):
+    queryset=UserProfile.objects.all()
+    serializer_class=UserProfileSerializer
+
+    def get(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        profile = UserProfile.objects.filter(user=user).first()
+        response = Response()
+        response.data = {
+            "user": UserSerializer(user).data,
+            "profile": UserProfileSerializer(profile).data
+        }
+        return response
     
+    def patch(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        profile = UserProfile.objects.filter(user=user).first()
+        profile.phone_number = request.data.get("phone_number")
+        profile_picture = request.data.get("profile_picture")
+        print(profile_picture)
+        if profile_picture != None:
+            profile.profile_picture = profile_picture
+        profile.save()
+        user.username = request.data.get("username")
+        user.email = request.data.get("email")
+        if User.objects.filter(username=user.username).exclude(id=user.id).exists():
+            return Response({"message": "Username already taken"})
+        if User.objects.filter(email=user.email).exclude(id=user.id).exists():
+            return Response({"message": "Email already taken"})
+        user.save()
+        return Response({"message": "User updated"})
+    
+    def delete(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        profile = UserProfile.objects.filter(user=user).first()
+        profile.delete()
+        user.delete()
+        # Remove the cookies
+        response = Response()
+        response.delete_cookie("jwt")
+        response.delete_cookie("jwt_exp")
+        return response
+
+class ChangePasswordView(generics.RetrieveUpdateAPIView):
+    queryset=User.objects.all()
+    serializer_class=UserSerializer
+
+    def patch(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+
+        if not user.check_password(request.data.get("current_password")):
+            return Response({"message": "Current password is incorrect"})
+        
+        if request.data.get("new_password") != request.data.get("confirm_password"):
+            return Response({"message": "Passwords do not match"})
+        
+        user.set_password(request.data.get("password"))
+        user.save()
+        return Response({"message": "Password changed"})
+    
+
+class ReviewUserView(generics.ListCreateAPIView):
+    queryset=Review.objects.all()
+    serializer_class=ReviewSerializer
+
+    def post(self, request):
+        # Check the jwt
+        token = self.request.COOKIES.get("jwt")
+        if not token:
+            raise AuthenticationFailed("Unauthenticated")
+        try:
+            payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed("Unauthenticated")
+        user = User.objects.filter(id=payload["id"]).first()
+        reviewee = User.objects.filter(id=request.data.get("reviewee")).first()
+        listing = Listing.objects.filter(id=request.data.get("listing")).first()
+        rating=request.data.get("rating")
+        review=request.data.get("review")
+
+        print(listing.owner, user)
+        
+        # if is the owner making the review, listing.seller_left_review true
+        if listing.owner == user:
+            listing.seller_left_review = True
+            listing.save()
+        else:
+            listing.buyer_left_review = True
+            listing.save()
+
+        print(listing.title)
+
+
+        Review.objects.create(reviewer=user, reviewee=reviewee, listing=listing, rating=rating, review=review)
+        return Response({"message": "Review created"})
+    
+
+# Create a view to fetch all the data for the public profile page given the user id, get the users name, profile pic, listings, reviews
+@api_view(["GET"])
+def fetch_public_profile(request, id):
+    user = User.objects.filter(id=id).first()
+    profile = UserProfile.objects.filter(user=user).first()
+    listings = Listing.objects.filter(owner=user).all()
+    reviews = Review.objects.filter(reviewee=user).all()
+    response = Response()
+    response.data = {
+        "user": UserSerializer(user).data,
+        "profile": UserProfileSerializer(profile).data,
+        "listings": ListingSerializer(listings, many=True).data,
+        "reviews": ReviewSerializer(reviews, many=True).data
+    }
+    return response

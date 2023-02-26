@@ -10,6 +10,18 @@
   margin-top: 1rem;
 }
 
+
+.scrolling--listing--container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 1em;
+}
+
+.listing--in--scrolling--container {
+  min-width: 24em;
+  margin-left: 1em;
+}
 .listing--card--image-container {
   position: relative;
 }
@@ -38,7 +50,7 @@
   display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	border-radius: 20px;
+	border-radius: 10px;
 	text-decoration: none;
   color: black;
 	box-shadow: 0 1.5em 2.5em -0.5em rgba(0, 0, 0, .1);
@@ -58,7 +70,7 @@
 }
 
 .listing--card--address {
-  height: 3em;
+  height: 2em;
 }
 
 .card-title {
@@ -416,6 +428,11 @@
   margin-bottom: 10px;
 }
 
+.chat--main--offer--message h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
 .chat--main--offer--message button {
   padding: 5px 10px;
   font-size: 14px;
@@ -576,3 +593,173 @@
   object-position: center;
 }
 
+
+.edit-profile__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-profile__label {
+  font-weight: bold;
+}
+
+.edit-profile__input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.edit-profile__submit-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #0077c0;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.edit-profile__submit-btn:hover {
+  background-color: #005ca9;
+}
+
+.edit-profile__error {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.edit-profile__success {
+  color: green;
+  margin-bottom: 10px;
+}
+
+.edit-profile__upload-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.edit-profile__upload-btn {
+  margin-bottom: 20px;
+}
+
+.edit-profile__current-photo {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+.edit-profile__photo-preview {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+.edit-profile__form-group {
+  margin-bottom: 20px;
+}
+
+.delete-profile__submit-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ff0000;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+
+.stars {
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+.stars input {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+}
+.stars label {
+  box-sizing: border-box;
+  display: inline-block;
+  margin-right: 2px;
+  height: 30px;
+  width: 30px;
+  background: url("data:image/svg+xml;
+  charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='transparent' stroke='slategray' stroke-width='38' d='M259.216 29.942L330.27 173.92l158.89 23.087L374.185 309.08l27.145 158.23-142.114-74.698-142.112 74.698 27.146-158.23L29.274 197.007l158.89-23.088z' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  font-size: 0;
+  cursor: pointer;
+}
+.stars input:nth-child(1):checked ~ label:nth-of-type(-n + 1), .stars input:nth-child(2):checked ~ label:nth-of-type(-n + 2), .stars input:nth-child(3):checked ~ label:nth-of-type(-n + 3), .stars input:nth-child(4):checked ~ label:nth-of-type(-n + 4), .stars input:nth-child(5):checked ~ label:nth-of-type(-n + 5) {
+  background: url("data:image/svg+xml;
+ charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='slategray' stroke='slategray' stroke-width='38' d='M259.216 29.942L330.27 173.92l158.89 23.087L374.185 309.08l27.145 158.23-142.114-74.698-142.112 74.698 27.146-158.23L29.274 197.007l158.89-23.088z' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+
+
+
+.review-header {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.card-container {
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 0.25rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-container {
+  overflow-y: scroll;
+  height: 36vh;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 100%;
+}
+.card {
+  margin-bottom: 1rem;
+}
+.card-body {
+  padding: 1rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-subtitle {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.stars {
+  color: #f1c40f;
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.fa-star-half-o:before {
+  content: "\f123";
+}
+
+.fa-star:before,
+.fa-star-half-o:before {
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

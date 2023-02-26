@@ -10,9 +10,6 @@ function ListingCard({ id, current_user_id, photo_main, title, address, price, b
   function truncate(str, n){
     return (str.length > n) ? str.substr(0, n-1) + '...' : str;
   }
-  console.log(is_sold)
-
-
   return(
     <div className='listing--card'>
   <Link to={"/listing/" + id} className="listing--card--link">

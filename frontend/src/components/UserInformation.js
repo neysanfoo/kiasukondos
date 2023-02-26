@@ -1,11 +1,15 @@
+import { Link } from 'react-router-dom'
 
-function UserInformation() {
+function UserInformation({ profilePic }) {
+
     return(
         <div>
-            <img src="https://via.placeholder.com/150" alt="user" />
+            <img className='edit-profile__current-photo' src={profilePic} alt="user" />
             <h1>Name</h1>
             <p>Rating</p>
-            <button>Edit Profile</button>
+            <Link to="/edit-profile">
+                <button>Edit Profile</button>
+            </Link>
         </div>
     )
 }

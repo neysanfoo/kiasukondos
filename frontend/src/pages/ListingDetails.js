@@ -161,8 +161,11 @@ function ListingDetails() {
                 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    {
+                        photos.map((photo, index) => (
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to={index + 1} aria-label={`Slide ${index + 2}`}></button>
+                        ))
+                    }
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active"> 
@@ -186,7 +189,7 @@ function ListingDetails() {
                 {/* Carousel End */}
             <div className="listing--details--info">
                 <h2>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}</h2>
-                <p><b>Owner Name: </b> { listingData.owner_name } </p>
+                <p><b>Owner Name: </b> <Link to={/user-profile/ + listingData.owner}>{ listingData.owner_name }</Link> </p>
                 <p><b>Address: </b> { listingData.address }</p>
                 <p><b>Zipcode: </b> { listingData.zipcode }</p>
                 <p><b>Property Type: </b>{ getPropertyType(listingData.property_type) }</p>
@@ -214,7 +217,7 @@ function ListingDetails() {
                 user_id && listing_id && listingData.owner && listingData.owner !== user_id &&
                 <button type="button" onClick={createChat}>Chat with Owner</button>
             }
-            {isOwner &&
+            { isOwner &&
                 <div>
                 <Link to={'/edit-listing/' + listing_id}>
                 <button type="button">Edit Listing</button>
