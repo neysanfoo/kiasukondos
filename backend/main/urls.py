@@ -25,5 +25,6 @@ urlpatterns = [
     path("offer/accept/", views.AcceptOfferView.as_view()),
     path("user-profile/", views.UserProfileView.as_view()),
     path("change-password/", views.ChangePasswordView.as_view()),
-    path("leave-review/", views.ReviewUserView.as_view())
+    path("leave-review/", views.ReviewUserView.as_view()),
+    path("public-user-profile/<int:id>", views.fetch_public_profile)
 ]

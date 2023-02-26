@@ -41,7 +41,7 @@ class SearchListingView(generics.ListAPIView):
         if searchInput is not None:
             queryset = queryset.filter(Q(title__icontains=searchInput) | Q(description__icontains=searchInput))
         else:
-            queryset = queryset.objects.all()
+            queryset = queryset.all()
         if numBedrooms is not None:
             queryset = queryset.filter(bedrooms=numBedrooms)
         if saleType is not None:
@@ -529,18 +529,39 @@ class ReviewUserView(generics.ListCreateAPIView):
             raise AuthenticationFailed("Unauthenticated")
         user = User.objects.filter(id=payload["id"]).first()
         reviewee = User.objects.filter(id=request.data.get("reviewee")).first()
-        print(reviewee)
         listing = Listing.objects.filter(id=request.data.get("listing")).first()
         rating=request.data.get("rating")
         review=request.data.get("review")
+
+        print(listing.owner, user)
         
-        # if is the owner making the review, listing.buyer_left_review true
+        # if is the owner making the review, listing.seller_left_review true
         if listing.owner == user:
-            listing.buyer_left_review = True
-            listing.save()
-        else:
             listing.seller_left_review = True
             listing.save()
+        else:
+            listing.buyer_left_review = True
+            listing.save()
+
+        print(listing.title)
+
 
         Review.objects.create(reviewer=user, reviewee=reviewee, listing=listing, rating=rating, review=review)
         return Response({"message": "Review created"})
+    
+
+# Create a view to fetch all the data for the public profile page given the user id, get the users name, profile pic, listings, reviews
+@api_view(["GET"])
+def fetch_public_profile(request, id):
+    user = User.objects.filter(id=id).first()
+    profile = UserProfile.objects.filter(user=user).first()
+    listings = Listing.objects.filter(owner=user).all()
+    reviews = Review.objects.filter(reviewee=user).all()
+    response = Response()
+    response.data = {
+        "user": UserSerializer(user).data,
+        "profile": UserProfileSerializer(profile).data,
+        "listings": ListingSerializer(listings, many=True).data,
+        "reviews": ReviewSerializer(reviews, many=True).data
+    }
+    return response

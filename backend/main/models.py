@@ -86,6 +86,9 @@ class Review(models.Model):
     review = models.TextField()
     rating = models.IntegerField()
 
+    def reviewer_username(self):
+        return self.reviewer.username
+
     def __str__(self):
         return self.review
 

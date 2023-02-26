@@ -19,7 +19,10 @@ function Dashboard() {
         };
         axios(config)
         .then(function (response) {
-            setMyPurchases(response.data)
+            // set myPurchases to the listings in response.data
+
+            setMyPurchases(response.data.map((purchase) => purchase.listing))
+
             console.log(response.data)
         }).catch(function (error) {
             console.log(error);
@@ -63,7 +66,7 @@ function Dashboard() {
             console.log(error);
         });
 
-    }, [])
+    }, [user])
 
 
 

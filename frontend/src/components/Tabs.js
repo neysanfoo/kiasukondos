@@ -42,8 +42,8 @@ function Tabs({ current_user_id, myListings, myLikes, myPurchases }) {
           {myListings.map((item) => (
             <div className='listing--in--container'>
               <ListingCard
-                id={item.id}
-                current_user_id={current_user_id}
+                id = {item.id}
+                current_user_id = {current_user_id}
                 photo_main={item.photo_main}
                 title={item.title}
                 address={item.address}
@@ -51,6 +51,8 @@ function Tabs({ current_user_id, myListings, myLikes, myPurchases }) {
                 bedrooms={item.bedrooms}
                 bathrooms={item.bathrooms}
                 sqmeters={item.sqmeters}
+                sale_or_rent={item.sale_or_rent}
+                is_sold={item.is_sold}
               />
             </div>
           ))}
@@ -66,8 +68,8 @@ function Tabs({ current_user_id, myListings, myLikes, myPurchases }) {
             { myLikes.map((item) => (
                 <div className='listing--in--container'>
                   <ListingCard
-                    id={item.id}
-                    current_user_id={current_user_id}
+                    id = {item.id}
+                    current_user_id = {current_user_id}
                     photo_main={item.photo_main}
                     title={item.title}
                     address={item.address}
@@ -75,6 +77,8 @@ function Tabs({ current_user_id, myListings, myLikes, myPurchases }) {
                     bedrooms={item.bedrooms}
                     bathrooms={item.bathrooms}
                     sqmeters={item.sqmeters}
+                    sale_or_rent={item.sale_or_rent}
+                    is_sold={item.is_sold}
                   />
                 </div>
             ))}
@@ -90,8 +94,8 @@ function Tabs({ current_user_id, myListings, myLikes, myPurchases }) {
             { myPurchases.map((item) => (
                 <div className='listing--in--container'>
                   <ListingCard
-                    id={item.id}
-                    current_user_id={current_user_id}
+                    id = {item.id}
+                    current_user_id = {current_user_id}
                     photo_main={item.photo_main}
                     title={item.title}
                     address={item.address}
@@ -99,6 +103,8 @@ function Tabs({ current_user_id, myListings, myLikes, myPurchases }) {
                     bedrooms={item.bedrooms}
                     bathrooms={item.bathrooms}
                     sqmeters={item.sqmeters}
+                    sale_or_rent={item.sale_or_rent}
+                    is_sold={item.is_sold}
                   />
                 </div>
             ))}

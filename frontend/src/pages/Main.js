@@ -12,6 +12,7 @@ import Dashboard from './Dashboard'
 import Chat from './Chat'
 import TestSocket from './TestSocket'
 import EditProfile from './EditProfile'
+import UserProfile from './UserProfile'
 
 
 
@@ -32,6 +33,7 @@ function Main() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/user-profile/:user_id" element={<UserProfile />} />
         <Route path="/" element={<ProtectedRoute />} >
           <Route path="/create-listing" element={<CreateListing />} />
           <Route path="/edit-listing/:listing_id" element={<EditListing />} />

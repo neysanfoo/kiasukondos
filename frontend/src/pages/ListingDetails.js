@@ -189,7 +189,7 @@ function ListingDetails() {
                 {/* Carousel End */}
             <div className="listing--details--info">
                 <h2>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}</h2>
-                <p><b>Owner Name: </b> { listingData.owner_name } </p>
+                <p><b>Owner Name: </b> <Link to={/user-profile/ + listingData.owner}>{ listingData.owner_name }</Link> </p>
                 <p><b>Address: </b> { listingData.address }</p>
                 <p><b>Zipcode: </b> { listingData.zipcode }</p>
                 <p><b>Property Type: </b>{ getPropertyType(listingData.property_type) }</p>

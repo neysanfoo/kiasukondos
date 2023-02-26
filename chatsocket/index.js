@@ -4,7 +4,8 @@ const http = require("http");
 const bodyParser = require("body-parser");
 const path = require("path");
 const socketIO = require("socket.io");
-const axios = require("axios")
+const axios = require("axios");
+const { off } = require("process");
 
 const port = 9000;
 const app = express();
@@ -167,13 +168,17 @@ app.get("/chats", (req, res) => {
 
           chat.offers.forEach(offer => {
             let offer_message = {
+              id: offer.id,
               chatId: offer.chatId,
               sender: offer.user,
               receiver: offer.listing.owner,
               price: offer.price,
               listing: offer.listing,
               date: offer.date,
-              isOffer: true
+              isOffer: true,
+              is_accepted: offer.is_accepted,
+              buyer_left_review: offer.buyer_left_review,
+              seller_left_review: offer.seller_left_review
             }
             chat.messages.push(offer_message)
           })
