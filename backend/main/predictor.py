@@ -83,7 +83,10 @@ def rent_predictor(months:int =0, town=None, flat_type=None):
     
     model = ARIMA(data, order=(5, 1, 2))
     results = model.fit()
-    future = results.predict(steps=months, start=datetime.strftime(datetime.now(), "%Y-%m"), end=datetime.strftime(datetime.now()+relativedelta(months=months), "%Y-%m"))
+    future = results.predict(steps=months, start=datetime.now()-relativedelta(months=1), end=datetime.now()+relativedelta(months=months)).to_frame().reset_index()
+    future['index'] = future['index'].apply(lambda date: datetime.strptime(date.strftime("%Y-%m"), "%Y-%m"))
+    future = future[future['index'] > datetime.now()-relativedelta(months=1)]
+    future.set_index('index', inplace=True)
     return future
 
 def resale_predictor(months:int =0, town=None, flat_type=None):
@@ -111,6 +114,14 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
         df = pd.DataFrame(loads(urlopen(req).read().decode("utf-8"))["result"]["records"])
         if not df.empty: resale_prices.append(pd.DataFrame(loads(urlopen(req).read().decode("utf-8"))["result"]["records"])[['month', 'resale_price']])
         
+    if len(resale_prices) == 0:
+        if flat_type is not None:
+            warn("Not enough data to predict specified flat type; Expanding data to all flat types")
+            return resale_predictor(months, town, flat_type=None)
+        else:
+            warn('Not enough data to perform prediction')
+            return            
+        
     resale_prices = pd.concat(resale_prices)
     data = []
     for month in resale_prices['month'].unique():
@@ -123,6 +134,8 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
     
     model = ARIMA(data, order=(5, 1, 2))
     results = model.fit()
-    future = results.predict(steps=months, start=datetime.strftime(datetime.now(), "%Y-%m"), end=datetime.strftime(datetime.now()+relativedelta(months=months), "%Y-%m"))
+    future = results.predict(steps=months, start=datetime.now()-relativedelta(months=1), end=datetime.now()+relativedelta(months=months)).to_frame().reset_index()
+    future['index'] = future['index'].apply(lambda date: datetime.strptime(date.strftime("%Y-%m"), "%Y-%m"))
+    future = future[future['index'] > datetime.now()-relativedelta(months=1)]
+    future.set_index('index', inplace=True)
     return future
-        
