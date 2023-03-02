@@ -43,7 +43,14 @@ function CreateListing() {
         photo_4: null,
         photo_5: null,
         photo_6: null,
+        town: ''
     });
+
+    const towns = ['PUNGGOL', 'JURONG WEST', 'BEDOK', 'BUKIT MERAH', 'CHOA CHU KANG', 'TAMPINES',
+    'SENGKANG', 'ANG MO KIO', 'HOUGANG', 'TOA PAYOH', 'JURONG EAST', 'WOODLANDS',
+    'BUKIT BATOK', 'SEMBAWANG', 'CENTRAL', 'QUEENSTOWN', 'BISHAN', 'CLEMENTI',
+    'MARINE PARADE', 'PASIR RIS', 'YISHUN', 'GEYLANG', 'SERANGOON',
+    'BUKIT PANJANG', 'KALLANG/WHAMPOA', 'BUKIT TIMAH']
 
     console.log(formData)
     const handleChange = e => {
@@ -80,6 +87,19 @@ function CreateListing() {
                 value={formData.title}
                 required
             />
+
+            <label htmlFor="town">Town</label>
+            <select
+                id="town"
+                name="town"
+                onChange={handleChange}
+                value={formData.town}
+                required
+            >
+                {towns.map((town) => (
+                    <option value={town}>{town}</option>
+                ))}
+            </select>
 
             <label htmlFor="address">Address:</label>
             <input

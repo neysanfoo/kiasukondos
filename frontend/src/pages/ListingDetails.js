@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Link, Navigate } from 'react-router-dom'
 import LikeButton from '../components/LikeButton'
+import PriceTable from '../components/PriceTable'
+import LineGraph from '../components/LineGraph'
 const baseURL="http://127.0.0.1:8000/api"
 
 function ListingDetails() {
@@ -11,14 +13,51 @@ function ListingDetails() {
     const [user_id, setUserId] = useState(null)
     const { listing_id } = useParams()
     const [offer, setOffer] = useState(0)
+    const [predictedRentPrice, setPredictedRentPrice] = useState([])
+    const [timeframe, setTimeframe] = useState(1)
+    const [predictedResalePrice, setPredicetedResalePrice] = useState([])
 
     useEffect(() => {
         axios.get(baseURL + "/listings/" + listing_id + "/").then((response) => {
             setListingData(response.data)
+            // if it is a hdb, get analytics
+            if (response.data.property_type === 1) {
+                axios.get(baseURL + "/listing-analytics/" + listing_id + "?timeframe=12" ).then((response) => {
+                    if (response.data.predicted_resale_price) {
+                        setPredicetedResalePrice(response.data.predicted_resale_price.predicted_mean)
+                    } 
+                    if (response.data.predicted_rent_price) {
+                        setPredictedRentPrice(response.data.predicted_rent_price.predicted_mean)
+                    }
+                }
+                ).catch(function (error) {
+                    console.log(error);
+                }
+                );
+            }
         })
 
     }, [])
 
+    console.log(listingData.sale_or_rent == 1 ? predictedResalePrice : predictedRentPrice)
+
+    function changeTimeframe(e) {
+        // get the new data
+        const newTime = e.target.value
+        axios.get(baseURL + "/listing-analytics/" + listing_id + "?timeframe=" + e.target.value * 12).then((response) => {
+            if (response.data.predicted_resale_price) {
+                setPredicetedResalePrice(response.data.predicted_resale_price.predicted_mean)
+            }
+            if (response.data.predicted_rent_price) {
+                setPredictedRentPrice(response.data.predicted_rent_price.predicted_mean)
+            }
+            setTimeframe(newTime)
+        }
+        ).catch(function (error) {
+            console.log(error);
+        })
+        // handle the select
+    }
 
     useEffect (() => {
         // Check if the current user logged in is the owner of the listing
@@ -153,6 +192,15 @@ function ListingDetails() {
       listingData.photo_6,
     ].filter((photo) => photo !== null);
 
+    function AnalyticsTitle() {
+        return (
+            <div className="analytics--title">
+                <h3>Analytics for <b>{listingData.bedrooms}-Room</b> HDBs for <b>{listingData.sale_or_rent === 1 ? "Sale" : "Rent"}</b> in <b>{listingData.town}</b></h3>
+            </div>
+        )
+
+    }
+
     return(
         <div className='container mt-4'>
             <h1 className='listing--details--title'>{ listingData.title }</h1>
@@ -201,6 +249,26 @@ function ListingDetails() {
                 <p><b>Description: </b>{ listingData.description }</p>
                 </div>
             </div>
+            {   listingData.property_type === 1 ?
+                <div className="listing--details--analytics">
+                    <h3>{AnalyticsTitle()}</h3>
+                    <select className="listing--details--analytics--dropdown" name="timeframe" value={timeframe} onChange={changeTimeframe}>
+                        <option value="1">1 Year</option>
+                        <option value="4">4 Years</option>
+                        <option value="10">10 Years</option>
+                    </select>
+                    <PriceTable
+                        analytics={listingData.sale_or_rent === 1 ? predictedResalePrice : predictedRentPrice}
+                        timeframe={timeframe}
+                    />
+                    <LineGraph
+                        analytics={listingData.sale_or_rent === 1 ? predictedResalePrice : predictedRentPrice}
+                        timeframe={timeframe}
+                    />
+                </div> 
+                : null
+            }
+
             { user_id && listing_id && 
             <LikeButton
                 user_id={user_id}

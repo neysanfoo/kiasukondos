@@ -8,7 +8,7 @@ import jwt, datetime
 from rest_framework.decorators import api_view
 from django.db.models import Q
 from django.db.models import Case, When, IntegerField
-
+from .predictor import rent_predictor, resale_predictor
 
 
 from rest_framework.exceptions import AuthenticationFailed
@@ -22,12 +22,105 @@ class ListingView(generics.ListCreateAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
     queryset = Listing.objects.filter(is_sold=False)  # filter out sold listings
-    # permission_classes = [permissions.AllowAny]
+
 
 class ListingDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
 
+
+class AnalyticsView(generics.ListAPIView):
+    queryset = Listing.objects.all()
+    serializer_class = ListingSerializer
+
+    def get_queryset(self):
+        # get the pk 
+        pk = self.kwargs.get('pk')
+        queryset = Listing.objects.filter(pk=pk)
+        listing = queryset.first()
+        # Add the rent_predictor for 12 months
+        town = listing.town
+        property_type = listing.property_type
+        sale_or_rent = listing.sale_or_rent
+        bedrooms = listing.bedrooms
+        
+        FLAT_TYPE = ['1-ROOM', '2-ROOM', '3-ROOM', '4-ROOM', '5-ROOM', 'EXECUTIVE']
+        # map bedrooms to flat_type
+
+        print(town,property_type,sale_or_rent,bedrooms)
+
+        if property_type == 1:
+            flat_type = FLAT_TYPE[0]
+            if bedrooms == 1:
+                flat_type = FLAT_TYPE[0]
+            elif bedrooms == 2:
+                flat_type = FLAT_TYPE[1]
+            elif bedrooms == 3:
+                flat_type = FLAT_TYPE[2]
+            elif bedrooms == 4:
+                flat_type = FLAT_TYPE[3]
+            elif bedrooms == 5:
+                flat_type = FLAT_TYPE[4]
+            elif bedrooms == 6:
+                flat_type = FLAT_TYPE[5]
+
+            if sale_or_rent == 1:
+                predicted_resale_price = resale_predictor(12, town, flat_type)
+
+            if sale_or_rent == 2:
+                predicted_rent_price = rent_predictor(12, town, flat_type)
+
+
+        return predicted_rent_price
+
+@api_view(["GET"])
+def fetch_analytics(request, pk):
+    listing = Listing.objects.get(pk=pk)
+    # Add the rent_predictor for 12 months
+    town = listing.town
+    property_type = listing.property_type
+    sale_or_rent = listing.sale_or_rent
+    bedrooms = listing.bedrooms
+    
+    timeframe = int(request.query_params.get('timeframe'))
+    FLAT_TYPE = ['1-ROOM', '2-ROOM', '3-ROOM', '4-ROOM', '5-ROOM', 'EXECUTIVE']
+    # map bedrooms to flat_type
+
+    print(town,property_type,sale_or_rent,bedrooms)
+
+    if property_type == 1:
+        flat_type = FLAT_TYPE[0]
+        if bedrooms == 1:
+            flat_type = FLAT_TYPE[0]
+        elif bedrooms == 2:
+            flat_type = FLAT_TYPE[1]
+        elif bedrooms == 3:
+            flat_type = FLAT_TYPE[2]
+        elif bedrooms == 4:
+            flat_type = FLAT_TYPE[3]
+        elif bedrooms == 5:
+            flat_type = FLAT_TYPE[4]
+        elif bedrooms == 6:
+            flat_type = FLAT_TYPE[5]
+
+        if sale_or_rent == 1:
+            predicted_resale_price = resale_predictor(timeframe, town, flat_type)
+            print(predicted_resale_price.values.tolist())
+
+        if sale_or_rent == 2:
+            predicted_rent_price = rent_predictor(timeframe, town, flat_type)
+            print(predicted_rent_price.values.tolist())
+
+    response = Response()
+    if sale_or_rent == 1:
+        response.data = {
+            "predicted_resale_price": predicted_resale_price
+        }
+    if sale_or_rent == 2:
+        response.data = {
+            "predicted_rent_price": predicted_rent_price
+        }
+    return response
 
 class SearchListingView(generics.ListAPIView):
     # ?searchInput=hi&numBedrooms=1&sortingOrder=priceHighToLow&saleType=forRent
