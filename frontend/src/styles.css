@@ -763,3 +763,76 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
+.price-table {
+  border-collapse: collapse;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.price-table th,
+.price-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.price-table th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.price-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.price-table tr:hover {
+  background-color: #ddd;
+}
+
+@media only screen and (max-width: 600px) {
+  .price-table {
+    width: 100%;
+  }
+}
+
+.listing--details--analytics {
+  margin-top: 20px;
+}
+
+.listing--details--analytics h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.listing--details--analytics--dropdown {
+  font-size: 16px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+.listing--details--analytics--dropdown:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.listing--details--analytics--dropdown option {
+  background-color: #fff;
+  color: #333;
+}
+
+.wrapper {
+  height: 500px !important;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
