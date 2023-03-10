@@ -240,6 +240,13 @@ function EditListing() {
                 name="photo_2"
                 onChange={handleFileChange}
             />
+            <label htmlFor="photo_3">Additional Photo 3:</label>
+            <input
+                type="file"
+                id="photo_3"
+                name="photo_3"
+                onChange={handleFileChange}
+            />
             <label htmlFor="photo_4">Additional Photo 4:</label>
             <input
                 type="file"
