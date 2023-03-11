@@ -7,7 +7,7 @@ const baseURL="http://127.0.0.1:8000/api"
 function EditListing() {
     const listing_id = useParams().listing_id;
     const [owner, setOwner] = useState(null)
-
+    const [photoMainURL, setPhotoMainURL] = useState(null)
     const [formData, setFormData] = useState({
         title: '',
         address: '',
@@ -83,7 +83,18 @@ function EditListing() {
     };
 
     const handleFileChange = e => {
+        console.log(e.target.files);
         setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+        const file = e.target.files[0];
+        if (file){
+            const imageUrl = URL.createObjectURL(file);
+            const img = new Image();
+            img.src = imageUrl;
+            img.onload = () =>{
+                URL.revokeObjectURL(img.src);
+            };
+            setPhotoMainURL(e.target.files[0])
+        }
     };
 
     const handleSubmit = e => {
@@ -216,7 +227,7 @@ function EditListing() {
                 required
             />
             
-            
+            <>
             <label htmlFor="photo_main">Main Photo:</label>
             <input
                 type="file"
@@ -224,7 +235,9 @@ function EditListing() {
                 name="photo_main"
                 onChange={handleFileChange}
             />
-            
+                {photoMainURL && <img src={photoMainURL} class = "photo_main" alt="..." />}
+                
+            </>
             <label htmlFor="photo_1">Additional Photo 1:</label>
             <input
                 type="file"

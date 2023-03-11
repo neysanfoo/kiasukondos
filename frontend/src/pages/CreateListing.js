@@ -21,7 +21,7 @@ function CreateListing() {
         
     }, []);
 
-
+    const [photoMainURL, setPhotoMainURL] = useState(null)
     const [formData, setFormData] = useState({
         title: '',
         address: '',
@@ -59,6 +59,16 @@ function CreateListing() {
 
     const handleFileChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+        const file = e.target.files[0];
+        if (file){
+            const imageUrl = URL.createObjectURL(file);
+            const img = new Image();
+            img.src = imageUrl;
+            img.onload = () =>{
+                URL.revokeObjectURL(img.src);
+            };
+            setPhotoMainURL(imageUrl)
+        }
     };
 
     const handleSubmit = e => {
@@ -214,6 +224,7 @@ function CreateListing() {
                 value={formData.list_date}
             />
             
+            <>
             <label htmlFor="photo_main">Main Photo:</label>
             <input
                 type="file"
@@ -221,6 +232,9 @@ function CreateListing() {
                 name="photo_main"
                 onChange={handleFileChange}
             />
+                {photoMainURL && <img src={photoMainURL} class = "photo_main" alt="..." style={{width:"300px", height:"300px" , float:"right"}}/>}
+                
+            </>
             
             <label htmlFor="photo_1">Additional Photo 1:</label>
             <input

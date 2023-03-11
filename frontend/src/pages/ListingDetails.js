@@ -284,40 +284,43 @@ function ListingDetails() {
             <h1 className='listing--details--title'>{ listingData.title }</h1>
             <div className="listing--details">
             <Swiper
+                id = "swiperParent"
                 centeredSlides={true}
                 pagination={{
                     clickable: true,
                     type: "fraction",
                 }}
-                breakpoints = {{
-                    640: {
-                      slidesPerView: 1,
-                      slidesPerGroup: 1,
-                    },
-                    768: {
-                      slidesPerView: 3,
-                      slidesPerGroup: 1,
-                      centeredSlides: true,
-                      loop: true,
-                      initialSlide: 0,
-                    },
-                  }}
-                zoom={true}
-                navigation={true}
-                loop = {true}
-                modules={[Zoom, Autoplay, Pagination, Navigation]}
+                navigation
+                loop
+                modules={[Autoplay, Pagination, Navigation]}
                 className="mySwiper"
+                //control = "swiperChild"
             >
                 <SwiperSlide> 
                         <img src={listingData.photo_main} class="d-block rounded 25 h-100 w-100"  alt="..." />
                 </SwiperSlide>
-                {photos.map((photo, index) =>(
-                    <SwiperSlide class="swiper-slide img">
-                        <img src={photo} class="d-block rounded 25 h-100 w-100"  alt="..." />
-                    </SwiperSlide>
-                    
-                ))}
-                
+                <SwiperSlide style={{display: "flex", alignItems:"center", justifyContent: "center"}}>
+                    <Swiper 
+                        id = "swiperChild"
+                        slidesPerView={3}
+                        spaceBetween = {5}
+                        //navigation
+                        //pagination={{
+                        //    clickable: true,
+                        //    type: "fraction",
+                        //}}
+                        controller = {{control: "swiperParent"}}
+                        //control="swiperParent"
+                        //modules={[Autoplay, Pagination, Navigation]}
+                        
+                    >
+                    {photos.map((photo, index) =>(
+                        <SwiperSlide class="swiper-slide img" style={{height: "100%"}}>
+                            <img src={photo} class="d-block rounded 25 h-100 w-100"  alt="..." />
+                        </SwiperSlide>
+                    ))}
+                    </Swiper>
+                </SwiperSlide>
             </Swiper>
                 {/*
                 {/* Carousel Start }
@@ -385,7 +388,9 @@ function ListingDetails() {
                 
                
                 <hr></hr>
-                <p><h3 >Description: </h3>{ listingData.description }</p>
+                <b style={{fontSize: "32px"}} >Description: </b>
+                <p>{ listingData.description }</p>
+                <hr></hr>
                 </div>
             </div>
             {   listingData.property_type === 1 ?
