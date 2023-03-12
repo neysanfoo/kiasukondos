@@ -590,6 +590,7 @@
   position: relative;
   border-radius: 10px;
 }
+
 .swiper-slide img{
   height: auto;
   width: auto;
@@ -597,14 +598,6 @@
   transition: all .2s ease-out;
 }
 
-.swiper-slide:hover::before{
-  max-width: scale(1.1);
-  max-height: scale(1.1);
-  width: scale(1.1);
-  height: scale(1.1);
-  transform: scale(1.1);
-  z-index: 1;
-}
 
 .swiper-slide img:hover{
   object-fit: cover;
@@ -613,10 +606,55 @@
   z-index: 1;
 }
 
-.swiper-slide:hover::after{
-  opacity: 0.2;
+.edit-listing-image-container{
+  float: right;
 }
 
+.edit-listing-image{
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 200px;
+  height: 200px;
+}
+
+.edit-listing-field{
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid;
+  box-shadow: 5px 5px lightgray;
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+
+.edit-listing-field-price {
+
+  position: relative;
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid;
+  box-shadow: 5px 5px lightgray;
+  margin-bottom: 20px;
+  padding-left: 50px;
+}
+
+.edit-listing-field:focus {
+  outline: none;
+  border-color: black;
+  box-shadow: 0 0 20px#13fb03;
+}
+
+.edit-listing-dropdown{
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid;
+  box-shadow: 5px 5px lightgray;
+  margin-bottom: 20px;
+  
+}
 .carousel {
   width: 100%;
   height: 400px;
