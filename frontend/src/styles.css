@@ -598,24 +598,58 @@
   transition: all .2s ease-out;
 }
 
+.modal {
+  display: block;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0px;
+  top: 0px;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+}
 
-.swiper-slide img:hover{
+.modal-content {
+  display: flex;
+  justify-content: center;
+  background-color: #fefefe;
+  margin-top: 5%;
+  margin: 2% auto; /* 15% from the top and centered */
+  overflow: hidden;
+  border: 1px solid #888;
+  border-radius: 20px;
   object-fit: cover;
-  transform: scale(1.5);
-  opacity: 1;
-  z-index: 1;
+  aspect-ratio: 16/9;
+  width: 80%; /* Could be more or less, depending on screen size */
 }
 
 .edit-listing-image-container{
-  float: right;
+  width: 50%;
+  padding-right: 20px;
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px
 }
 
 .edit-listing-image{
-  display: block;
-  margin-bottom: 10px;
-  padding: 10px;
-  width: 200px;
-  height: 200px;
+  
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.edit-listing-mainImage{
+  
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 5px;
+  margin-top: 20px;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
 }
 
 .edit-listing-field{
@@ -626,18 +660,6 @@
   box-shadow: 5px 5px lightgray;
   margin-bottom: 20px;
   padding-left: 20px;
-}
-
-.edit-listing-field-price {
-
-  position: relative;
-  width: 100%;
-  height: 40px;
-  border-radius: 5px;
-  border: 1px solid;
-  box-shadow: 5px 5px lightgray;
-  margin-bottom: 20px;
-  padding-left: 50px;
 }
 
 .edit-listing-field:focus {
@@ -653,8 +675,19 @@
   border: 1px solid;
   box-shadow: 5px 5px lightgray;
   margin-bottom: 20px;
-  
 }
+
+.edit-listing-submit{
+  float: right;
+  border: none;
+  border-radius: 5px;
+  background-color: #008f79;
+  color: white;
+  font-size: 16px;
+  padding: 8px 16px;
+  margin-bottom: 50px;
+}
+
 .carousel {
   width: 100%;
   height: 400px;

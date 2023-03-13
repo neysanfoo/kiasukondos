@@ -99,7 +99,7 @@ function CreateListing() {
   return (
     <div className='container'>
         <form className='create--listing--form' onSubmit={handleSubmit}>
-            <div className='listing-details' style={{float: "right", fontSize: "20px", width: "50%"}}>
+            <div className='listing-details' style={{float: "right", fontSize: "20px", width: "50%", marginTop: "10px"}}>
                 <h2>Location</h2>
                 <label htmlFor="title" >Listing Title:</label>
                 <input
@@ -271,20 +271,15 @@ function CreateListing() {
                     placeholder="Share details about this property to help buyers decide if this will be their future home"
                     required
                 ></textarea>
+
+
+                <button class = "edit-listing-submit" type="submit">Submit</button>
             </div>
             
             <hr></hr>
             
-             <div className="edit-listing-image-container" >
-                {photoUrls["photo_main"] && <img src={photoUrls["photo_main"]} class = "edit-listing-image" alt="..." />}
-                {photoUrls["photo_1"] && <img src={photoUrls["photo_1"]} class = "edit-listing-image" alt="..." />}
-                {photoUrls["photo_2"] && <img src={photoUrls["photo_2"]} class = "edit-listing-image" alt="..." />}
-                {photoUrls["photo_3"] && <img src={photoUrls["photo_3"]} class = "edit-listing-image" alt="..." />}
-                {photoUrls["photo_4"] && <img src={photoUrls["photo_4"]} class = "edit-listing-image" alt="..."/>}
-                {photoUrls["photo_5"] && <img src={photoUrls["photo_5"]} class = "edit-listing-image" alt="..." />}
-                {photoUrls["photo_6"] && <img src={photoUrls["photo_6"]} class = "edit-listing-image" alt="..."/>}
-            </div>
-            <>
+             
+            <div className="edit-listing-photo-container">
                 <label htmlFor="photo_main">Main Photo:</label>
                 <input
                     type="file"
@@ -334,12 +329,18 @@ function CreateListing() {
                     name="photo_6"
                     onChange={handleFileChange}
                 />
-            </>
+                <div className="edit-listing-image-container" >
+                    {photoUrls["photo_main"] && <b>Main Photo</b> && <img src={photoUrls["photo_main"]} class = "edit-listing-mainImage" alt="..." style={{marginTop: "20px", width: "100%", aspectRatio:"16/9", borderRadius: "5px", gridColumnStart:"1", gridColumnEnd:"4"}}/>}
+                    {photoUrls["photo_1"] && <img src={photoUrls["photo_1"]} class = "edit-listing-image" alt="..." />}
+                    {photoUrls["photo_2"] && <img src={photoUrls["photo_2"]} class = "edit-listing-image" alt="..." />}
+                    {photoUrls["photo_3"] && <img src={photoUrls["photo_3"]} class = "edit-listing-image" alt="..." />}
+                    {photoUrls["photo_4"] && <img src={photoUrls["photo_4"]} class = "edit-listing-image" alt="..."/>}
+                    {photoUrls["photo_5"] && <img src={photoUrls["photo_5"]} class = "edit-listing-image" alt="..." />}
+                    {photoUrls["photo_6"] && <img src={photoUrls["photo_6"]} class = "edit-listing-image" alt="..."/>}
+                </div>
+            </div>
+
            
-            <hr></hr>
-            <>
-            <button type="submit" style={{marginTop:"20px"}}>Submit</button>
-            </>
         </form>
     </div>
   );

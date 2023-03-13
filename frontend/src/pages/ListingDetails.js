@@ -262,66 +262,98 @@ function ListingDetails() {
         )
 
     }
-    /*
-    function prep(){
-        const photoCards = [];
-        let i =0;
-        for(;i<photos.length - 2;i++){
-            photoCards.push([photos[i], photos[i+1], photos[i+2]])
-        }
-        photoCards.push([photos[i], photos[i+1], photos[0]])
-        photoCards.push([photos[i+1], photos[0], photos[1]])
-        return photoCards;
-    }
 
-    const photoCards = prep();
-    */
-   
-    
+    function SwiperModal() {
+        const [isOpen, setIsOpen] = useState(false);
+        const [activeIndex, setActiveIndex] = useState(0);
 
-    return(
-        <div className='container mt-4'>
-            <h1 className='listing--details--title'>{ listingData.title }</h1>
-            <div className="listing--details">
+        const handleCloseModal = () => {
+            setIsOpen(false);
+        };
+
+        const handleOpenModal = (index) => {
+            setActiveIndex(index);
+            setIsOpen(true);
+        };
+
+        return (
+            <>
             <Swiper
-                id = "swiperParent"
                 centeredSlides={true}
-                pagination={{
-                    clickable: true,
-                    type: "fraction",
-                }}
                 navigation
                 loop
-                modules={[Autoplay, Pagination, Navigation]}
                 className="mySwiper"
-                //control = "swiperChild"
+                modules={[Navigation]}
             >
                 <SwiperSlide> 
-                        <img src={listingData.photo_main} class="d-block rounded 25 h-100 w-100"  alt="..." />
+                        <img src={listingData.photo_main} id = "photo_main" class="d-block rounded 25 h-100 w-100"  alt="..." onClick={() => handleOpenModal(0)}/>
+                        
                 </SwiperSlide>
                 <SwiperSlide style={{display: "flex", alignItems:"center", justifyContent: "center"}}>
                     <Swiper 
-                        id = "swiperChild"
+                        autoplay = {{
+                            delay: 2500,
+                            disableOnInteraction: false,
+                        }}
                         slidesPerView={3}
                         spaceBetween = {5}
-                        //navigation
-                        //pagination={{
-                        //    clickable: true,
-                        //    type: "fraction",
-                        //}}
-                        controller = {{control: "swiperParent"}}
-                        //control="swiperParent"
-                        //modules={[Autoplay, Pagination, Navigation]}
+                        loop
+                        pagination={{
+                            clickable: false,
+                        }}
+                        modules={[Autoplay, Pagination]}
                         
                     >
                     {photos.map((photo, index) =>(
                         <SwiperSlide class="swiper-slide img" style={{height: "100%"}}>
-                            <img src={photo} class="d-block rounded 25 h-100 w-100"  alt="..." />
+                            <img src={photo} onClick={() => handleOpenModal(index + 1)} class="d-block rounded 25 h-100 w-100"  alt="..." />
                         </SwiperSlide>
                     ))}
                     </Swiper>
                 </SwiperSlide>
             </Swiper>
+                {isOpen &&
+                    <div className="modal">
+                    <div className="modal-content" >
+                        <span className="closeModal" onClick={handleCloseModal}>
+                            <button type = "button" style={{position: "absolute", top: "2%", left: "97%", backgroundColor: "transparent", border:'none', zIndex: "2", fontWeight: "bold"}} onClick={handleCloseModal}> X </button>
+                            <Swiper
+                            id="modalSwiper"
+                            style={{ width: '100%', height: '100%', zIndex: "1"}}
+                            initialSlide={activeIndex}
+                            loop={true}
+                            navigation={true}
+                            pagination={{
+                                clickable: true,
+                            }}
+                            
+                            modules = {[Navigation, Pagination]}
+                            >
+                            <SwiperSlide> 
+                                <img src={listingData.photo_main} id = "photo_main"  alt="..." />
+                            </SwiperSlide>
+                            {photos.map((photo, index) =>(
+                                <SwiperSlide key = {index} class="swiper-slide img" >
+                                    <img src={photo} alt="..." />
+                                </SwiperSlide>
+                            ))}
+                            
+                            </Swiper>
+                        </span>
+                    </div>
+                    </div>
+                }
+            </>
+        );
+    }
+    
+    return(
+        <div className='container mt-4'>
+            <h1 className='listing--details--title'>{ listingData.title }</h1>
+            <div className="listing--details">
+            
+                <div>{SwiperModal()}</div>
+            
                 {/*
                 {/* Carousel Start }
                 
@@ -364,19 +396,43 @@ function ListingDetails() {
                     </div> */}
                 
             <div className="listing--details--info">
-                <h1>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}</h1>
+                <h1>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}
+                
+                { user_id && listing_id && 
+                <b style={{marginLeft: "20px"}}>
+                <LikeButton
+                    user_id={user_id}
+                    listing_id={listing_id}
+                    />
+                    </b>
+                } 
+                
+                </h1>
+                
                 <h2><b>Price: </b> <FontAwesomeIcon icon={ faDollarSign } />{ listingData.price }</h2>
+                
+                <div style={{position: "absolute", top: "65%", left: "70%"}}>
+                        <b>Owner Name: </b> <Link to={/user-profile/ + listingData.owner}>{ listingData.owner_name }</Link>
+                        { user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
+                        <div>
+                            <input name="offer" value={offer} onChange={handleChange} type="number" />
+                            <button type="button" onClick={makeOffer}>Make Offer</button>
+                        </div>
+                        }
+                        {
+                            user_id && listing_id && listingData.owner && listingData.owner !== user_id &&
+                            <button type="button" onClick={createChat}>Chat with Owner</button>
+                        }
+                </div> 
                 <div style={{ fontSize: "16px"}}>
                     <b>Number of Bedrooms: </b>{listingData.bedrooms}<b> </b><FontAwesomeIcon icon={ faBed } style={{paddingRight: "30px"}}/>
                     <b>Number of Bathrooms: </b>{listingData.bathrooms}<b> </b><FontAwesomeIcon icon={ faBath } />
-                    <p style={{float: "right"}}>
-                        <b>Owner Name: </b> <Link to={/user-profile/ + listingData.owner}>{ listingData.owner_name }</Link>
-                    </p> 
+                    
                 </div>
                 <hr></hr>
                 <div style={{height: '400px' , fontSize: "20px"}}>
                     <div style={{ float: 'right', aspectRatio: '1/1', height: '100%' }}>
-                        <div ref={mymap} style={{ height: '100%', width: '100%' }} />
+                        <div ref={mymap} style={{ height: '100%', width: '100%' , zIndex: "0" }} />
                     </div>
                     <p> <FontAwesomeIcon icon={faLocationDot} style={{fontSize: "1.5em"}}/> <b style={{fontSize: "32px"}}> Address: </b> </p>
                     <p><strong>Street: </strong>{ listingData.address }</p>
@@ -413,22 +469,8 @@ function ListingDetails() {
                 : null
             }
 
-            { user_id && listing_id && 
-            <LikeButton
-                user_id={user_id}
-                listing_id={listing_id}
-             />
-            } 
-            { user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
-            <div>
-                <input name="offer" value={offer} onChange={handleChange} type="number" />
-                <button type="button" onClick={makeOffer}>Make Offer</button>
-            </div>
-            }
-            {
-                user_id && listing_id && listingData.owner && listingData.owner !== user_id &&
-                <button type="button" onClick={createChat}>Chat with Owner</button>
-            }
+            
+            
             { isOwner &&
                 <div>
                 <Link to={'/edit-listing/' + listing_id}>
