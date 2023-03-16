@@ -659,7 +659,8 @@
   border: 1px solid;
   box-shadow: 5px 5px lightgray;
   margin-bottom: 20px;
-  padding-left: 20px;
+  padding-left: 10px;
+  font-size: 16px;
 }
 
 .edit-listing-field:focus {
@@ -675,6 +676,8 @@
   border: 1px solid;
   box-shadow: 5px 5px lightgray;
   margin-bottom: 20px;
+  padding-left: 10px;
+  font-size: 16px;
 }
 
 .edit-listing-submit{
@@ -686,6 +689,18 @@
   font-size: 16px;
   padding: 8px 16px;
   margin-bottom: 50px;
+}
+
+.edit-listing-image-remove{
+  position: absolute;
+  right: 0%;
+  top: 3%;
+  z-index: 1;
+  background-color: transparent;
+  border: none;
+  color: red;
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .carousel {

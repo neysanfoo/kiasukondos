@@ -67,7 +67,6 @@ function CreateListing() {
 
     const handleFileChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.files[0] });
-        console.log(e.target.files)
         
         const file = e.target.files[0];
         if (file){
@@ -79,8 +78,22 @@ function CreateListing() {
             };
             setPhotoUrls({...photoUrls, [e.target.name]:imageUrl})
         }
-        console.log(photoUrls)
     };
+
+    /**
+     * 
+     * @param {*} e 
+     */
+
+    const handleFileRemove = e => {
+        const updatedUrls = {...photoUrls};
+        const newFormData = {...formData};
+        delete updatedUrls[e];
+        newFormData[e] = null;
+        setPhotoUrls(updatedUrls);
+        setFormData(newFormData);
+        console.log(formData);
+    }
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -120,6 +133,7 @@ function CreateListing() {
                     name="town"
                     onChange={handleChange}
                     value={formData.town}
+                    placeholder = ""
                     required
                 >
                     {towns.map((town) => (
@@ -160,6 +174,7 @@ function CreateListing() {
                     name="property_type"
                     onChange={handleChange}
                     value={formData.property_type}
+                    placeholder = ""
                     required
                 >
                     <option value="1">HDB</option>
@@ -167,7 +182,7 @@ function CreateListing() {
                     <option value="3">Landed</option>
                 </select>
                 
-                <label htmlFor="sale_or_rent">Sale or Rent:</label>
+                {/*<label htmlFor="sale_or_rent">Sale or Rent:</label>*/}
                 <select
                     className="edit-listing-dropdown"
                     id="sale_or_rent"
@@ -182,22 +197,7 @@ function CreateListing() {
                 
                 
                 
-                {/*<label htmlFor="price">Price:</label>*/}
-                <div style={{position: "relative"}} >
-                    <span style={{position: "absolute", left: "10px", top: "8%", zIndex: "1", paddingLeft: "10px", fontSize: "20px"}}>S$</span>
-                    <input
-                    className="edit-listing-field"
-                    type="number"
-                    id="price"
-                    name="price"
-                    onChange={handleChange}
-                    value={formData.price}
-                    required
-                    placeholder="Price"
-                    style={{paddingLeft: "50px"}}
-                    />
                 
-                </div>
                 
                 {/*<label htmlFor="bedrooms">Bedrooms:</label>*/}
                 <input
@@ -249,7 +249,22 @@ function CreateListing() {
                     />
                 </div>
                 
+                {/*<label htmlFor="price">Price:</label>*/}
+                <div style={{position: "relative"}} >
+                    <span style={{position: "absolute", left: "10px", top: "8%", zIndex: "1", paddingLeft: "10px", fontSize: "20px"}}>S$</span>
+                    <input
+                    className="edit-listing-field"
+                    type="number"
+                    id="price"
+                    name="price"
+                    onChange={handleChange}
+                    value={formData.price}
+                    required
+                    placeholder="Price"
+                    style={{paddingLeft: "50px"}}
+                    />
                 
+                </div>
                 
                 <label htmlFor="list_date">List Date:</label>
                 <input
@@ -330,13 +345,52 @@ function CreateListing() {
                     onChange={handleFileChange}
                 />
                 <div className="edit-listing-image-container" >
-                    {photoUrls["photo_main"] && <b>Main Photo</b> && <img src={photoUrls["photo_main"]} class = "edit-listing-mainImage" alt="..." style={{marginTop: "20px", width: "100%", aspectRatio:"16/9", borderRadius: "5px", gridColumnStart:"1", gridColumnEnd:"4"}}/>}
-                    {photoUrls["photo_1"] && <img src={photoUrls["photo_1"]} class = "edit-listing-image" alt="..." />}
-                    {photoUrls["photo_2"] && <img src={photoUrls["photo_2"]} class = "edit-listing-image" alt="..." />}
-                    {photoUrls["photo_3"] && <img src={photoUrls["photo_3"]} class = "edit-listing-image" alt="..." />}
-                    {photoUrls["photo_4"] && <img src={photoUrls["photo_4"]} class = "edit-listing-image" alt="..."/>}
-                    {photoUrls["photo_5"] && <img src={photoUrls["photo_5"]} class = "edit-listing-image" alt="..." />}
-                    {photoUrls["photo_6"] && <img src={photoUrls["photo_6"]} class = "edit-listing-image" alt="..."/>}
+                    {photoUrls["photo_main"] &&
+                    <div style={{position:"relative", gridColumnStart:"1", gridColumnEnd:"4"}}>
+                        <h4> Main Photo </h4>
+                        <button class = "edit-listing-image-remove" style={{top: "13%"}} onClick={()=>handleFileRemove("photo_main")}> &times; </button> 
+                        <img src={photoUrls["photo_main"]} class = "edit-listing-mainImage" alt="..." style={{width: "100%", aspectRatio:"16/9", borderRadius: "5px"}} />
+                    </div>
+                    }
+                    
+                    {photoUrls["photo_1"] && 
+                        <div style={{position:"relative"}}>
+                            <button class = "edit-listing-image-remove" onClick={()=>handleFileRemove("photo_1")}> &times; </button> 
+                            <img src={photoUrls["photo_1"]} class = "edit-listing-image" alt="..." />
+                        </div>
+                    }
+
+                    {photoUrls["photo_2"] && 
+                        <div style={{position:"relative"}}>
+                            <button class = "edit-listing-image-remove" onClick={()=>handleFileRemove("photo_2")}> &times; </button> 
+                            <img src={photoUrls["photo_2"]} class = "edit-listing-image" alt="..." />
+                        </div>
+                    }
+
+                    {photoUrls["photo_3"] && 
+                        <div style={{position:"relative"}}>
+                            <button class = "edit-listing-image-remove" onClick={()=>handleFileRemove("photo_3")}> &times; </button> 
+                            <img src={photoUrls["photo_3"]} class = "edit-listing-image" alt="..." />
+                        </div>
+                    }
+
+                    {photoUrls["photo_4"] && 
+                        <div style={{position:"relative"}}>
+                            <button class = "edit-listing-image-remove" onClick={()=>handleFileRemove("photo_4")}> &times; </button> 
+                            <img src={photoUrls["photo_4"]} class = "edit-listing-image" alt="..." />
+                        </div>                    }
+                    {photoUrls["photo_5"] && 
+                        <div  style={{position:"relative"}}>
+                            <button class = "edit-listing-image-remove" onClick={()=>handleFileRemove("photo_5")}> &times; </button> 
+                            <img src={photoUrls["photo_5"]} class = "edit-listing-image" alt="..." />
+                        </div>
+                    }
+                    {photoUrls["photo_6"] && 
+                        <div  style={{position:"relative"}}>
+                            <button class = "edit-listing-image-remove" onClick={()=>handleFileRemove("photo_6")}> &times; </button> 
+                            <img src={photoUrls["photo_6"]} class = "edit-listing-image" alt="..." />
+                        </div>
+                    }
                 </div>
             </div>
 

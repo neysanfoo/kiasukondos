@@ -7,11 +7,10 @@ import PriceTable from '../components/PriceTable'
 import LineGraph from '../components/LineGraph'
 
 import {Swiper, SwiperSlide} from "swiper/react"
-import {Zoom, Autoplay, Pagination, Navigation} from 'swiper';
+import {Autoplay, Pagination, Navigation} from 'swiper';
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import "swiper/css/zoom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign, faBath, faBed, faLocationDot, faExpand } from '@fortawesome/free-solid-svg-icons'
 import L from 'leaflet';
@@ -104,43 +103,7 @@ function ListingDetails() {
 
     }, [listingData])
 
-    const mymap = useRef(null);
     
-    useEffect(()=>{
-        const map = L.map(mymap.current).setView([1.3521, 103.8198], 12);
-        // Add a tile layer to the map
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "Map data &copy; OpenStreetMap contributors",
-        maxZoom: 18,
-        }).addTo(map);
-        const address = listingData.address;
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&addressdetails=1&limit=1`;
-        console.log(url)
-        if (url !== undefined){
-            fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                //check if address is valid
-                if (data.length !== 0){
-                    const lat = data[0].lat;
-                    const lon = data[0].lon;
-                    //change view
-                    map.setView([lat,lon],14);
-                    // Add a marker to the map at the latitude and longitude coordinates
-                    L.marker([lat, lon]).addTo(map).bindPopup(listingData.address);
-                }
-                else{
-                    L.marker([1.3521,  103.8198]).addTo(map).bindPopup("Address Not Found");
-                }            
-            });
-        }
-        
-        
-        return () => {
-            // Clean up the map when the component unmounts
-            map.remove();
-        };
-    },[listingData])
 
     function getPropertyType() {
         if (listingData.property_type === 1) {
@@ -263,6 +226,11 @@ function ListingDetails() {
 
     }
 
+    /**
+     * This builds the photos modal using the SwiperJS library
+     * @returns Photos Modal
+     */
+
     function SwiperModal() {
         const [isOpen, setIsOpen] = useState(false);
         const [activeIndex, setActiveIndex] = useState(0);
@@ -346,6 +314,48 @@ function ListingDetails() {
             </>
         );
     }
+
+    /**
+     * Stuff I added
+     * This calls a map api to show the location of the given address
+     */
+    const mymap = useRef(null);
+    
+    useEffect(()=>{
+        const map = L.map(mymap.current).setView([1.3521, 103.8198], 12);
+        // Add a tile layer to the map
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "Map data &copy; OpenStreetMap contributors",
+        maxZoom: 18,
+        }).addTo(map);
+        const address = listingData.address;
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&addressdetails=1&limit=1`;
+        console.log(url)
+        if (url !== undefined){
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                //check if address is valid
+                if (data.length !== 0){
+                    const lat = data[0].lat;
+                    const lon = data[0].lon;
+                    //change view
+                    map.setView([lat,lon],14);
+                    // Add a marker to the map at the latitude and longitude coordinates
+                    L.marker([lat, lon]).addTo(map).bindPopup(listingData.address);
+                }
+                else{
+                    L.marker([1.3521,  103.8198]).addTo(map).bindPopup("Address Not Found");
+                }            
+            });
+        }
+        
+        
+        return () => {
+            // Clean up the map when the component unmounts
+            map.remove();
+        };
+    },[listingData])
     
     return(
         <div className='container mt-4'>
