@@ -113,7 +113,7 @@ const EditProfile = () => {
         { withCredentials: true }
       );
 
-      window.location.href = "/";
+      window.location.href = "/homes";
     } catch (error) {
       console.log(error);
     }
