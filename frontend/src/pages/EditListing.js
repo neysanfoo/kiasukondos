@@ -66,7 +66,7 @@ function EditListing() {
         .then(function (response) {
             // Check if the current user is the owner of this listing
             if (owner && response.data.id !== owner) {
-                window.location.href = "/"
+                window.location.href = "/homes"
             } 
         })
         .catch(function (error) {
@@ -105,7 +105,7 @@ function EditListing() {
             }
         }).then((response) => {
             console.log(response.data)
-            window.location.href = "/"
+            window.location.href = "/homes"
 
         }
         )

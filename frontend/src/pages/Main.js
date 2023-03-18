@@ -1,6 +1,7 @@
 import Header from '../components/Header'
 
 // Pages
+import HomePage from './HomePage'
 import Home from './Home'
 import ListingDetails from './ListingDetails'
 import Login from './Login'
@@ -28,7 +29,8 @@ function Main() {
     <div>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/homes" element={<Home />} />
         <Route path="/listing/:listing_id" element={<ListingDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
