@@ -1,11 +1,13 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api"
+
 function Logout() {
     useEffect(() => {
         var config = {
           method: 'post',
-          url: 'http://localhost:8000/api/logout/',
+          url: baseURL + '/logout/',
           headers: { },
           withCredentials: true
         };

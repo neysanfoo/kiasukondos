@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const baseURL = process.env.REACT_APP_BACKEND_URL + '/api';
+
 const LikeButton = ({ user_id, listing_id }) => {
     const [isLiked, setIsLiked] = useState(false);
 
@@ -8,7 +10,7 @@ const LikeButton = ({ user_id, listing_id }) => {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://localhost:8000/api/fetch-like-status/' + listing_id ,
+            url: baseURL + '/fetch-like-status/' + listing_id ,
             withCredentials: true,
           };
         axios(config)
@@ -28,7 +30,7 @@ const LikeButton = ({ user_id, listing_id }) => {
         formData.append('listing', listing_id);
         var config = {
             method: 'post',
-            url: 'http://localhost:8000/api/likes/',
+            url: baseURL + '/likes/',
             withCredentials: true,
             data: formData
         };

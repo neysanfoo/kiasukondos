@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'
 import axios from 'axios'
 
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
+
 function Header() {
   let headerContent;
   const [auth, setAuth] = useState(false)
@@ -9,7 +11,7 @@ function Header() {
   useEffect(() => {
     var config = {
         method: 'get',
-        url: 'http://localhost:8000/api/user/',
+        url: baseURL + '/user/',
         withCredentials: true
     };
     

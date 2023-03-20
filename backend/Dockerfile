@@ -9,4 +9,6 @@ WORKDIR /kiasukondo_api
 
 COPY . /kiasukondo_api/
 
-RUN pip install --upgrade pip && pip install pip-tools && pip install -r requirements.txt 
+RUN pip install --upgrade pip && pip install pip-tools && pip install -r requirements.txt  && python manage.py migrate && python manage.py loaddata fixtures.json && python manage.py collectstatic --noinput
+
+EXPOSE 8000

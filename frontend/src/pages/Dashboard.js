@@ -3,6 +3,8 @@ import UserInformation from "../components/UserInformation";
 import axios from "axios"
 import { useState, useEffect } from "react";
 
+const baseURL = process.env.REACT_APP_BACKEND_URL
+
 function Dashboard() {
 
     const [myPurchases, setMyPurchases] = useState([])
@@ -14,7 +16,7 @@ function Dashboard() {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://localhost:8000/api/purchases/',
+            url: baseURL + '/api/purchases/',
             withCredentials: true,
         };
         axios(config)
@@ -30,7 +32,7 @@ function Dashboard() {
 
         config = {
             method: 'get',
-            url: 'http://localhost:8000/api/listings-by-user/',
+            url: baseURL + '/api/listings-by-user/',
             withCredentials: true,
         };
         axios(config)
@@ -43,7 +45,7 @@ function Dashboard() {
 
         config = {
             method: 'get',
-            url: 'http://localhost:8000/api/likes/',
+            url: baseURL + '/api/likes/',
             withCredentials: true,
         };
         axios(config)
@@ -55,13 +57,13 @@ function Dashboard() {
 
         config = {
             method: 'get',
-            url: 'http://localhost:8000/api/user-profile/',
+            url: baseURL + '/api/user-profile/',
             withCredentials: true,
         };
         axios(config)
         .then(function (response) {
             setUser(response.data.user.id)
-            setProfilePic(`http://localhost:8000${response.data.profile.profile_picture}`)
+            setProfilePic(response.data.profile.profile_picture)
         }).catch(function (error) {
             console.log(error);
         });

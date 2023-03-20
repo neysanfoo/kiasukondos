@@ -8,3 +8,5 @@ media
 */photos
 kiasukondo.pem
 *.pem
+*.env
+*static/
