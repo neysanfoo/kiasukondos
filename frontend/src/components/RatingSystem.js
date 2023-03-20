@@ -7,7 +7,7 @@ function RatingSystem(props) {
             <input type="radio" onChange={props.handleChange} id="star1" name="rating" value="1" />
             <input type="radio" onChange={props.handleChange} id="star2" name="rating" value="2" />
             <input type="radio" onChange={props.handleChange} id="star3" name="rating" value="3" />
-            <input type="radio" onChange={props.handleChange}  id="star4" name="rating" value="4" />
+            <input type="radio" onChange={props.handleChange} id="star4" name="rating" value="4" />
             <input type="radio" onChange={props.handleChange} id="star5" name="rating" value="5" />
             <label for="star1" aria-label="Banana">1 star</label>
             <label for="star2">2 stars</label>

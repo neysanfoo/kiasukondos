@@ -22,7 +22,7 @@ function Login() {
         
         axios(config)
         .then(function (response) {
-          window.location.href = "/"
+          window.location.href = "/homes"
         })
         .catch(function (error) {
             console.log(error);
@@ -59,7 +59,7 @@ function Login() {
 
       axios(config)
       .then(function (response) {
-        window.location.href = "/"
+        window.location.href = "/homes"
       })
       .catch(function (error) {
         setError(error.response.data.error)

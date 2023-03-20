@@ -77,7 +77,7 @@ function UserProfile() {
                         <div className="card-body">
                             <h5>Listings</h5>
                             <div className="row">
-                            {myListings.length == 0 ? <h1>User does not have any listings yet</h1> : 
+                            {myListings.length === 0 ? <h1>User does not have any listings yet</h1> : 
                                 <div className="scrolling--listing--container">
                                 {myListings.map((item) => (
                                     <div className='listing--in--scrolling--container'>
@@ -100,7 +100,7 @@ function UserProfile() {
                             </div>
                             <h5 className="mt-4">Reviews</h5>
                             <div className="review-container">
-                                {myReviews.length == 0 ? <h1>User does not have any reviews yet</h1> : 
+                                {myReviews.length === 0 ? <h1>User does not have any reviews yet</h1> : 
                                 myReviews.map((item) => (
                                     <div className="card" key={item.id}>
                                     <div className="card-body">

@@ -160,6 +160,12 @@ function Chat() {
 
     function sendMessage() {
         socket.emit("message", messageData);
+        setMessageData(
+            {
+                ...messageData,
+                message: ""
+            }
+        )
     }
 
     useEffect(() => {

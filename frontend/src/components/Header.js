@@ -65,7 +65,7 @@ function Header() {
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="navbar-nav ms-auto">
-            <Link className="nav-link" to="/">Home</Link>
+            <Link className="nav-link" to="/homes">Buy</Link>
             {headerContent}
           </div>
         </div>
