@@ -283,8 +283,6 @@ function Chat() {
         // If is_owner and not_accpeted, say sender_name has offered price for listing title (Link to listing)
         // If not is_owner and is_accepted, say that you have bought this for price
         // If not is_owner and not_accepted, say that you have offered price for listing title (Link to listing)
-        console.log(sender_name)
-        console.log(listing_id)
         console.log(buyer_left_review)
         console.log(seller_left_review)
         if (is_owner) {
