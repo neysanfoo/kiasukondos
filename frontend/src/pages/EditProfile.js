@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const baseURL = process.env.REACT_APP_BACKEND_URL;
+
 const EditProfile = () => {
   // use object destructuring for state variables
   const [formData, setFormData] = useState({
@@ -22,7 +24,7 @@ const EditProfile = () => {
     const getUserProfile = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:8000/api/user-profile/",
+          baseURL + "/api/user-profile/",
           { withCredentials: true }
         );
         setFormData({
@@ -67,7 +69,7 @@ const EditProfile = () => {
       data.append("phone_number", formData.phoneNumber);
 
       const { data: responseData } = await axios.patch(
-        "http://localhost:8000/api/user-profile/",
+        baseURL + "/api/user-profile/",
         data,
         { withCredentials: true }
       );
@@ -87,7 +89,7 @@ const EditProfile = () => {
       data.append("confirm_password", formData.confirmPassword);
 
       const { data: responseData } = await axios.patch(
-        "http://localhost:8000/api/change-password/",
+        baseURL + "/api/change-password/",
         data,
         { withCredentials: true }
       );
@@ -109,7 +111,7 @@ const EditProfile = () => {
   const deleteAccount = async (e) => {
     try {
       const { data } = await axios.delete(
-        "http://localhost:8000/api/user-profile/",
+        baseURL + "/api/user-profile/",
         { withCredentials: true }
       );
 
@@ -127,7 +129,7 @@ const EditProfile = () => {
           {formData.currentPictureUrl ? (
             <img
                 className="edit-profile__current-photo"
-              src={`http://localhost:8000${formData.currentPictureUrl}`}
+              src={formData.currentPictureUrl}
               alt="Current Profile Picture"
             />
           ) : (

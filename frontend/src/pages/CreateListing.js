@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-
-import {Swiper, SwiperSlide} from "swiper/react"
-import {Zoom, Autoplay, Pagination, Navigation} from 'swiper';
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-const baseURL="http://127.0.0.1:8000/api"
-
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
 
 function CreateListing() {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://localhost:8000/api/user/',
+            url: baseURL + '/user/',
             withCredentials: true
         };
         
