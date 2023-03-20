@@ -9,3 +9,4 @@ media
 kiasukondo.pem
 *.pem
 *.env
+*static/
