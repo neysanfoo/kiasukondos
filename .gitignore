@@ -7,4 +7,5 @@ media
 *.DS_Store
 */photos
 kiasukondo.pem
+watchman_sync/
 *.pem
