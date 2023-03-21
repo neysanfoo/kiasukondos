@@ -248,43 +248,35 @@ function ListingDetails() {
             <>
             <Swiper
                 centeredSlides={true}
+                autoplay = {{
+                    delay: 2500,
+                    disableOnInteraction: true,
+                }}
                 navigation
                 loop
+                pagination={{
+                    clickable: true,
+                }}
+                slidesPerView={3}
+                spaceBetween={10}
                 className="mySwiper"
-                modules={[Navigation]}
+                modules={[Autoplay, Pagination, Navigation]}
             >
                 <SwiperSlide> 
-                        <img src={listingData.photo_main} id = "photo_main" class="d-block rounded 25 h-100 w-100"  alt="..." onClick={() => handleOpenModal(0)}/>
-                        
+                        <img src={listingData.photo_main} id = "photo_main" style = {{height: "100%", aspectRatio: "4/3",  borderRadius: "5px"}} alt="..." onClick={() => handleOpenModal(0)}/>
                 </SwiperSlide>
-                <SwiperSlide style={{display: "flex", alignItems:"center", justifyContent: "center"}}>
-                    <Swiper 
-                        autoplay = {{
-                            delay: 2500,
-                            disableOnInteraction: false,
-                        }}
-                        slidesPerView={3}
-                        spaceBetween = {5}
-                        loop
-                        pagination={{
-                            clickable: false,
-                        }}
-                        modules={[Autoplay, Pagination]}
-                        
-                    >
-                    {photos.map((photo, index) =>(
-                        <SwiperSlide class="swiper-slide img" style={{height: "100%"}}>
-                            <img src={photo} onClick={() => handleOpenModal(index + 1)} class="d-block rounded 25 h-100 w-100"  alt="..." />
-                        </SwiperSlide>
-                    ))}
-                    </Swiper>
-                </SwiperSlide>
+                {photos.map((photo, index) =>(
+                    <SwiperSlide class="swiper-slide img"  >
+                        <img src={photo} onClick={() => handleOpenModal(index + 1)} style = {{height: "100%", aspectRatio: "4/3",  borderRadius: "5px"}} alt="..." />
+                    </SwiperSlide>
+                ))}
+                
             </Swiper>
                 {isOpen &&
                     <div className="modal">
                     <div className="modal-content" >
-                        <span className="closeModal" onClick={handleCloseModal}>
-                            <button type = "button" style={{position: "absolute", top: "2%", left: "97%", backgroundColor: "transparent", border:'none', zIndex: "2", fontWeight: "bold"}} onClick={handleCloseModal}> X </button>
+                        <span className="closeModal" >
+                            <button type = "button" style={{position: "absolute", top: "2%", left: "97%", color:"#999", backgroundColor: "white", borderRadius: "50%", border:'none', zIndex: "2", fontWeight: "bold"}} onClick={handleCloseModal}> X </button>
                             <Swiper
                             id="modalSwiper"
                             style={{ width: '100%', height: '100%', zIndex: "1"}}

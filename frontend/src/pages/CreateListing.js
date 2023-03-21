@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-import {Swiper, SwiperSlide} from "swiper/react"
-import {Zoom, Autoplay, Pagination, Navigation} from 'swiper';
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
+import { FileUploader } from 'react-drag-drop-files';
+
 
 const baseURL="http://127.0.0.1:8000/api"
 
@@ -29,6 +26,9 @@ function CreateListing() {
         
     }, []);
 
+
+    
+      
     const [photoUrls, setPhotoUrls] = useState([])
     const [formData, setFormData] = useState({
         title: '',
@@ -54,6 +54,21 @@ function CreateListing() {
         town: ''
     });
 
+    const [predictedPrice, setPredicetedPrice] = useState(null)
+    useEffect(() => {
+        if (formData.town && formData.property_type && formData.sale_or_rent && formData.bedrooms) {
+          axios.get(`${baseURL}/predicted-price/${formData.town}/${formData.property_type}/${formData.sale_or_rent}/${formData.bedrooms}/`)
+            .then(response => {
+              console.log(response.data);
+              setPredicetedPrice(response.data.predictedPrice);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
+        console.log("predicted price " + predictedPrice);
+      }, [formData]);
+
     const towns = ['PUNGGOL', 'JURONG WEST', 'BEDOK', 'BUKIT MERAH', 'CHOA CHU KANG', 'TAMPINES',
     'SENGKANG', 'ANG MO KIO', 'HOUGANG', 'TOA PAYOH', 'JURONG EAST', 'WOODLANDS',
     'BUKIT BATOK', 'SEMBAWANG', 'CENTRAL', 'QUEENSTOWN', 'BISHAN', 'CLEMENTI',
@@ -63,21 +78,35 @@ function CreateListing() {
     console.log(formData)
     const handleChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        
     };
 
     const handleFileChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.files[0] });
-        
-        const file = e.target.files[0];
-        if (file){
-            const imageUrl = URL.createObjectURL(file);
-            const img = new Image();
-            img.src = imageUrl;
-            img.onload = () =>{
-                URL.revokeObjectURL(img.src);
-            };
-            setPhotoUrls({...photoUrls, [e.target.name]:imageUrl})
+        //setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+        const base = "photo_"
+        const newFormData = { ...formData };
+        const newPhotoUrls = { ...photoUrls };
+        for(let i = 0; i<e.length; i++){
+            const file = e[i];
+            if (file){
+                const imageUrl = URL.createObjectURL(file);
+                const img = new Image();
+                img.src = imageUrl;
+                img.onload = () =>{
+                    URL.revokeObjectURL(img.src);
+                };
+                if(i === 0){
+                    newFormData["photo_main"] = file;
+                    newPhotoUrls["photo_main"] = imageUrl;
+                }
+                else{
+                    newFormData[base + i.toString()] = file;
+                    newPhotoUrls[base + i.toString()] = imageUrl;
+                }
+            }   
         }
+        setFormData(newFormData);
+        setPhotoUrls(newPhotoUrls);
     };
 
     /**
@@ -108,6 +137,7 @@ function CreateListing() {
         }
         )
     };
+
 
   return (
     <div className='container'>
@@ -195,10 +225,6 @@ function CreateListing() {
                     <option value="2">For Rent</option>
                 </select>
                 
-                
-                
-                
-                
                 {/*<label htmlFor="bedrooms">Bedrooms:</label>*/}
                 <input
                     className="edit-listing-field"
@@ -210,7 +236,9 @@ function CreateListing() {
                     required
                     placeholder='Bedrooms'
                 />
-                
+
+                {formData.bedrooms && formData.bedrooms <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of bedrooms</p>}
+                {formData.bedrooms && formData.bedrooms >= 7 && <p style={{fontSize: "12px", color: "red"}}>{formData.bedrooms} bedrooms seem abit high. Please double-check your value</p>}
                 {/*<label htmlFor="bathrooms">Bathrooms:</label>*/}
                 <input
                     className="edit-listing-field"
@@ -222,7 +250,8 @@ function CreateListing() {
                     required
                     placeholder='Bathrooms'
                 />
-                
+                {formData.bathrooms && formData.bathrooms <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of bathrooms</p>}
+                {formData.bathrooms && formData.bathrooms >= 4 && <p style={{fontSize: "12px", color: "red"}}>{formData.bathrooms} bathrooms seem abit high. Please double-check your value</p>}
                 {/*<label htmlFor="garage">Garage:</label>*/}
                 <input
                     className="edit-listing-field"
@@ -234,6 +263,8 @@ function CreateListing() {
                     placeholder='Garage'
                 />
                 
+                {formData.garage && formData.garage <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of garage</p>}
+
                 {/*<label htmlFor="sqmeters">Sq Meters:</label>*/}
                 <div style={{position: "relative"}} >
                     <span style={{position: "absolute", left: "580px", top: "8%", zIndex: "1"}}>sqm</span>
@@ -248,6 +279,8 @@ function CreateListing() {
                         placeholder='Area'
                     />
                 </div>
+
+                {formData.sqmeters && formData.sqmeters <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid area</p>}
                 
                 {/*<label htmlFor="price">Price:</label>*/}
                 <div style={{position: "relative"}} >
@@ -263,14 +296,15 @@ function CreateListing() {
                     placeholder="Price"
                     style={{paddingLeft: "50px"}}
                     />
-                
                 </div>
+                {formData.price && formData.price <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid price</p>}
                 
                 <label htmlFor="list_date">List Date:</label>
                 <input
                     type="date"
                     id="list_date"
                     name="list_date"
+                    style={{fontSize: "16px", borderRadius: "10px"}}
                     onChange={handleChange}
                     value={formData.list_date}
                 />  
@@ -293,8 +327,16 @@ function CreateListing() {
             
             <hr></hr>
             
-             
             <div className="edit-listing-photo-container">
+                
+                <FileUploader 
+                    //label={"Drag or Drop Files"} 
+                    dropMessageStyle = {{backgroundColor: 'red !important' }}
+                    handleChange={handleFileChange}
+                    classes = "drop_area drop_zone"
+                    multiple = {true}/>
+                {/**
+                 * 
                 <label htmlFor="photo_main">Main Photo:</label>
                 <input
                     type="file"
@@ -344,6 +386,7 @@ function CreateListing() {
                     name="photo_6"
                     onChange={handleFileChange}
                 />
+                 */}
                 <div className="edit-listing-image-container" >
                     {photoUrls["photo_main"] &&
                     <div style={{position:"relative", gridColumnStart:"1", gridColumnEnd:"4"}}>

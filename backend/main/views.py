@@ -76,6 +76,8 @@ class AnalyticsView(generics.ListAPIView):
 @api_view(["GET"])
 def fetch_analytics(request, pk):
     listing = Listing.objects.get(pk=pk)
+    print(pk)
+    print(listing)
     # Add the rent_predictor for 12 months
     town = listing.town
     property_type = listing.property_type
@@ -120,6 +122,71 @@ def fetch_analytics(request, pk):
         response.data = {
             "predicted_rent_price": predicted_rent_price
         }
+    return response
+
+@api_view(["GET"])
+def fetch_predicted_price(request, town, property_type, sale_or_rent, bedrooms):
+    
+    # Add the rent_predictor for 12 months
+    property_type = int(property_type)
+    sale_or_rent = int(sale_or_rent)
+    bedrooms = int(bedrooms)
+
+    FLAT_TYPE = ['1-ROOM', '2-ROOM', '3-ROOM', '4-ROOM', '5-ROOM', 'EXECUTIVE']
+    # map bedrooms to flat_type
+    print()
+    print()
+    print()
+    print()
+    print()
+    print(town,property_type,sale_or_rent,bedrooms)
+    print()
+    print()
+    print()
+    print()
+    print()
+    if property_type == 1:
+        flat_type = FLAT_TYPE[0]
+        if bedrooms == 1:
+            flat_type = FLAT_TYPE[0]
+        elif bedrooms == 2:
+            flat_type = FLAT_TYPE[1]
+        elif bedrooms == 3:
+            flat_type = FLAT_TYPE[2]
+        elif bedrooms == 4:
+            flat_type = FLAT_TYPE[3]
+        elif bedrooms == 5:
+            flat_type = FLAT_TYPE[4]
+        elif bedrooms == 6:
+            flat_type = FLAT_TYPE[5]
+        print(type(sale_or_rent))
+        print(sale_or_rent==1)
+        if sale_or_rent == 1:
+            print("A")
+            predicted_resale_price = resale_predictor(town = town, flat_type = flat_type)
+            print("B")
+            print("A"+predicted_resale_price)
+
+        if sale_or_rent == 2:
+            predicted_rent_price = rent_predictor(1, town, flat_type)
+            print("B"+predicted_rent_price)
+    print()
+    print()
+    print("ABC")
+    print()
+    print()
+    response = Response()
+    if sale_or_rent == 1:
+        predicted_price =sum(predicted_resale_price)/len(predicted_resale_price)
+        response.data = {
+            "predictedPrice": predicted_price
+        }
+    if sale_or_rent == 2:
+        predicted_price =sum(predicted_rent_price)/len(predicted_rent_price)
+        response.data = {
+            "predictedPrice": predicted_price
+        }
+    print(response.data)
     return response
 
 class SearchListingView(generics.ListAPIView):

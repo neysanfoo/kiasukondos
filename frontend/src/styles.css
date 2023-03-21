@@ -595,7 +595,33 @@
   height: auto;
   width: auto;
   object-fit: cover;
+  object-position: center;
   transition: all .2s ease-out;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  background-color: #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+.swiper-button-prev::after{
+  content: "";
+  display: inline-block;
+  border-style: solid;
+  border-width: 8px 16px 8px 0;
+  border-color: transparent #999 transparent transparent;
+}
+
+.swiper-button-next::after {
+  content: "";
+  display: inline-block;
+  border-style: solid;
+  border-width: 8px 0 8px 16px;
+  border-color: transparent transparent transparent #999;
 }
 
 .modal {
@@ -661,6 +687,21 @@
   margin-bottom: 20px;
   padding-left: 10px;
   font-size: 16px;
+}
+.react-drag-drop-files-droparea.dropzone{
+  background-color: red;
+  color: red;
+}
+
+.ewqTBN{
+  display: flex !important;
+  border: 2px dashed #13fb03 !important;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 32/9 !important;
+}
+.kyUZVo > span{
+  font-size: 16px !important;
 }
 
 .edit-listing-field:focus {
