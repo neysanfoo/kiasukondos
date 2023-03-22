@@ -45,104 +45,6 @@ function parseCookies (request) {
   return list;
 }
 
-// app.get("/messages", (req, res) => {
-//   // Get the jwt 
-//   const cookies = parseCookies(req);
-//   const jwt = cookies.jwt;
-//   var config = {
-//     method: 'post',
-//     url: 'http://localhost:8000/api/messages/',
-//     headers: {
-//       'Content-Type': 'application/json', 
-//     },
-//     data: {
-//       'jwt': jwt
-//     }
-//   };
-
-//   axios(config)
-//   .then(function (response) {
-//         res.status(200).send(response.data);
-//   }).catch(function (error) {
-//     console.log(error);
-//   });
-// });
-
-// app.post("/offer", (req, res) => {
-//   // Get the jwt 
-//   const cookies = parseCookies(req);
-//   const jwt = cookies.jwt;
-//   var config = {
-//     method: 'post',
-//     url: 'http://localhost:8000/api/offers/',
-//     headers: {
-//       'Content-Type': 'application/json', 
-//     },
-//     data: {
-//       'jwt': jwt,
-//       'listing': req.body.listing,
-//       'offer': req.body.offer
-//     }
-//   };
-
-//   axios(config)
-//   .then(function (response) {
-//     console.log(response.data)
-//     res.status(200).send(response.data);
-//   }).catch(function (error) {
-//     console.log(error);
-//   });
-// })
-
-
-
-
-// app.post("/server", (req, res) => {
-//   io.emit("command", req.body);
-//   console.log(req.body)
-//   res.status(201).json({ status: "reached" });
-// });
-
-// io.on("connection", (socket) => {
-//   console.log(`User connected ${socket.id}`);
-
-//   socket.on("join", function (room) {
-//     console.log("user joined " + room);
-//     socket.join(room);
-//   })
-
-
-//   socket.on("message", function (data) {
-//     // save the message in the django backend
-//     var config = {
-//       method: 'post',
-//       url: 'http://localhost:8000/api/add_message/',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       data: {
-//         'sender': data.sender,
-//         'receiver': data.receiver,
-//         'message': data.body,
-//       }
-//     };
-//     axios(config)
-//     .then(
-//       function (response) {
-//         response.data.chatId = data.chatId;
-//         io.to(data.chatId).emit("message", response.data);
-//       }
-//     ).catch(function (error) {
-//       console.log(error);
-//     }
-//     );
-//   })
-
-//   socket.on('disconnect', () => {
-//     console.log('user disconnected');
-//   });
-// });
-
 
 app.get("/chats", (req, res) => {
   // Get the jwt 
@@ -156,7 +58,8 @@ app.get("/chats", (req, res) => {
     },
     data: {
       'jwt': jwt
-    }
+    },
+    withCredentials: true
   };
 
   axios(config)
