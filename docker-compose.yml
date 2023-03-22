@@ -9,6 +9,8 @@ services:
     volumes:
       - ./backend:/app
     command: python manage.py runserver 0.0.0.0:8000
+    networks:
+      - mynet
   chatsocket:
     build:
       context: ./chatsocket
@@ -17,6 +19,8 @@ services:
     volumes:
       - ./chatsocket:/app
     command: npm start
+    networks:
+      - mynet
   frontend:
     build:
       context: ./frontend
@@ -25,3 +29,10 @@ services:
     volumes:
       - ./frontend:/app
     command: npm start
+    networks:
+      - mynet
+
+
+networks:
+  mynet:
+    driver: bridge
