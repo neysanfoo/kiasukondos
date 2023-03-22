@@ -12,7 +12,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDollarSign, faBath, faBed, faLocationDot, faExpand } from '@fortawesome/free-solid-svg-icons'
+import { faDollarSign, faBath, faBed, faLocationDot, faExpand, faUser } from '@fortawesome/free-solid-svg-icons'
 import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -61,7 +61,7 @@ function ListingDetails() {
 
     }, [])
 
-    console.log(listingData.sale_or_rent === 1 ? predictedResalePrice : predictedRentPrice)
+    //console.log(listingData.sale_or_rent === 1 ? predictedResalePrice : predictedRentPrice)
 
     function changeTimeframe(e) {
         // get the new data
@@ -153,7 +153,7 @@ function ListingDetails() {
             return "Rent"
         }
     }
-    console.log(user_id, listing_id)
+    //console.log(user_id, listing_id)
 
     function deleteListing() {
         var config = {
@@ -349,6 +349,22 @@ function ListingDetails() {
         };
     },[listingData])
     
+    function loadProfile(){
+        
+
+        axios.get(`http://localhost:8000/api/user-profile/${listingData.owner}`)
+          .then(response => {
+            console.log(response.data);
+            
+          })
+          .catch(error => {
+            console.log(error);
+          });
+       
+        return ;
+    };
+          
+    
     return(
         <div className='container mt-4'>
             <h1 className='listing--details--title'>{ listingData.title }</h1>
@@ -414,7 +430,21 @@ function ListingDetails() {
                 <h2><b>Price: </b> <FontAwesomeIcon icon={ faDollarSign } />{ listingData.price }</h2>
                 
                 <div style={{position: "absolute", top: "65%", left: "70%"}}>
-                        <b>Owner Name: </b> <Link to={/user-profile/ + listingData.owner}>{ listingData.owner_name }</Link>
+                    {console.log(listingData)}
+                    {/**
+                     * 
+                     * 
+                     * 
+                     * 
+                     * 
+                     * 
+                     * 
+                     * 
+                     * 
+                        {listingData.owner.profilePicture && <img src = {listingData.owner.currentPictureUrl}/> }
+                    */}
+                        { loadProfile() && <FontAwesomeIcon style = {{color:"white",backgroundColor:"gray",height:"40px", width: "40px"}}icon={ faUser } />}
+                        <b> Owner Name: </b> <Link to={/user-profile/ + listingData.owner}>{ listingData.owner_name }</Link>
                         { user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
                         <div>
                             <input name="offer" value={offer} onChange={handleChange} type="number" />

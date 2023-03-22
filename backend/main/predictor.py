@@ -113,7 +113,6 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
         )
         df = pd.DataFrame(loads(urlopen(req).read().decode("utf-8"))["result"]["records"])
         if not df.empty: resale_prices.append(pd.DataFrame(loads(urlopen(req).read().decode("utf-8"))["result"]["records"])[['month', 'resale_price']])
-        
     if len(resale_prices) == 0:
         if flat_type is not None:
             warn("Not enough data to predict specified flat type; Expanding data to all flat types")
@@ -131,7 +130,6 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
     data.set_index('date', inplace=True)
     data.index = data.index.to_period('M')
     data = data.sort_index()
-    
     model = ARIMA(data, order=(5, 1, 2))
     results = model.fit()
     future = results.predict(steps=months, start=datetime.now()-relativedelta(months=1), end=datetime.now()+relativedelta(months=months)).to_frame().reset_index()

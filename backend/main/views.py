@@ -10,6 +10,9 @@ from django.db.models import Q
 from django.db.models import Case, When, IntegerField
 from .predictor import rent_predictor, resale_predictor
 
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
 
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -124,6 +127,9 @@ def fetch_analytics(request, pk):
         }
     return response
 
+'''
+Method to fetch predicited average price when filling up the create-listing/ edit-listing form
+'''
 @api_view(["GET"])
 def fetch_predicted_price(request, town, property_type, sale_or_rent, bedrooms):
     
@@ -134,17 +140,6 @@ def fetch_predicted_price(request, town, property_type, sale_or_rent, bedrooms):
 
     FLAT_TYPE = ['1-ROOM', '2-ROOM', '3-ROOM', '4-ROOM', '5-ROOM', 'EXECUTIVE']
     # map bedrooms to flat_type
-    print()
-    print()
-    print()
-    print()
-    print()
-    print(town,property_type,sale_or_rent,bedrooms)
-    print()
-    print()
-    print()
-    print()
-    print()
     if property_type == 1:
         flat_type = FLAT_TYPE[0]
         if bedrooms == 1:
@@ -159,34 +154,32 @@ def fetch_predicted_price(request, town, property_type, sale_or_rent, bedrooms):
             flat_type = FLAT_TYPE[4]
         elif bedrooms == 6:
             flat_type = FLAT_TYPE[5]
-        print(type(sale_or_rent))
-        print(sale_or_rent==1)
+
         if sale_or_rent == 1:
-            print("A")
-            predicted_resale_price = resale_predictor(town = town, flat_type = flat_type)
-            print("B")
-            print("A"+predicted_resale_price)
+            predicted_resale_price = resale_predictor(months = 12, town = town, flat_type = flat_type)
+            print(predicted_resale_price)
 
         if sale_or_rent == 2:
             predicted_rent_price = rent_predictor(1, town, flat_type)
-            print("B"+predicted_rent_price)
-    print()
-    print()
-    print("ABC")
-    print()
-    print()
+            print(predicted_rent_price)
+
     response = Response()
     if sale_or_rent == 1:
-        predicted_price =sum(predicted_resale_price)/len(predicted_resale_price)
+        predicted_price = 0
+        for index, row in predicted_resale_price.iterrows():
+            predicted_price += row['predicted_mean']
+        predicted_price /= len(predicted_resale_price.index)
         response.data = {
             "predictedPrice": predicted_price
         }
     if sale_or_rent == 2:
-        predicted_price =sum(predicted_rent_price)/len(predicted_rent_price)
+        predicted_price = 0
+        for index, row in predicted_rent_price.iterrows():
+            predicted_price += row['predicted_mean']
+        predicted_price /= len(predicted_rent_price.index)
         response.data = {
             "predictedPrice": predicted_price
         }
-    print(response.data)
     return response
 
 class SearchListingView(generics.ListAPIView):

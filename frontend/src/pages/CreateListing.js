@@ -298,7 +298,16 @@ function CreateListing() {
                     />
                 </div>
                 {formData.price && formData.price <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid price</p>}
+                {predictedPrice && <div>
+                    <p style={{fontSize: "12px", fontColor: "red"}}>The predicted price for {formData.bedrooms} Bedrooms in {formData.town} is ${Math.round(predictedPrice)}</p>
+                    </div>}
+               
+                {predictedPrice && formData.price && (formData.price >= 1.2 * predictedPrice || formData.price <= 0.8 * predictedPrice)
                 
+                &&<div>
+                    
+                    <p style={{fontSize: "12px", color: "red"}}>You have inputted {formData.price} and it appears to either too fking high or too fking low pls check</p>
+                </div>}
                 <label htmlFor="list_date">List Date:</label>
                 <input
                     type="date"
