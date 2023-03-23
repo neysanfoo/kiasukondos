@@ -24,6 +24,13 @@ function EditListing() {
         bathrooms: '',
         garage: '',
         sqmeters: '',
+        photo_main: null,
+        photo_1: null,
+        photo_2: null,
+        photo_3: null,
+        photo_4: null,
+        photo_5: null,
+        photo_6: null,
         is_published: true,
     });
 
@@ -37,6 +44,7 @@ function EditListing() {
         axios(config)
         .then(function (response) {
             const res = response.data
+            console.log(response.data)
             setFormData({
                 title: res.title,
                 address: res.address,
@@ -49,9 +57,25 @@ function EditListing() {
                 bathrooms: res.bathrooms,
                 garage: res.garage,
                 sqmeters: res.sqmeters,
+                photo_main: res.photo_main,
+                photo_1: res.photo_1,
+                photo_2: res.photo_2,
+                photo_3: res.photo_3,
+                photo_4: res.photo_4,
+                photo_5: res.photo_5,
+                photo_6: res.photo_6,
                 is_published: res.is_published, 
             })
             setOwner(res.owner)
+            setPhotoUrls({
+                photo_main: res.photo_main,
+                photo_1: res.photo_1,
+                photo_2: res.photo_2,
+                photo_3: res.photo_3,
+                photo_4: res.photo_4,
+                photo_5: res.photo_5,
+                photo_6: res.photo_6,
+            })
         })
         .catch(function (error) {
             console.log(error);
@@ -59,6 +83,7 @@ function EditListing() {
         
     }, []);
 
+    console.log(formData);
     useEffect (() => {
         var config = {
             method: 'get',
@@ -143,10 +168,25 @@ function EditListing() {
         console.log(formData);
     }
 
+    const [predictedPrice, setPredicetedPrice] = useState(null)
+    useEffect(() => {
+        if (formData.town && formData.property_type && formData.sale_or_rent && formData.bedrooms) {
+          axios.get(`${baseURL}/predicted-price/${formData.town}/${formData.property_type}/${formData.sale_or_rent}/${formData.bedrooms}/`)
+            .then(response => {
+              console.log(response.data);
+              setPredicetedPrice(response.data.predictedPrice);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
+        console.log("predicted price " + predictedPrice);
+      }, [formData]);
+
     return (
         <div className='container'>
             <form className='create--listing--form' onSubmit={handleSubmit}>
-                <div className='listing-details' style={{float: "right", fontSize: "20px", width: "50%", marginTop: "10px"}}>
+                <div className='edit--listing-details'>
                     <h2>Location</h2>
                     <label htmlFor="title" >Listing Title:</label>
                     <input
@@ -162,7 +202,7 @@ function EditListing() {
                     <label htmlFor="town" >Town</label>
                     <select
                         className="edit-listing-dropdown"
-                        //style={{borderRadius: "10px", width: "100%", height: "34px", boxShadow: "5px 5px lightgray" }}
+                        
                         id="town"
                         name="town"
                         onChange={handleChange}
@@ -230,48 +270,60 @@ function EditListing() {
                     </select>
                     
                     {/*<label htmlFor="bedrooms">Bedrooms:</label>*/}
-                    <input
-                        className="edit-listing-field"
-                        type="number"
-                        id="bedrooms"
-                        name="bedrooms"
-                        onChange={handleChange}
-                        value={formData.bedrooms}
-                        required
-                        placeholder='Bedrooms'
-                    />
+                    <div style={{position: "relative"}} >
     
-                    {formData.bedrooms && formData.bedrooms <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of bedrooms</p>}
-                    {formData.bedrooms && formData.bedrooms >= 7 && <p style={{fontSize: "12px", color: "red"}}>{formData.bedrooms} bedrooms seem abit high. Please double-check your value</p>}
+                        {formData.bedrooms && <span className = "edit-listing-field-units" >Bedrooms</span>}
+                        <input
+                            className="edit-listing-field"
+                            type="number"
+                            id="bedrooms"
+                            name="bedrooms"
+                            onChange={handleChange}
+                            value={formData.bedrooms}
+                            required
+                            placeholder='Bedrooms'
+                        />
+                    </div>
+    
+                    {formData.bedrooms !== null && formData.bedrooms <= 0 && <p className = "edit-listing-field-warning">Error: Please enter a valid number of bedrooms</p>}
+                    {formData.bedrooms !== null && formData.bedrooms >= 7 && <p className = "edit-listing-field-warning">{formData.bedrooms} bedrooms seem abit high. Please double-check your value</p>}
                     {/*<label htmlFor="bathrooms">Bathrooms:</label>*/}
-                    <input
-                        className="edit-listing-field"
-                        type="number"
-                        id="bathrooms"
-                        name="bathrooms"
-                        onChange={handleChange}
-                        value={formData.bathrooms}
-                        required
-                        placeholder='Bathrooms'
-                    />
-                    {formData.bathrooms && formData.bathrooms <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of bathrooms</p>}
-                    {formData.bathrooms && formData.bathrooms >= 4 && <p style={{fontSize: "12px", color: "red"}}>{formData.bathrooms} bathrooms seem abit high. Please double-check your value</p>}
-                    {/*<label htmlFor="garage">Garage:</label>*/}
-                    <input
-                        className="edit-listing-field"
-                        type="number"
-                        id="garage"
-                        name="garage"
-                        onChange={handleChange}
-                        value={formData.garage}
-                        placeholder='Garage'
-                    />
                     
-                    {formData.garage && formData.garage <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of garage</p>}
+                    <div style={{position: "relative"}} >
+                        {formData.bathrooms && <span className = "edit-listing-field-units">Bathrooms</span>}
+                        <input
+                            className="edit-listing-field"
+                            type="number"
+                            id="bathrooms"
+                            name="bathrooms"
+                            onChange={handleChange}
+                            value={formData.bathrooms}
+                            required
+                            placeholder='Bathrooms'
+                        />
+                    </div>
+                    {formData.bathrooms !== null && formData.bathrooms <= 0 && <p className = "edit-listing-field-warning">Error: Please enter a valid number of bathrooms</p>}
+                    {formData.bathrooms !== null && formData.bathrooms >= 4 && <p className = "edit-listing-field-warning">{formData.bathrooms} bathrooms seem abit high. Please double-check your value</p>}
+                    
+                    {/*<label htmlFor="garage">Garage:</label>*/}
+                    <div style={{position: "relative"}} >
+                        {formData.garage !== null && <span className = "edit-listing-field-units">Garage</span>}
+                        <input
+                            className="edit-listing-field"
+                            type="number"
+                            id="garage"
+                            name="garage"
+                            onChange={handleChange}
+                            value={formData.garage}
+                            placeholder='Garage'
+                        />
+                    </div>
+                    
+                    { formData.garage !== null && formData.garage < 0 && <p className = "edit-listing-field-warning">Error: Please enter a valid number of garage</p>}
     
                     {/*<label htmlFor="sqmeters">Sq Meters:</label>*/}
                     <div style={{position: "relative"}} >
-                        <span style={{position: "absolute", left: "580px", top: "8%", zIndex: "1"}}>sqm</span>
+                        <span  className = "edit-listing-field-units">sqm</span>
                         <input
                             className="edit-listing-field"
                             type="number"
@@ -284,7 +336,7 @@ function EditListing() {
                         />
                     </div>
     
-                    {formData.sqmeters && formData.sqmeters <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid area</p>}
+                    { formData.sqmeters !== null && formData.sqmeters < 0 && <p className = "edit-listing-field-warning">Error: Please enter a valid area</p>}
                     
                     {/*<label htmlFor="price">Price:</label>*/}
                     <div style={{position: "relative"}} >
@@ -301,14 +353,26 @@ function EditListing() {
                         style={{paddingLeft: "50px"}}
                         />
                     </div>
-                    {formData.price && formData.price <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid price</p>}
+                    {formData.price !== null &&  formData.price <= 0 && <p className = "edit-listing-field-warning">Error: Please enter a valid price</p>}
+    
+                    {predictedPrice && predictedPrice === -1 && 
+                        <p className = "edit-listing-field-warning">Insufficient data to find average for {formData.bedrooms} Bedrooms in {formData.town}</p>
+                    }
+    
+                    {predictedPrice && predictedPrice !== -1 &&
+                        <p style={{fontSize: "12px"}}>The average price from 2022 for {formData.bedrooms} Bedrooms in {formData.town} is ${Math.round(predictedPrice)}</p>
+                    }
+    
+                    {predictedPrice && formData.price && (formData.price >= 1.2 * predictedPrice || formData.price <= 0.8 * predictedPrice) &&
+                        <p className = "edit-listing-field-warning">You have inputted ${formData.price} and it appears to be either too high or too low consider putting closer to the average price of ${Math.round(predictedPrice)}</p>
+                    }
                     
                     <label htmlFor="list_date">List Date:</label>
                     <input
                         type="date"
                         id="list_date"
                         name="list_date"
-                        style={{fontSize: "16px", borderRadius: "10px"}}
+                        className = "edit-listing-list-date"
                         onChange={handleChange}
                         value={formData.list_date}
                     />  
@@ -320,7 +384,7 @@ function EditListing() {
                         name="description"
                         onChange={handleChange}
                         value={formData.description}
-                        style={{fontSize: "16px", height: "400px", paddingTop: "10px"}}
+                        style={{height: "400px", paddingTop: "10px"}} //Increase height and have some padding but keep rest of the styling
                         placeholder="Share details about this property to help buyers decide if this will be their future home"
                         required
                     ></textarea>
@@ -334,10 +398,8 @@ function EditListing() {
                 <div className="edit-listing-photo-container">
                     
                     <FileUploader 
-                        //label={"Drag or Drop Files"} 
-                        dropMessageStyle = {{backgroundColor: 'red !important' }}
+    
                         handleChange={handleFileChange}
-                        classes = "drop_area drop_zone"
                         multiple = {true}/>
                     {/**
                      * 
@@ -391,12 +453,14 @@ function EditListing() {
                         onChange={handleFileChange}
                     />
                      */}
+                     {console.log(formData)}
+                     {console.log(photoUrls)}
                     <div className="edit-listing-image-container" >
                         {photoUrls["photo_main"] &&
-                        <div style={{position:"relative", gridColumnStart:"1", gridColumnEnd:"4"}}>
+                        <div class = "edit-listing-main-image-container">
                             <h4> Main Photo </h4>
                             <button class = "edit-listing-image-remove" style={{top: "13%"}} onClick={()=>handleFileRemove("photo_main")}> &times; </button> 
-                            <img src={photoUrls["photo_main"]} class = "edit-listing-mainImage" alt="..." style={{width: "100%", aspectRatio:"16/9", borderRadius: "5px"}} />
+                            <img src={photoUrls["photo_main"]} class = "edit-listing-main-image" alt="..."  />
                         </div>
                         }
                         

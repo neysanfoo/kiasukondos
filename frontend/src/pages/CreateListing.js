@@ -142,7 +142,7 @@ function CreateListing() {
   return (
     <div className='container'>
         <form className='create--listing--form' onSubmit={handleSubmit}>
-            <div className='listing-details' style={{float: "right", fontSize: "20px", width: "50%", marginTop: "10px"}}>
+            <div className='edit--listing-details'>
                 <h2>Location</h2>
                 <label htmlFor="title" >Listing Title:</label>
                 <input
@@ -158,7 +158,7 @@ function CreateListing() {
                 <label htmlFor="town" >Town</label>
                 <select
                     className="edit-listing-dropdown"
-                    //style={{borderRadius: "10px", width: "100%", height: "34px", boxShadow: "5px 5px lightgray" }}
+                    
                     id="town"
                     name="town"
                     onChange={handleChange}
@@ -228,7 +228,7 @@ function CreateListing() {
                 {/*<label htmlFor="bedrooms">Bedrooms:</label>*/}
                 <div style={{position: "relative"}} >
 
-                    {formData.bedrooms && <span style={{fontSize: "16px", position: "absolute", right: "30px", top: "12%", zIndex: "1"}}>Bedrooms</span>}
+                    {formData.bedrooms && <span className = "edit-listing-field-units" >Bedrooms</span>}
                     <input
                         className="edit-listing-field"
                         type="number"
@@ -241,12 +241,12 @@ function CreateListing() {
                     />
                 </div>
 
-                {formData.bedrooms && formData.bedrooms <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of bedrooms</p>}
-                {formData.bedrooms && formData.bedrooms >= 7 && <p style={{fontSize: "12px", color: "red"}}>{formData.bedrooms} bedrooms seem abit high. Please double-check your value</p>}
+                {formData.bedrooms && formData.bedrooms <= 0 && <p className = "edit-listing-field-warning">Error: Please enter a valid number of bedrooms</p>}
+                {formData.bedrooms && formData.bedrooms >= 7 && <p className = "edit-listing-field-warning">{formData.bedrooms} bedrooms seem abit high. Please double-check your value</p>}
                 {/*<label htmlFor="bathrooms">Bathrooms:</label>*/}
                 
                 <div style={{position: "relative"}} >
-                    {formData.bathrooms && <span style={{fontSize: "16px", position: "absolute", right: "30px", top: "12%", zIndex: "1"}}>Bathrooms</span>}
+                    {formData.bathrooms && <span className = "edit-listing-field-units">Bathrooms</span>}
                     <input
                         className="edit-listing-field"
                         type="number"
@@ -258,12 +258,12 @@ function CreateListing() {
                         placeholder='Bathrooms'
                     />
                 </div>
-                {formData.bathrooms && formData.bathrooms <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of bathrooms</p>}
-                {formData.bathrooms && formData.bathrooms >= 4 && <p style={{fontSize: "12px", color: "red"}}>{formData.bathrooms} bathrooms seem abit high. Please double-check your value</p>}
+                {formData.bathrooms && formData.bathrooms <= 0 && <p className = "edit-listing-field-warning">Error: Please enter a valid number of bathrooms</p>}
+                {formData.bathrooms && formData.bathrooms >= 4 && <p className = "edit-listing-field-warning">{formData.bathrooms} bathrooms seem abit high. Please double-check your value</p>}
                 
                 {/*<label htmlFor="garage">Garage:</label>*/}
                 <div style={{position: "relative"}} >
-                    {formData.garage && <span style={{fontSize: "16px", position: "absolute", right: "30px", top: "12%", zIndex: "1"}}>Garage</span>}
+                    {formData.garage && <span className = "edit-listing-field-units">Garage</span>}
                     <input
                         className="edit-listing-field"
                         type="number"
@@ -275,11 +275,11 @@ function CreateListing() {
                     />
                 </div>
                 
-                {formData.garage && formData.garage <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of garage</p>}
+                {formData.garage && formData.garage <= 0 && <p className = "edit-listing-field-warning">Error: Please enter a valid number of garage</p>}
 
                 {/*<label htmlFor="sqmeters">Sq Meters:</label>*/}
                 <div style={{position: "relative"}} >
-                    <span style={{ fontSize: "16px", position: "absolute", right: "30px", top: "12%", zIndex: "1"}}>sqm</span>
+                    <span  className = "edit-listing-field-units">sqm</span>
                     <input
                         className="edit-listing-field"
                         type="number"
@@ -292,7 +292,7 @@ function CreateListing() {
                     />
                 </div>
 
-                {formData.sqmeters && formData.sqmeters <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid area</p>}
+                {formData.sqmeters && formData.sqmeters <= 0 && <p className = "edit-listing-field-warning">Error: Please enter a valid area</p>}
                 
                 {/*<label htmlFor="price">Price:</label>*/}
                 <div style={{position: "relative"}} >
@@ -309,24 +309,26 @@ function CreateListing() {
                     style={{paddingLeft: "50px"}}
                     />
                 </div>
-                {formData.price && formData.price <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid price</p>}
-                {predictedPrice && predictedPrice === -1 && <div>
-                    <p style={{fontSize: "12px", color: "red"}}>Insufficient data to find average for {formData.bedrooms} Bedrooms in {formData.town}</p>
-                    </div>}
-                {predictedPrice && predictedPrice !== -1 && <div>
+                {formData.price && formData.price <= 0 && <p className = "edit-listing-field-warning">Error: Please enter a valid price</p>}
+
+                {predictedPrice && predictedPrice === -1 && 
+                    <p className = "edit-listing-field-warning">Insufficient data to find average for {formData.bedrooms} Bedrooms in {formData.town}</p>
+                }
+
+                {predictedPrice && predictedPrice !== -1 &&
                     <p style={{fontSize: "12px"}}>The average price from 2022 for {formData.bedrooms} Bedrooms in {formData.town} is ${Math.round(predictedPrice)}</p>
-                    </div>}
-                {predictedPrice && formData.price && (formData.price >= 1.2 * predictedPrice || formData.price <= 0.8 * predictedPrice)
-                &&<div>
-                    <p style={{fontSize: "12px", color: "red"}}>You have inputted ${formData.price} and it appears to be either too high or too low consider putting closer to the average price of ${Math.round(predictedPrice)}</p>
-                </div>}
+                }
+
+                {predictedPrice && formData.price && (formData.price >= 1.2 * predictedPrice || formData.price <= 0.8 * predictedPrice) &&
+                    <p className = "edit-listing-field-warning">You have inputted ${formData.price} and it appears to be either too high or too low consider putting closer to the average price of ${Math.round(predictedPrice)}</p>
+                }
                 
                 <label htmlFor="list_date">List Date:</label>
                 <input
                     type="date"
                     id="list_date"
                     name="list_date"
-                    style={{fontSize: "16px", border: "1px solid", cursor: "pointer", height: "40px", borderRadius: "5px"}}
+                    className = "edit-listing-list-date"
                     onChange={handleChange}
                     value={formData.list_date}
                 />  
@@ -338,7 +340,7 @@ function CreateListing() {
                     name="description"
                     onChange={handleChange}
                     value={formData.description}
-                    style={{fontSize: "16px", height: "400px", paddingTop: "10px"}}
+                    style={{height: "400px", paddingTop: "10px"}} //Increase height and have some padding but keep rest of the styling
                     placeholder="Share details about this property to help buyers decide if this will be their future home"
                     required
                 ></textarea>
@@ -352,10 +354,8 @@ function CreateListing() {
             <div className="edit-listing-photo-container">
                 
                 <FileUploader 
-                    //label={"Drag or Drop Files"} 
-                    dropMessageStyle = {{backgroundColor: 'red !important' }}
+
                     handleChange={handleFileChange}
-                    classes = "drop_area drop_zone"
                     multiple = {true}/>
                 {/**
                  * 
@@ -411,10 +411,10 @@ function CreateListing() {
                  */}
                 <div className="edit-listing-image-container" >
                     {photoUrls["photo_main"] &&
-                    <div style={{position:"relative", gridColumnStart:"1", gridColumnEnd:"4"}}>
+                    <div class = "edit-listing-main-image-container">
                         <h4> Main Photo </h4>
                         <button class = "edit-listing-image-remove" style={{top: "13%"}} onClick={()=>handleFileRemove("photo_main")}> &times; </button> 
-                        <img src={photoUrls["photo_main"]} class = "edit-listing-mainImage" alt="..." style={{width: "100%", aspectRatio:"16/9", borderRadius: "5px"}} />
+                        <img src={photoUrls["photo_main"]} class = "edit-listing-main-image" alt="..."  />
                     </div>
                     }
                     

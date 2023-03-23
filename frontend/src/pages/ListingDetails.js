@@ -40,6 +40,10 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 const baseURL="http://127.0.0.1:8000/api"
 
+//Green and Red hex code used
+const primaryColor = "#008f79"
+const secondaryColor = "#ff2636"
+
 function ListingDetails() {
     const [listingData, setListingData] = useState([])
     const [isOwner, setIsOwner] = useState(false)
@@ -377,7 +381,7 @@ function ListingDetails() {
                  * I tried on 2 screen sizes it was ok...
                  */}
                 <div style={{display: "flex"}}>
-                    <div style={{display:"flex", flexDirection: 'column', flex: "1"}}> 
+                    <div className = "listing--details--title-details" > 
                         <h1>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}
                         
                         { user_id && listing_id && 
@@ -403,41 +407,61 @@ function ListingDetails() {
                     {/**
                      * Start of owner listing card
                      * I changed offer to useState(null) instead of useState(0) dont think it affects anything but just letting u know
-                     * At this point im just lazy to make new css styles lol
+                     * I made like 10 million css stylings for supposed "upgradability" ???????? its literally used once
+                     * Anyways I think have extra divs or unnecessary ones idk ...
+                     * It should look like how i sent u unless smth fked up then come find me agn...
                      */}
-                    <div style={{display:"flex", border: "1px solid", width :"30%", aspectRatio: "16/5" , borderRadius: "5px", marginLeft: "10px", boxShadow: "5px 5px lightgray"}}>
+                    <div className = "listing--details--owner-card">
                     
-                        <div style={{display: "flex", alignItems: "center"}}>
+                        <div className = "listing--details--owner-card-details" >
                             {/**
                              * Supposed to load profile picture here but now it always just loads the icon
                              */}
                             <div>
-                                <FontAwesomeIcon style={{ borderRadius: "5px", color: 'white', backgroundColor: 'gray', height: '80px', width: '80px', marginRight: '5px', marginLeft: '5px' }} icon={faUser} />
+                                <FontAwesomeIcon className = "listing--details--owner-card-profile" icon={faUser} />
                             </div>
 
-                            <div style={{display: "flex", flexDirection: "column"}}>
+                            <div className = "listing--details--owner-card-content" >
                                 <div>
                                     <b>Owner Name:</b>
                                     <Link to={'/user-profile/' + listingData.owner}>{listingData.owner_name}</Link>
                                 </div>
+                                { isOwner &&
+                                    <div>
+                                        <Link to={'/edit-listing/' + listing_id}>
+                                            <button type="button" className = "listing--details--owner-card-edit-listing" style={{backgroundColor: primaryColor}}>Edit Listing</button>
+                                        </Link>
+                                        <button type="button" className = "listing--details--owner-card-delete-listing" style={{backgroundColor: secondaryColor}} onClick={deleteListing}>Delete Listing</button>
+                                    </div>
+                                }
 
                                 {user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
-                                <div style={{marginRight: "10px", marginTop: "10px",  flexDirection: "column", display: "flex", alignItems: "flex-start"}}>
+                                <div className = "listing--details--owner-card-buyer" >
 
-                                    <div style={{display: "flex", flexDirection: "row"}}>
-                                        <input style={{ borderRadius: '5px 0px 0px 5px' }} name="offer" value={offer} onChange={handleChange} type="number" />
-                                        <button style={{ borderRadius: '0px 5px 5px 0px' }} type="button" onClick={makeOffer} style={{backgroundColor:  !offer || (offer && offer <= 0) ||
-                                                                                                                                                        (offer && offer > 0 && offer <= 0.8 * listingData.price) ||
-                                                                                                                                                        (offer && offer >= 1.2 * listingData.price)
-                                                                                                                                                        ? "#ff2636": "#008f79"
-                                        , color:"white"}}>Make Offer</button>
+                                    <div className = "listing--details--owner-card-buyer-options" >
+                                        <input  className = "listing--details--owner-card-offer-input" name="offer" value={offer} onChange={handleChange} type="number" />
+                                        <button 
+                                        className = "listing--details--owner-card-offer-button"
+                                        type="button" 
+                                        onClick={ !offer || 
+                                            (offer && offer <= 0) ||
+                                            (offer && offer > 0 && offer <= 0.8 * listingData.price) ||
+                                            (offer && offer >= 1.2 * listingData.price)
+                                            ? null : makeOffer} //If invalid offer do nothing else make offer
+                                        style={{
+                                        backgroundColor:  
+                                                !offer || (offer && offer <= 0) ||
+                                                (offer && offer > 0 && offer <= 0.8 * listingData.price) ||
+                                                (offer && offer >= 1.2 * listingData.price)
+                                                ? secondaryColor: primaryColor //If invalid offer button appears red else green
+                                        }}>Make Offer</button>
                                     </div>
 
-                                    <div style={{display: "flex", flexDirection: "row", marginTop: "10px"}}>
-                                        <button style={{ display: "flex",flexDirection: "column", borderRadius: '5px' }} type="button" onClick={createChat}>Chat with Owner</button>
-                                        {offer && offer <= 0 && <p style={{maxHeight:"14px", fontSize: "12px", marginLeft: "10px", color:"red"}}>Invalid offer value</p>}
-                                        {offer && offer > 0 && offer<= 0.8 * listingData.price && <p style={{maxHeight:"14px", fontSize: "12px", marginLeft: "10px", color:"red"}}>Offer is too low</p>}
-                                        {offer && offer >= 1.2 * listingData.price && <p style={{maxHeight:"14px", fontSize: "12px", marginLeft: "10px", color:"red" }}>Offer is too high</p>}
+                                    <div className = "listing--details--owner-card-chat" >
+                                        <button className = "listing--details--owner-card-chat-button" type="button" onClick={createChat}>Chat with Owner</button>
+                                        {offer && offer <= 0 && <p className = "listing--details--owner-card-warning">Invalid offer value</p>}
+                                        {offer && offer > 0 && offer<= 0.8 * listingData.price && <p className = "listing--details--owner-card-warning">Offer is too low</p>}
+                                        {offer && offer >= 1.2 * listingData.price && <p className = "listing--details--owner-card-warning">Offer is too high</p>}
                                     </div>
 
                                 </div>
@@ -493,9 +517,9 @@ function ListingDetails() {
             <div className="listing--details--info">
                 
                 <hr></hr>
-                <div style={{height: '400px' , fontSize: "20px"}}>
-                    <div style={{ float: 'right', aspectRatio: '1/1', height: '100%' }}>
-                        <div ref={mymap} style={{ height: '100%', width: '100%' , zIndex: "0" }} />
+                <div  className="listing--details--info-location">
+                    <div className="listing--details--info-map-container">
+                        <div className="listing--details--info-map" ref={mymap}/>
                     </div>
                     <p> <FontAwesomeIcon icon={faLocationDot} style={{fontSize: "1.5em"}}/> <b style={{fontSize: "32px"}}> Address: </b> </p>
                     <p><strong>Street: </strong>{ listingData.address }</p>
@@ -532,20 +556,6 @@ function ListingDetails() {
                 : null
             }
 
-            
-            
-            { isOwner &&
-                <div>
-                <Link to={'/edit-listing/' + listing_id}>
-                <button type="button">Edit Listing</button>
-                </Link>
-                </div>
-            }
-            {isOwner &&
-                <div>
-                <button type="button" onClick={deleteListing}>Delete Listing</button>
-                </div>
-            }
         </div>
     )
 }
