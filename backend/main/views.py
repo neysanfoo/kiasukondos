@@ -8,7 +8,7 @@ import jwt, datetime
 from rest_framework.decorators import api_view
 from django.db.models import Q
 from django.db.models import Case, When, IntegerField
-from .predictor import rent_predictor, resale_predictor
+from .predictor import rent_predictor, rent_mean, resale_mean, resale_predictor
 
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -128,10 +128,14 @@ def fetch_analytics(request, pk):
     return response
 
 '''
+
+
 Method to fetch predicited average price when filling up the create-listing/ edit-listing form
+
+
 '''
 @api_view(["GET"])
-def fetch_predicted_price(request, town, property_type, sale_or_rent, bedrooms):
+def fetch_mean_price(request, town, property_type, sale_or_rent, bedrooms):
     
     # Add the rent_predictor for 12 months
     property_type = int(property_type)
@@ -152,33 +156,25 @@ def fetch_predicted_price(request, town, property_type, sale_or_rent, bedrooms):
             flat_type = FLAT_TYPE[3]
         elif bedrooms == 5:
             flat_type = FLAT_TYPE[4]
-        elif bedrooms == 6:
+        elif bedrooms >= 6:
             flat_type = FLAT_TYPE[5]
 
         if sale_or_rent == 1:
-            predicted_resale_price = resale_predictor(months = 12, town = town, flat_type = flat_type)
-            print(predicted_resale_price)
+            mean_resale_price = resale_mean(town = town, flat_type = flat_type)
+            print(mean_resale_price)
 
         if sale_or_rent == 2:
-            predicted_rent_price = rent_predictor(1, town, flat_type)
-            print(predicted_rent_price)
+            mean_rent_price = rent_mean(town = town, flat_type = flat_type)
+            print(mean_rent_price)
 
     response = Response()
     if sale_or_rent == 1:
-        predicted_price = 0
-        for index, row in predicted_resale_price.iterrows():
-            predicted_price += row['predicted_mean']
-        predicted_price /= len(predicted_resale_price.index)
         response.data = {
-            "predictedPrice": predicted_price
+            "predictedPrice": mean_resale_price
         }
     if sale_or_rent == 2:
-        predicted_price = 0
-        for index, row in predicted_rent_price.iterrows():
-            predicted_price += row['predicted_mean']
-        predicted_price /= len(predicted_rent_price.index)
         response.data = {
-            "predictedPrice": predicted_price
+            "predictedPrice": mean_rent_price
         }
     return response
 
