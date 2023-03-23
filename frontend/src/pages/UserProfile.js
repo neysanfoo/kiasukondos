@@ -48,6 +48,7 @@ function UserProfile() {
                 email: response.data.user.email,
                 phoneNumber: response.data.profile.phone_number
             })
+            console.log(response.data)
             setProfilePic("http://127.0.0.1:8000/" + response.data.profile.profile_picture)
         })
         .catch(function (error) {

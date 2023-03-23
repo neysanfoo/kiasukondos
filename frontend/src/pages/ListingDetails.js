@@ -6,13 +6,24 @@ import LikeButton from '../components/LikeButton'
 import PriceTable from '../components/PriceTable'
 import LineGraph from '../components/LineGraph'
 
+/**
+ * Importing for the slideshow
+ */
 import {Swiper, SwiperSlide} from "swiper/react"
 import {Autoplay, Pagination, Navigation} from 'swiper';
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+
+/**
+ * Icons to be displayed
+ */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign, faBath, faBed, faLocationDot, faExpand, faUser } from '@fortawesome/free-solid-svg-icons'
+
+/**
+ * Import relevant packages to laod map 
+ */
 import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -34,7 +45,7 @@ function ListingDetails() {
     const [isOwner, setIsOwner] = useState(false)
     const [user_id, setUserId] = useState(null)
     const { listing_id } = useParams()
-    const [offer, setOffer] = useState(0)
+    const [offer, setOffer] = useState(null)
     const [predictedRentPrice, setPredictedRentPrice] = useState([])
     const [timeframe, setTimeframe] = useState(1)
     const [predictedResalePrice, setPredicetedResalePrice] = useState([])
@@ -313,6 +324,10 @@ function ListingDetails() {
      */
     const mymap = useRef(null);
     
+    /**
+     * This shifts the map api to where the address is
+     * The address is based on the street 
+     */
     useEffect(()=>{
         const map = L.map(mymap.current).setView([1.3521, 103.8198], 12);
         // Add a tile layer to the map
@@ -349,29 +364,90 @@ function ListingDetails() {
         };
     },[listingData])
     
-    function loadProfile(){
-        
-
-        axios.get(`http://localhost:8000/api/user-profile/${listingData.owner}`)
-          .then(response => {
-            console.log(response.data);
-            
-          })
-          .catch(error => {
-            console.log(error);
-          });
-       
-        return ;
-    };
-          
-    
     return(
         <div className='container mt-4'>
             <h1 className='listing--details--title'>{ listingData.title }</h1>
             <div className="listing--details">
             
+
                 <div>{SwiperModal()}</div>
-            
+
+                {/**
+                 * There is like 10 million divs but its to make the owner details on the right 
+                 * I tried on 2 screen sizes it was ok...
+                 */}
+                <div style={{display: "flex"}}>
+                    <div style={{display:"flex", flexDirection: 'column', flex: "1"}}> 
+                        <h1>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}
+                        
+                        { user_id && listing_id && 
+                        <b style={{marginLeft: "20px"}}>
+                        <LikeButton
+                            user_id={user_id}
+                            listing_id={listing_id}
+                            />
+                            </b>
+                        } 
+                        
+                        </h1>
+                        
+                        <h2><b>Price: </b> <FontAwesomeIcon icon={ faDollarSign } />{ listingData.price }</h2>
+                        
+                        
+                        <div style={{ fontSize: "16px", display:"inline"}}>
+                            <b>Number of Bedrooms: </b>{listingData.bedrooms}<b> </b><FontAwesomeIcon icon={ faBed } style={{paddingRight: "30px"}}/>
+                            <b>Number of Bathrooms: </b>{listingData.bathrooms}<b> </b><FontAwesomeIcon icon={ faBath } />
+                        </div>
+                    </div>
+
+                    {/**
+                     * Start of owner listing card
+                     * I changed offer to useState(null) instead of useState(0) dont think it affects anything but just letting u know
+                     * At this point im just lazy to make new css styles lol
+                     */}
+                    <div style={{display:"flex", border: "1px solid", width :"30%", aspectRatio: "16/5" , borderRadius: "5px", marginLeft: "10px", boxShadow: "5px 5px lightgray"}}>
+                    
+                        <div style={{display: "flex", alignItems: "center"}}>
+                            {/**
+                             * Supposed to load profile picture here but now it always just loads the icon
+                             */}
+                            <div>
+                                <FontAwesomeIcon style={{ borderRadius: "5px", color: 'white', backgroundColor: 'gray', height: '80px', width: '80px', marginRight: '5px', marginLeft: '5px' }} icon={faUser} />
+                            </div>
+
+                            <div style={{display: "flex", flexDirection: "column"}}>
+                                <div>
+                                    <b>Owner Name:</b>
+                                    <Link to={'/user-profile/' + listingData.owner}>{listingData.owner_name}</Link>
+                                </div>
+
+                                {user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
+                                <div style={{marginRight: "10px", marginTop: "10px",  flexDirection: "column", display: "flex", alignItems: "flex-start"}}>
+
+                                    <div style={{display: "flex", flexDirection: "row"}}>
+                                        <input style={{ borderRadius: '5px 0px 0px 5px' }} name="offer" value={offer} onChange={handleChange} type="number" />
+                                        <button style={{ borderRadius: '0px 5px 5px 0px' }} type="button" onClick={makeOffer} style={{backgroundColor:  !offer || (offer && offer <= 0) ||
+                                                                                                                                                        (offer && offer > 0 && offer <= 0.8 * listingData.price) ||
+                                                                                                                                                        (offer && offer >= 1.2 * listingData.price)
+                                                                                                                                                        ? "#ff2636": "#008f79"
+                                        , color:"white"}}>Make Offer</button>
+                                    </div>
+
+                                    <div style={{display: "flex", flexDirection: "row", marginTop: "10px"}}>
+                                        <button style={{ display: "flex",flexDirection: "column", borderRadius: '5px' }} type="button" onClick={createChat}>Chat with Owner</button>
+                                        {offer && offer <= 0 && <p style={{maxHeight:"14px", fontSize: "12px", marginLeft: "10px", color:"red"}}>Invalid offer value</p>}
+                                        {offer && offer > 0 && offer<= 0.8 * listingData.price && <p style={{maxHeight:"14px", fontSize: "12px", marginLeft: "10px", color:"red"}}>Offer is too low</p>}
+                                        {offer && offer >= 1.2 * listingData.price && <p style={{maxHeight:"14px", fontSize: "12px", marginLeft: "10px", color:"red" }}>Offer is too high</p>}
+                                    </div>
+
+                                </div>
+                                }
+                            </div>
+                        </div>
+                </div> 
+                </div>
+                
+                
                 {/*
                 {/* Carousel Start }
                 
@@ -413,54 +489,9 @@ function ListingDetails() {
 
                     </div> */}
                 
+
             <div className="listing--details--info">
-                <h1>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}
                 
-                { user_id && listing_id && 
-                <b style={{marginLeft: "20px"}}>
-                <LikeButton
-                    user_id={user_id}
-                    listing_id={listing_id}
-                    />
-                    </b>
-                } 
-                
-                </h1>
-                
-                <h2><b>Price: </b> <FontAwesomeIcon icon={ faDollarSign } />{ listingData.price }</h2>
-                
-                <div style={{position: "absolute", top: "65%", left: "70%"}}>
-                    {console.log(listingData)}
-                    {/**
-                     * 
-                     * 
-                     * 
-                     * 
-                     * 
-                     * 
-                     * 
-                     * 
-                     * 
-                        {listingData.owner.profilePicture && <img src = {listingData.owner.currentPictureUrl}/> }
-                    */}
-                        { loadProfile() && <FontAwesomeIcon style = {{color:"white",backgroundColor:"gray",height:"40px", width: "40px"}}icon={ faUser } />}
-                        <b> Owner Name: </b> <Link to={/user-profile/ + listingData.owner}>{ listingData.owner_name }</Link>
-                        { user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
-                        <div>
-                            <input name="offer" value={offer} onChange={handleChange} type="number" />
-                            <button type="button" onClick={makeOffer}>Make Offer</button>
-                        </div>
-                        }
-                        {
-                            user_id && listing_id && listingData.owner && listingData.owner !== user_id &&
-                            <button type="button" onClick={createChat}>Chat with Owner</button>
-                        }
-                </div> 
-                <div style={{ fontSize: "16px"}}>
-                    <b>Number of Bedrooms: </b>{listingData.bedrooms}<b> </b><FontAwesomeIcon icon={ faBed } style={{paddingRight: "30px"}}/>
-                    <b>Number of Bathrooms: </b>{listingData.bathrooms}<b> </b><FontAwesomeIcon icon={ faBath } />
-                    
-                </div>
                 <hr></hr>
                 <div style={{height: '400px' , fontSize: "20px"}}>
                     <div style={{ float: 'right', aspectRatio: '1/1', height: '100%' }}>
