@@ -226,48 +226,60 @@ function CreateListing() {
                 </select>
                 
                 {/*<label htmlFor="bedrooms">Bedrooms:</label>*/}
-                <input
-                    className="edit-listing-field"
-                    type="number"
-                    id="bedrooms"
-                    name="bedrooms"
-                    onChange={handleChange}
-                    value={formData.bedrooms}
-                    required
-                    placeholder='Bedrooms'
-                />
+                <div style={{position: "relative"}} >
+
+                    {formData.bedrooms && <span style={{fontSize: "16px", position: "absolute", right: "30px", top: "12%", zIndex: "1"}}>Bedrooms</span>}
+                    <input
+                        className="edit-listing-field"
+                        type="number"
+                        id="bedrooms"
+                        name="bedrooms"
+                        onChange={handleChange}
+                        value={formData.bedrooms}
+                        required
+                        placeholder='Bedrooms'
+                    />
+                </div>
 
                 {formData.bedrooms && formData.bedrooms <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of bedrooms</p>}
                 {formData.bedrooms && formData.bedrooms >= 7 && <p style={{fontSize: "12px", color: "red"}}>{formData.bedrooms} bedrooms seem abit high. Please double-check your value</p>}
                 {/*<label htmlFor="bathrooms">Bathrooms:</label>*/}
-                <input
-                    className="edit-listing-field"
-                    type="number"
-                    id="bathrooms"
-                    name="bathrooms"
-                    onChange={handleChange}
-                    value={formData.bathrooms}
-                    required
-                    placeholder='Bathrooms'
-                />
+                
+                <div style={{position: "relative"}} >
+                    {formData.bathrooms && <span style={{fontSize: "16px", position: "absolute", right: "30px", top: "12%", zIndex: "1"}}>Bathrooms</span>}
+                    <input
+                        className="edit-listing-field"
+                        type="number"
+                        id="bathrooms"
+                        name="bathrooms"
+                        onChange={handleChange}
+                        value={formData.bathrooms}
+                        required
+                        placeholder='Bathrooms'
+                    />
+                </div>
                 {formData.bathrooms && formData.bathrooms <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of bathrooms</p>}
                 {formData.bathrooms && formData.bathrooms >= 4 && <p style={{fontSize: "12px", color: "red"}}>{formData.bathrooms} bathrooms seem abit high. Please double-check your value</p>}
+                
                 {/*<label htmlFor="garage">Garage:</label>*/}
-                <input
-                    className="edit-listing-field"
-                    type="number"
-                    id="garage"
-                    name="garage"
-                    onChange={handleChange}
-                    value={formData.garage}
-                    placeholder='Garage'
-                />
+                <div style={{position: "relative"}} >
+                    {formData.garage && <span style={{fontSize: "16px", position: "absolute", right: "30px", top: "12%", zIndex: "1"}}>Garage</span>}
+                    <input
+                        className="edit-listing-field"
+                        type="number"
+                        id="garage"
+                        name="garage"
+                        onChange={handleChange}
+                        value={formData.garage}
+                        placeholder='Garage'
+                    />
+                </div>
                 
                 {formData.garage && formData.garage <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid number of garage</p>}
 
                 {/*<label htmlFor="sqmeters">Sq Meters:</label>*/}
                 <div style={{position: "relative"}} >
-                    <span style={{position: "absolute", left: "580px", top: "8%", zIndex: "1"}}>sqm</span>
+                    <span style={{ fontSize: "16px", position: "absolute", right: "30px", top: "12%", zIndex: "1"}}>sqm</span>
                     <input
                         className="edit-listing-field"
                         type="number"
@@ -298,22 +310,23 @@ function CreateListing() {
                     />
                 </div>
                 {formData.price && formData.price <= 0 && <p style={{fontSize: "12px", color: "red"}}>Error: Please enter a valid price</p>}
-                {predictedPrice && <div>
-                    <p style={{fontSize: "12px", fontColor: "red"}}>The predicted price for {formData.bedrooms} Bedrooms in {formData.town} is ${Math.round(predictedPrice)}</p>
+                {predictedPrice && predictedPrice === -1 && <div>
+                    <p style={{fontSize: "12px", color: "red"}}>Insufficient data to find average for {formData.bedrooms} Bedrooms in {formData.town}</p>
                     </div>}
-               
+                {predictedPrice && predictedPrice !== -1 && <div>
+                    <p style={{fontSize: "12px"}}>The average price from 2022 for {formData.bedrooms} Bedrooms in {formData.town} is ${Math.round(predictedPrice)}</p>
+                    </div>}
                 {predictedPrice && formData.price && (formData.price >= 1.2 * predictedPrice || formData.price <= 0.8 * predictedPrice)
-                
                 &&<div>
-                    
-                    <p style={{fontSize: "12px", color: "red"}}>You have inputted {formData.price} and it appears to either too fking high or too fking low pls check</p>
+                    <p style={{fontSize: "12px", color: "red"}}>You have inputted ${formData.price} and it appears to be either too high or too low consider putting closer to the average price of ${Math.round(predictedPrice)}</p>
                 </div>}
+                
                 <label htmlFor="list_date">List Date:</label>
                 <input
                     type="date"
                     id="list_date"
                     name="list_date"
-                    style={{fontSize: "16px", borderRadius: "10px"}}
+                    style={{fontSize: "16px", border: "1px solid", cursor: "pointer", height: "40px", borderRadius: "5px"}}
                     onChange={handleChange}
                     value={formData.list_date}
                 />  
