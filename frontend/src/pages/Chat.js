@@ -318,7 +318,7 @@ function Chat() {
 
         return (
             <div className='chat--main--offer--message'>
-                <h3>You have offered ${price} for <Link to={`/listing/${title}`}>{title}</Link></h3>
+                <h3>You have offered ${price} for <Link to={`/listing/${listing_id}`}>{title}</Link></h3>
             </div>
         )
 
