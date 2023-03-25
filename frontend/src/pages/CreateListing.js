@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
 import { FileUploader } from 'react-drag-drop-files';
 
 
-const baseURL="http://127.0.0.1:8000/api"
-
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
 
 function CreateListing() {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://localhost:8000/api/user/',
+            url: baseURL + '/user/',
             withCredentials: true
         };
         

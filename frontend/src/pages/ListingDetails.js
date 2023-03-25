@@ -38,7 +38,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 
 
-const baseURL="http://127.0.0.1:8000/api"
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
 
 //Green and Red hex code used
 const primaryColor = "#008f79"
@@ -101,7 +101,7 @@ function ListingDetails() {
         // If he is then add a button that routes to "edit-listing/" + listing_id
         var config = {
             method: 'get',
-            url: 'http://localhost:8000/api/user/',
+            url: baseURL + '/user/',
             withCredentials: true
         };
         axios(config)
@@ -139,7 +139,7 @@ function ListingDetails() {
         });
         var config = {
             method: 'post',
-            url: 'http://localhost:8000/api/adcarousel-item-cardoffer/',
+            url: baseURL + '/adcarousel-item-cardoffer/',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -173,7 +173,7 @@ function ListingDetails() {
     function deleteListing() {
         var config = {
             method: 'delete',
-            url: 'http://localhost:8000/api/listings/' + listing_id + '/',
+            url: baseURL + '/listings/' + listing_id + '/',
             headers: { },
             withCredentials: true
         };
@@ -206,7 +206,7 @@ function ListingDetails() {
         });
         var config = {
             method: 'post',
-            url: 'http://localhost:8000/api/chat/',
+            url: baseURL + '/chat/',
             headers: {
                 'Content-Type': 'application/json'
             },

@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
 import { FileUploader } from 'react-drag-drop-files';
-
-
-const baseURL="http://127.0.0.1:8000/api"
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
 
 function EditListing() {
     const listing_id = useParams().listing_id;
@@ -37,7 +35,7 @@ function EditListing() {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://localhost:8000/api/listings/' + listing_id + '/',
+            url: baseURL + '/listings/' + listing_id + '/',
             withCredentials: true
         };
         
@@ -87,7 +85,7 @@ function EditListing() {
     useEffect (() => {
         var config = {
             method: 'get',
-            url: 'http://localhost:8000/api/user/',
+            url: baseURL + '/user/',
             withCredentials: true
         };
         

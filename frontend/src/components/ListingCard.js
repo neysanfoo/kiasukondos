@@ -1,10 +1,7 @@
-import axios from 'axios'
-import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign, faBath, faBed, faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import LikeButton from '../components/LikeButton'
-const baseURL = 'http://127.0.0.1:8000/api'
 
 function ListingCard({ id, current_user_id, photo_main, title, address, price, bedrooms, bathrooms, sqmeters, sale_or_rent, is_sold}) {
   function truncate(str, n){
@@ -14,7 +11,7 @@ function ListingCard({ id, current_user_id, photo_main, title, address, price, b
     <div className='listing--card'>
   <Link to={"/listing/" + id} className="listing--card--link">
     <div className={is_sold && "listing--card--image-container"}>
-      <img className="listing--card--image" src={photo_main} alt="Card image cap" />
+      <img className="listing--card--image" src={photo_main} alt="listing card" />
     </div>
     <div className="card-body">
       <div>
@@ -27,7 +24,7 @@ function ListingCard({ id, current_user_id, photo_main, title, address, price, b
     <div className='card--icons'>
       {
         // if for rent?
-        sale_or_rent == 1 ? 
+        sale_or_rent === 1 ? 
         <p><FontAwesomeIcon icon={ faDollarSign } /> {price}</p>
         :
         <p><FontAwesomeIcon icon={ faDollarSign } /> {price} / mth</p>

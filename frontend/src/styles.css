@@ -630,10 +630,13 @@ Start of swiper modal in listing details page css styling
   border-color: transparent transparent transparent #999;
 }
 
-.modal {
+
+/* Dont use this name for your class, it will override the bootstrap modal */
+
+/* .modal {
   display: block;
-  position: fixed;
-  z-index: 1;
+  position: fixed; 
+  z-index: 1; 
   left: 0px;
   top: 0px;
   width: 100%; 
@@ -641,7 +644,8 @@ Start of swiper modal in listing details page css styling
   overflow: auto; 
   background-color: rgb(0,0,0); 
   background-color: rgba(0,0,0,0.6);
-}
+  background-color: rgba(0,0,0,0.6); 
+} */
 
 .modal-content {
   display: flex;
