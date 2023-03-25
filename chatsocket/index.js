@@ -6,6 +6,8 @@ const path = require("path");
 const socketIO = require("socket.io");
 const axios = require("axios");
 const { off } = require("process");
+require('dotenv').config();
+
 
 const port = 9000;
 const app = express();
@@ -16,8 +18,11 @@ const io = socketIO(server, {
   }
 });
 
+const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: frontendUrl,
   credentials: true,
 
 }
@@ -52,7 +57,7 @@ app.get("/chats", (req, res) => {
   const jwt = cookies.jwt;
   var config = {
     method: 'post',
-    url: 'http://localhost:8000/api/fetch-chats-of-user/',
+    url: `${backendUrl}/api/fetch-chats-of-user/`,
     headers: {
       'Content-Type': 'application/json', 
     },
@@ -116,7 +121,7 @@ io.on("connection", (socket) => {
     // Send the message to the django backend
     var config = {
       method: 'post',
-      url: 'http://localhost:8000/api/add-message/',
+      url: `${backendUrl}/api/add-message/`,
       headers: {
         'Content-Type': 'application/json',
       },
