@@ -6,6 +6,8 @@ const path = require("path");
 const socketIO = require("socket.io");
 const axios = require("axios");
 const { off } = require("process");
+require('dotenv').config();
+
 
 const port = 9000;
 const app = express();
