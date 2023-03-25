@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'
 import axios from 'axios'
 
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
+
 function Header() {
   let headerContent;
   const [auth, setAuth] = useState(false)
@@ -9,7 +11,7 @@ function Header() {
   useEffect(() => {
     var config = {
         method: 'get',
-        url: 'http://localhost:8000/api/user/',
+        url: baseURL + '/user/',
         withCredentials: true
     };
     
@@ -59,13 +61,13 @@ function Header() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light ">
       <div className="container">
-        <a className="navbar-brand" href="/">KiasuKondos</a>
+        <a className="navbar-brand" href={auth ? "/homes" : "/"}>KiasuKondos</a>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="navbar-nav ms-auto">
-            <Link className="nav-link" to="/">Home</Link>
+            <Link className="nav-link" to="/homes">Buy</Link>
             {headerContent}
           </div>
         </div>

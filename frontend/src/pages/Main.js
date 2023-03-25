@@ -1,6 +1,7 @@
 import Header from '../components/Header'
 
 // Pages
+import HomePage from './HomePage'
 import Home from './Home'
 import ListingDetails from './ListingDetails'
 import Login from './Login'
@@ -10,7 +11,6 @@ import CreateListing from './CreateListing'
 import EditListing from './EditListing'
 import Dashboard from './Dashboard'
 import Chat from './Chat'
-import TestSocket from './TestSocket'
 import EditProfile from './EditProfile'
 import UserProfile from './UserProfile'
 
@@ -28,7 +28,8 @@ function Main() {
     <div>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/homes" element={<Home />} />
         <Route path="/listing/:listing_id" element={<ListingDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
@@ -39,7 +40,6 @@ function Main() {
           <Route path="/edit-listing/:listing_id" element={<EditListing />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/chat" element={<Chat />} />
-          <Route path="/test-socket" element={<TestSocket />} />
           <Route path="/edit-profile" element={<EditProfile />} />
         </Route>
       </Routes>

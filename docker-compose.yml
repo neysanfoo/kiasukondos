@@ -1,50 +1,38 @@
-version: '3'
+version: "3.9"
 
 services:
   backend:
-    build: ./backend
-    command: bash -c "python manage.py runserver 0.0.0.0:8000"
-    container_name: kiasukondo
-    restart: unless-stopped
-    volumes:
-      - .:/kiasukondo_api
+    build:
+      context: ./backend
     ports:
       - "8000:8000"
-    networks:
-      - postgres
-
-  chatsocket:
-  socket:
-    build: ./chatsocket
-    command: npm start
-    container_name: chatsocket
-    restart: unless-stopped
     volumes:
-      - .:/chatsocket
-      - /chatsocket/node_modules
+      - ./backend:/app
+    command: python manage.py runserver 0.0.0.0:8000
     networks:
-      - postgres
+      - mynet
+  chatsocket:
+    build:
+      context: ./chatsocket
     ports:
       - "9000:9000"
-
-  frontend:
-    build: ./frontend
-    command: npm start
-    container_name: kiasukondo_frontend
-    restart: unless-stopped
     volumes:
-      - .:/kiasukondo_frontend
-      - /kiasukondo_frontend/node_modules
+      - ./chatsocket:/app
+    command: npm start
     networks:
-      - postgres
+      - mynet
+  frontend:
+    build:
+      context: ./frontend
     ports:
       - "3000:3000"
-    
-    depends_on:
-      - chatsocket
-      - kiasukondo
+    volumes:
+      - ./frontend:/app
+    command: npm start
+    networks:
+      - mynet
 
 
 networks:
-  postgres:
+  mynet:
     driver: bridge

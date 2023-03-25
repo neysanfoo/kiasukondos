@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Navigate, Outlet } from 'react-router-dom';
 
-
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
 
 function ProtectedRoute({ component: Component, ...rest }) {
   const [isLoading, setIsLoading] = useState(true)
@@ -12,7 +12,7 @@ function ProtectedRoute({ component: Component, ...rest }) {
   useEffect(() => {
     var config = {
         method: 'get',
-        url: 'http://localhost:8000/api/user/',
+        url: baseURL + '/user/',
         withCredentials: true
     };
     

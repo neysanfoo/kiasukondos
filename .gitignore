@@ -7,3 +7,6 @@ media
 *.DS_Store
 */photos
 kiasukondo.pem
+*.pem
+*.env
+*static/

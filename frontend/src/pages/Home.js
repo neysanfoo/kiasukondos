@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react'
 import ListingCard from '../components/ListingCard'
 import SearchBar from '../components/SearchBar'
 import { Link } from 'react-router-dom'
-const baseURL="http://127.0.0.1:8000/api"
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
+
+
 
 function Home() {
   const [listing, setListing] = useState([])
@@ -13,7 +15,7 @@ function Home() {
     // Get the current user's data
     var config = {
       method: 'get',
-      url: 'http://localhost:8000/api/user/',
+      url: baseURL + '/user/',
       withCredentials: true
     };
     axios(config)

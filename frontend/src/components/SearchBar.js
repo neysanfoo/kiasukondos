@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
+
 function SearchContainer({ setListing }) {
   const [searchInput, setSearchInput] = useState("");
   const [numBedrooms, setNumBedrooms] = useState("");
@@ -20,7 +22,7 @@ function SearchContainer({ setListing }) {
       .map((key) => `${key}=${queryParams[key]}`)
       .join("&");
 
-    axios.get(`http://localhost:8000/api/search/?${queryString}`)
+    axios.get(`${baseURL}/search/?${queryString}`)
       .then((response) => {
         setListing(response.data);
       })

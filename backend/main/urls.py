@@ -26,5 +26,7 @@ urlpatterns = [
     path("user-profile/", views.UserProfileView.as_view()),
     path("change-password/", views.ChangePasswordView.as_view()),
     path("leave-review/", views.ReviewUserView.as_view()),
-    path("public-user-profile/<int:id>", views.fetch_public_profile)
+    path("public-user-profile/<int:id>", views.fetch_public_profile),
+    path("listing-analytics/<int:pk>",views.fetch_analytics),
+    path("predicted-price/<str:town>/<int:property_type>/<str:sale_or_rent>/<int:bedrooms>/", views.fetch_mean_price),
 ]

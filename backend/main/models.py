@@ -25,6 +25,7 @@ class Listing(models.Model):
     # Can either be for sale or for rent
     # 1 = For Sale
     # 2 = For Rent
+    town = models.CharField(max_length=255)
     description = models.TextField()
     price = models.IntegerField()
     bedrooms = models.IntegerField()

@@ -10,7 +10,7 @@ class ListingSerializer(serializers.ModelSerializer):
     owner_name = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Listing
-        fields = ['id', 'owner', 'owner_name', 'title', 'address', 'zipcode', 'property_type', 'sale_or_rent', 'description', 'price', 'bedrooms', 'bathrooms', 'garage', 'sqmeters', 'is_published', 'list_date', 'photo_main', 'photo_1', 'photo_2', 'photo_3', 'photo_4', 'photo_5', 'photo_6', 'likes', 'is_sold', 'buyer_left_review', 'seller_left_review']
+        fields = ['id', 'owner', 'owner_name', 'title', 'address', 'zipcode', 'property_type', 'sale_or_rent', 'description', 'price', 'bedrooms', 'bathrooms', 'garage', 'sqmeters', 'is_published', 'list_date', 'photo_main', 'photo_1', 'photo_2', 'photo_3', 'photo_4', 'photo_5', 'photo_6', 'likes', 'is_sold', 'buyer_left_review', 'seller_left_review', 'town']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-const baseURL="http://127.0.0.1:8000/api"
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
 
 function Register() {
   const [registrationData, setRegistrationData] = useState({

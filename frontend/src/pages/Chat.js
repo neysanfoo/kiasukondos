@@ -4,71 +4,15 @@ import axios from 'axios';
 import io from "socket.io-client";
 import RatingSystem from '../components/RatingSystem';
 let socket;
-const baseURL = "http://localhost:8000/api"
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
+const socketURL = process.env.REACT_APP_CHATSOCKET_URL;
 
-const test_data = [
-    {
-        "chatId": "1-2",
-        "interlocutor": 2,
-        "inteculator_name": "User 2",
-        "messages": [
-            {
-                "messageid": 1,
-                "sender": 1,
-                "receiver": 2,
-                "sender_name": "User 1",
-                "receiver_name": "User 2",
-                "message": "Hello 2",
-                "date": "2021-05-01T00:00:00Z",
-                "isOffer" : false
-            },
-            {
-                "messageid": 2,
-                "sender": 2,
-                "receiver": 1,
-                "sender_name": "User 2",
-                "receiver_name": "User 1",
-                "message": "Hello 1",
-                "date": "2021-05-01T00:00:00Z",
-                "isOffer" : false
-            },
-        ]
-    },
-    {
-        "chatId": "1-4",
-        "interlocutor": 4,
-        "inteculator_name": "User 4",
-        "messages": [
-            {
-                "messageid": 3,
-                "sender": 1,
-                "receiver": 4,
-                "sender_name": "User 1",
-                "receiver_name": "User 4",
-                "message": "Hello 4",
-                "date": "2021-05-01T00:00:00Z",
-                "isOffer" : false
-            },
-            {
-                "messageid": 4,
-                "sender": 4,
-                "receiver": 1,
-                "sender_name": "User 4",
-                "receiver_name": "User 1",
-                "message": "Hello 1",
-                "date": "2021-05-01T00:00:00Z",
-                "isOffer" : false
-            },
-        ]
-    }
-]
 
 function Chat() {
     //This will connect your socket connection first time and it will disconnect when the component ejects.
     // This is to prevent multiple connections on the same page
     useEffect(() => {
-        socket = io.connect("http://localhost:9000");
-  
+        socket = io.connect(socketURL);
         return () => {
           socket.disconnect();
         };
@@ -102,7 +46,7 @@ function Chat() {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://localhost:8000/api/user/',
+            url: baseURL + '/user/',
             withCredentials: true
         };
         
@@ -125,7 +69,7 @@ function Chat() {
         if (userId) {
             var config = {
                 method: 'get',
-                url: 'http://localhost:9000/chats',
+                url: socketURL + '/chats',
                 withCredentials: true
             };
 
@@ -160,6 +104,12 @@ function Chat() {
 
     function sendMessage() {
         socket.emit("message", messageData);
+        setMessageData(
+            {
+                ...messageData,
+                message: ""
+            }
+        )
     }
 
     useEffect(() => {
@@ -214,7 +164,7 @@ function Chat() {
     function acceptOffer(offer_id) {
         var config = {
             method: 'post',
-            url: 'http://localhost:8000/api/offer/accept/',
+            url: baseURL + '/offer/accept/',
             withCredentials: true,
             data: {
                 "offer": offer_id,
@@ -253,7 +203,7 @@ function Chat() {
           RatingformData.append("reviewee", interlocutorId)
             var config = {
                 method: 'post',
-                url: 'http://localhost:8000/api/leave-review/',
+                url: baseURL + '/leave-review/',
                 withCredentials: true,
                 data: RatingformData
             }
@@ -277,8 +227,6 @@ function Chat() {
         // If is_owner and not_accpeted, say sender_name has offered price for listing title (Link to listing)
         // If not is_owner and is_accepted, say that you have bought this for price
         // If not is_owner and not_accepted, say that you have offered price for listing title (Link to listing)
-        console.log(sender_name)
-        console.log(listing_id)
         console.log(buyer_left_review)
         console.log(seller_left_review)
         if (is_owner) {
@@ -370,7 +318,7 @@ function Chat() {
 
         return (
             <div className='chat--main--offer--message'>
-                <h3>You have offered ${price} for <Link to={`/listing/${title}`}>{title}</Link></h3>
+                <h3>You have offered ${price} for <Link to={`/listing/${listing_id}`}>{title}</Link></h3>
             </div>
         )
 

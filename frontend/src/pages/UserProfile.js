@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import ListingCard from "../components/ListingCard";
 
+const baseURL = process.env.REACT_APP_BACKEND_URL
+
 
 function UserProfile() {
     const [profilePic, setProfilePic] = useState(null)
@@ -20,7 +22,7 @@ function UserProfile() {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://localhost:8000/api/user/',
+            url: baseURL + '/api/user/',
             withCredentials: true
         }
 
@@ -36,7 +38,7 @@ function UserProfile() {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://127.0.0.1:8000/api/public-user-profile/' + user_id,
+            url: baseURL + '/api/public-user-profile/' + user_id,
             withCredentials: true,
         };
         axios(config)
@@ -48,7 +50,7 @@ function UserProfile() {
                 email: response.data.user.email,
                 phoneNumber: response.data.profile.phone_number
             })
-            setProfilePic("http://127.0.0.1:8000/" + response.data.profile.profile_picture)
+            setProfilePic(response.data.profile.profile_picture)
         })
         .catch(function (error) {
             console.log(error);
@@ -56,7 +58,7 @@ function UserProfile() {
 
     }, [user_id]);
 
-    console.log(myReviews)
+
 
 
 
@@ -77,14 +79,14 @@ function UserProfile() {
                         <div className="card-body">
                             <h5>Listings</h5>
                             <div className="row">
-                            {myListings.length == 0 ? <h1>User does not have any listings yet</h1> : 
+                            {myListings.length === 0 ? <h1>User does not have any listings yet</h1> : 
                                 <div className="scrolling--listing--container">
                                 {myListings.map((item) => (
                                     <div className='listing--in--scrolling--container'>
                                     <ListingCard
                                         id = {item.id}
                                         current_user_id = {currentUser}
-                                        photo_main={"http://127.0.0.1:8000/" + item.photo_main}
+                                        photo_main={item.photo_main}
                                         title={item.title}
                                         address={item.address}
                                         price={item.price}
@@ -100,7 +102,7 @@ function UserProfile() {
                             </div>
                             <h5 className="mt-4">Reviews</h5>
                             <div className="review-container">
-                                {myReviews.length == 0 ? <h1>User does not have any reviews yet</h1> : 
+                                {myReviews.length === 0 ? <h1>User does not have any reviews yet</h1> : 
                                 myReviews.map((item) => (
                                     <div className="card" key={item.id}>
                                     <div className="card-body">

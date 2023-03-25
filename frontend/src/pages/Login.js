@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const baseURL = 'http://127.0.0.1:8000/api'
+const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
 
 function Login() {
     const [loginData, setLoginData] = useState({
@@ -16,13 +16,13 @@ function Login() {
     useEffect(() => {
         var config = {
             method: 'get',
-            url: 'http://localhost:8000/api/user/',
+            url: baseURL + '/user/',
             withCredentials: true
         };
         
         axios(config)
         .then(function (response) {
-          window.location.href = "/"
+          window.location.href = "/homes"
         })
         .catch(function (error) {
             console.log(error);
@@ -49,7 +49,7 @@ function Login() {
 
       let config = {
         method: 'post',
-        url: 'http://localhost:8000/api/login/',
+        url: baseURL + '/login/',
         headers: { 
           'Content-Type': 'application/json'
         },
@@ -59,7 +59,7 @@ function Login() {
 
       axios(config)
       .then(function (response) {
-        window.location.href = "/"
+        window.location.href = "/homes"
       })
       .catch(function (error) {
         setError(error.response.data.error)
