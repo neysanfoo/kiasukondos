@@ -124,7 +124,7 @@ function ListingDetails() {
         });
         var config = {
             method: 'post',
-            url: baseURL + '/adcarousel-item-cardoffer/',
+            url: 'http://localhost:8000/api/add-offer/',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -281,8 +281,8 @@ function ListingDetails() {
                 </SwiperSlide>
             </Swiper>
                 {isOpen &&
-                    <div className="modal">
-                    <div className="modal-content" >
+                    <div className="listing-modal">
+                    <div className="listing-modal-content" >
                         <span className="closeModal" onClick={handleCloseModal}>
                             <button type = "button" style={{position: "absolute", top: "2%", left: "97%", backgroundColor: "transparent", border:'none', zIndex: "2", fontWeight: "bold"}} onClick={handleCloseModal}> X </button>
                             <Swiper
