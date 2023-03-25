@@ -570,6 +570,9 @@
   }
 }
 
+/**
+Start of listing details page css styling
+*/
 
 .listing--details--title {
   display: flex;
@@ -579,6 +582,9 @@
   border-bottom: 1px solid #ccc;
 }
 
+/**
+Start of swiper modal in listing details page css styling
+*/
 .mySwiper{
   width: 100%;
   height: 400px;
@@ -595,8 +601,35 @@
   height: auto;
   width: auto;
   object-fit: cover;
+  object-position: center;
   transition: all .2s ease-out;
 }
+
+.swiper-button-prev,
+.swiper-button-next {
+  background-color: #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+.swiper-button-prev::after{
+  content: "";
+  display: inline-block;
+  border-style: solid;
+  border-width: 8px 16px 8px 0;
+  border-color: transparent #999 transparent transparent;
+}
+
+.swiper-button-next::after {
+  content: "";
+  display: inline-block;
+  border-style: solid;
+  border-width: 8px 0 8px 16px;
+  border-color: transparent transparent transparent #999;
+}
+
 
 /* Dont use this name for your class, it will override the bootstrap modal */
 
@@ -610,6 +643,7 @@
   height: 100%; 
   overflow: auto; 
   background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.6);
   background-color: rgba(0,0,0,0.6); 
 } */
 
@@ -618,13 +652,178 @@
   justify-content: center;
   background-color: #fefefe;
   margin-top: 5%;
-  margin: 2% auto; /* 15% from the top and centered */
+  margin: 2% auto; 
   overflow: hidden;
   border: 1px solid #888;
   border-radius: 20px;
   object-fit: cover;
   aspect-ratio: 16/9;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 80%; 
+}
+
+/**
+End of swiper modal in listing details page css styling
+*/
+
+/**
+I left the old carousel styling here still 
+*/
+.carousel {
+  width: 100%;
+  height: 400px;
+  margin-bottom: 20px;
+
+}
+
+.carousel-item active{
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.carousel-item{
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.carousel-item img{
+  width: 500px;
+  height: 400px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.carousel slide{
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.listing--details--title-details{
+  display:flex;
+  flex-direction: column;
+  flex: 1;
+}
+/**
+End of carousel styling
+*/
+
+/**
+Start of owner card in listing details page css styling
+*/
+.listing--details--owner-card{
+  display: flex;
+  border: 1px solid; 
+  width: 30%;
+  aspect-ratio: 16/5;
+  border-radius: 5px;
+  margin-left: 10px;
+  box-shadow: 5px 5px lightgray;
+}
+
+.listing--details--owner-card-details{
+  display: flex;
+  align-items: center;
+}
+
+.listing--details--owner-card-profile{
+  border-radius: 5px;
+  color: white;
+  background-color: gray;
+  height: 80px;
+  width: 80px;
+  margin-right: 5px;
+  margin-left: 5px
+}
+
+.listing--details--owner-card-content{
+  display: flex;
+  flex-direction: column;
+}
+
+.listing--details--owner-card-edit-listing{
+  color: white;
+}
+
+.listing--details--owner-card-delete-listing{
+  color: white;
+}
+
+.listing--details--owner-card-buyer{
+  margin-right: 10px; 
+  margin-top: 10px;  
+  flex-direction: column;
+  display: flex;
+  align-items: flex-start;
+}
+
+.listing--details--owner-card-buyer-options{
+  display: flex;
+  flex-direction: row;
+}
+
+.listing--details--owner-card-offer-input{
+  border-radius: 5px 0px 0px 5px;
+}
+
+.listing--details--owner-card-offer-button{
+  border-radius: 0px 5px 5px 0px;
+  color: white;
+}
+
+.listing--details--owner-card-chat{
+  display: flex; 
+  flex-direction: row;
+  margin-top: 10px;
+}
+
+.listing--details--owner-card-chat-button{
+  display: flex; 
+  flex-direction: column;
+  border-radius: 5px;
+  background-color: #008f79;
+  color: white;
+}
+
+.listing--details--owner-card-warning{
+  max-height: 14px;
+  font-size: 12px;
+  margin-left: 10px;
+  color: red
+}
+
+/**
+End of owner card in listing details page css styling
+Start of location section in listing details page css styling
+*/
+
+.listing--details--info-location{
+  height: 400px;
+  font-size: 20px;
+}
+
+.listing--details--info-map-container{
+  float: right;
+  aspect-ratio: 1/1;
+  height: 100%;
+}
+
+.listing--details--info-map{
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+/**
+End of listing details styling
+*/
+
+/**
+Start of edit listing css styling
+*/
+.edit--listing-details{
+  float: right;
+  font-size: 20px;
+  width: 50%;
+  margin-top: 10px;
 }
 
 .edit-listing-image-container{
@@ -637,21 +836,42 @@
 }
 
 .edit-listing-image{
-  
   width: 100%;
   aspect-ratio: 1/1;
   border-radius: 5px;
   margin-top: 10px;
 }
 
-.edit-listing-mainImage{
-  
+.edit-listing-main-image-container{
+  position: relative; 
+  grid-column-start: 1; 
+  grid-column-end: 4;
+}
+
+.edit-listing-main-image{
   width: 100%;
   aspect-ratio: 16/9;
   border-radius: 5px;
   margin-top: 20px;
   grid-column: 1 / 2;
   grid-row: 1 / 2;
+}
+
+
+
+/** 
+These are the 2 classes that affects the drag drop box
+Literally nothing else i tried could change them ...
+*/
+.ewqTBN{
+  display: flex !important;
+  border: 2px dashed #13fb03 !important;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 32/9 !important;
+}
+.kyUZVo > span{
+  font-size: 16px !important;
 }
 
 .edit-listing-field{
@@ -669,6 +889,19 @@
   outline: none;
   border-color: black;
   box-shadow: 0 0 20px#13fb03;
+}
+
+.edit-listing-field-units{
+  font-size: 16px;
+  position: absolute;
+  right: 30px;
+  top: 12%;
+  z-index: 1;
+}
+
+.edit-listing-field-warning{
+  font-size: 12px;
+  color: red
 }
 
 .edit-listing-dropdown{
@@ -705,59 +938,18 @@
   cursor: pointer;
 }
 
-.carousel {
-  width: 100%;
-  height: 400px;
-  margin-bottom: 20px;
-
+.edit-listing-list-date{
+  font-size: 16px;
+  border: 1px solid;
+  cursor: pointer;
+  height: 40px; 
+  border-radius: 5px;
 }
 
-.carousel-item-left {
-  max-width: 33%;
-  height: 400px;
-  display: inline-flex;
-  margin-right: 1px;
 
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-.carousel-item-mid {
-  max-width: 33%;
-  height: 400px;
-  display: inline-flex;
-  margin-right: 1px;
-}
-.carousel-item-right {
-  max-width: 33%;
-  height: 400px;
-  display: inline-flex;
-  margin-right: 1px;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-.carousel-item active{
-  max-width: 100%;
-  border-radius: 10px;
-}
-
-.carousel-item{
-  max-width: 100%;
-  border-radius: 10px;
-}
-
-.carousel-item img{
-  width: 500px;
-  height: 400px;
-  object-fit: cover;
-  object-position: center;
-}
-
-.carousel slide{
-  border-radius: 10px;
-  display: inline-block;
-}
-
+/**
+End of edit listing styling
+*/
 .edit-profile__form {
   display: flex;
   flex-direction: column;
