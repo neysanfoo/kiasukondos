@@ -6,6 +6,7 @@ const path = require("path");
 const socketIO = require("socket.io");
 const axios = require("axios");
 const { off } = require("process");
+require('dotenv').config();
 
 const port = 9000;
 const app = express();
@@ -18,6 +19,10 @@ const io = socketIO(server, {
 
 const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+console.log("HELLO")
+console.log(process.env.BACKEND_URL)
+console.log(backendUrl)
 
 const corsOptions = {
   origin: frontendUrl,
