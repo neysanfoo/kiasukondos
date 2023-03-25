@@ -1,3 +1,4 @@
+import os
 from urllib.request import Request, urlopen
 from urllib.parse import quote
 from json import loads, dumps
@@ -15,6 +16,29 @@ TOWNS = ['PUNGGOL', 'JURONG WEST', 'BEDOK', 'BUKIT MERAH', 'CHOA CHU KANG', 'TAM
          'BUKIT PANJANG', 'KALLANG/WHAMPOA', 'BUKIT TIMAH']
 FLAT_TYPE = ['1-ROOM', '2-ROOM', '3-ROOM', '4-ROOM', '5-ROOM', 'EXECUTIVE']
 
+rent_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), 'rent_hist')
+resale_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), 'resale_hist')
+
+def get_rent_from_hist(town, flat_type=None):
+    if town is not None: 
+        assert town in TOWNS
+    if flat_type is not None:
+        assert flat_type in FLAT_TYPE
+    hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
+    if hist_name not in os.listdir(rent_path): return None
+    print(os.path.join(rent_path, hist_name))
+    return pd.read_pickle(os.path.join(rent_path, hist_name))
+        
+def get_resale_from_hist(town, flat_type=None):
+    if town is not None: 
+        assert town in TOWNS
+    if flat_type is not None:
+        assert flat_type in FLAT_TYPE
+    hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
+    if hist_name not in os.listdir(resale_path): return None
+    print(os.path.join(resale_path, hist_name))
+    return pd.read_pickle(os.path.join(resale_path, hist_name))
+
 def rent_predictor(months:int =0, town=None, flat_type=None):
     assert months >= 0
     filters={}
@@ -24,6 +48,12 @@ def rent_predictor(months:int =0, town=None, flat_type=None):
     if flat_type is not None:
         assert flat_type in FLAT_TYPE
         filters['flat_type'] = flat_type
+
+    df = get_rent_from_hist(town, flat_type)
+    if df is not None:
+        if df.index[-1] > pd.Timestamp(datetime.now() + relativedelta(months=months-1)):
+            return df[(df.index > pd.Timestamp(datetime.now() - relativedelta(months=1))) & (df.index < pd.Timestamp(datetime.now() + relativedelta(months=months)))]
+
     url_cur = 'https://data.gov.sg/api/action/datastore_search?resource_id=9caa8451-79f3-4cd6-a6a7-9cecc6d59544&limit=77000'
     url_hist = 'https://data.gov.sg/api/action/datastore_search?resource_id=6b1ec2ff-7c38-4ce9-9bbb-af865b4d78cb&limit=10500'
     if bool(filters): 
@@ -83,11 +113,14 @@ def rent_predictor(months:int =0, town=None, flat_type=None):
     
     model = ARIMA(data, order=(5, 1, 2))
     results = model.fit()
-    future = results.predict(steps=months, start=datetime.now()-relativedelta(months=1), end=datetime.now()+relativedelta(months=months)).to_frame().reset_index()
+    future = results.predict(steps=months, start=datetime.now()-relativedelta(months=1), end=datetime.now()+relativedelta(months=132)).to_frame().reset_index()
     future['index'] = future['index'].apply(lambda date: datetime.strptime(date.strftime("%Y-%m"), "%Y-%m"))
     future = future[future['index'] > datetime.now()-relativedelta(months=1)]
     future.set_index('index', inplace=True)
-    return future
+    
+    hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
+    future.to_pickle(os.path.join(rent_path, hist_name))
+    return future[future.index < datetime.now()+relativedelta(months=months)]
 
 def resale_predictor(months:int =0, town=None, flat_type=None):
     assert months >= 0
@@ -98,6 +131,12 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
     if flat_type is not None:
         assert flat_type in FLAT_TYPE
         filters['flat_type'] = flat_type
+        
+    df = get_resale_from_hist(town, flat_type)
+    if df is not None:
+        if df.index[-1] > pd.Timestamp(datetime.now() + relativedelta(months=months-1)):
+            return df[(df.index > pd.Timestamp(datetime.now() - relativedelta(months=1))) & (df.index < pd.Timestamp(datetime.now() + relativedelta(months=months)))]
+        
     tags = ['adbbddd3-30e2-445f-a123-29bee150a6fe',
             '8c00bf08-9124-479e-aeca-7cc411d884c4',
             '83b2fc37-ce8c-4df4-968b-370fd818138b',
@@ -134,8 +173,11 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
     
     model = ARIMA(data, order=(5, 1, 2))
     results = model.fit()
-    future = results.predict(steps=months, start=datetime.now()-relativedelta(months=1), end=datetime.now()+relativedelta(months=months)).to_frame().reset_index()
+    future = results.predict(steps=months, start=datetime.now()-relativedelta(months=1), end=datetime.now()+relativedelta(months=132)).to_frame().reset_index()
     future['index'] = future['index'].apply(lambda date: datetime.strptime(date.strftime("%Y-%m"), "%Y-%m"))
     future = future[future['index'] > datetime.now()-relativedelta(months=1)]
     future.set_index('index', inplace=True)
-    return future
+    
+    hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
+    future.to_pickle(os.path.join(resale_path, hist_name))
+    return future[future.index < datetime.now()+relativedelta(months=months)]
