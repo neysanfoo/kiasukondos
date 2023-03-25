@@ -8,6 +8,10 @@ from dateutil.relativedelta import relativedelta
 from statsmodels.tsa.arima.model import ARIMA
 import pandas as pd
 
+
+# import ssl
+# ssl._create_default_https_context = ssl._create_unverified_context
+
 TOWNS = ['PUNGGOL', 'JURONG WEST', 'BEDOK', 'BUKIT MERAH', 'CHOA CHU KANG', 'TAMPINES',
          'SENGKANG', 'ANG MO KIO', 'HOUGANG', 'TOA PAYOH', 'JURONG EAST', 'WOODLANDS',
          'BUKIT BATOK', 'SEMBAWANG', 'CENTRAL', 'QUEENSTOWN', 'BISHAN', 'CLEMENTI',
@@ -113,7 +117,6 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
         )
         df = pd.DataFrame(loads(urlopen(req).read().decode("utf-8"))["result"]["records"])
         if not df.empty: resale_prices.append(pd.DataFrame(loads(urlopen(req).read().decode("utf-8"))["result"]["records"])[['month', 'resale_price']])
-        
     if len(resale_prices) == 0:
         if flat_type is not None:
             warn("Not enough data to predict specified flat type; Expanding data to all flat types")
@@ -131,7 +134,6 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
     data.set_index('date', inplace=True)
     data.index = data.index.to_period('M')
     data = data.sort_index()
-    
     model = ARIMA(data, order=(5, 1, 2))
     results = model.fit()
     future = results.predict(steps=months, start=datetime.now()-relativedelta(months=1), end=datetime.now()+relativedelta(months=months)).to_frame().reset_index()
@@ -139,3 +141,57 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
     future = future[future['index'] > datetime.now()-relativedelta(months=1)]
     future.set_index('index', inplace=True)
     return future
+
+def rent_mean(town=None, flat_type=None):
+    
+    filters={}
+    if town is not None: 
+        assert town in TOWNS
+        filters['town'] = town
+    if flat_type is not None:
+        assert flat_type in FLAT_TYPE
+        filters['flat_type'] = flat_type
+
+    url_cur = 'https://data.gov.sg/api/action/datastore_search?resource_id=9caa8451-79f3-4cd6-a6a7-9cecc6d59544&limit=77000'
+
+    if bool(filters): 
+        filters = dumps(filters)
+        url_cur += f'&filters={filters}'
+    
+    req = Request(
+        quote(url_cur, safe=':/?&='), 
+        headers={'User-Agent': 'Mozilla/5.0'}
+    )
+    
+    rent_cur = pd.DataFrame(loads(urlopen(req).read().decode("utf-8").replace('ROOM', 'RM').replace('UTIVE', ''))["result"]["records"])
+    if rent_cur.empty:
+        return -1
+    rent_cur = rent_cur[rent_cur["rent_approval_date"] >= "2022"]
+    rent_cur["monthly_rent"] = rent_cur["monthly_rent"].astype(float)
+    return rent_cur["monthly_rent"].mean()
+
+def resale_mean(town=None, flat_type=None):
+    
+    filters={}
+    if town is not None: 
+        assert town in TOWNS
+        filters['town'] = town
+    if flat_type is not None:
+        assert flat_type in FLAT_TYPE
+        filters['flat_type'] = flat_type
+    tags = ['f1765b54-a209-4718-8d38-a39237f502b3']
+    resale_prices = []
+    for tag in tags:
+        url = f"https://data.gov.sg/api/action/datastore_search?resource_id={tag}&limit=500000"
+        if bool(filters): url += f"&filters={dumps(filters).replace('-', ' ')}"
+        req = Request(
+            quote(url, safe=':/?&='), 
+            headers={'User-Agent': 'Mozilla/5.0'}
+        )
+        df = pd.DataFrame(loads(urlopen(req).read().decode("utf-8"))["result"]["records"])
+        if not df.empty: resale_prices.append(pd.DataFrame(loads(urlopen(req).read().decode("utf-8"))["result"]["records"])[['month', 'resale_price']])
+    if df.empty:
+        return -1
+    df = df[df["month"] >= "2021"]
+    df["resale_price"] = df["resale_price"].astype(float)
+    return df["resale_price"].mean()

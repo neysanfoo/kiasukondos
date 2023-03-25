@@ -6,13 +6,24 @@ import LikeButton from '../components/LikeButton'
 import PriceTable from '../components/PriceTable'
 import LineGraph from '../components/LineGraph'
 
+/**
+ * Importing for the slideshow
+ */
 import {Swiper, SwiperSlide} from "swiper/react"
 import {Autoplay, Pagination, Navigation} from 'swiper';
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+
+/**
+ * Icons to be displayed
+ */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDollarSign, faBath, faBed, faLocationDot, faExpand } from '@fortawesome/free-solid-svg-icons'
+import { faDollarSign, faBath, faBed, faLocationDot, faExpand, faUser } from '@fortawesome/free-solid-svg-icons'
+
+/**
+ * Import relevant packages to laod map 
+ */
 import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -29,12 +40,16 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
 
+//Green and Red hex code used
+const primaryColor = "#008f79"
+const secondaryColor = "#ff2636"
+
 function ListingDetails() {
     const [listingData, setListingData] = useState([])
     const [isOwner, setIsOwner] = useState(false)
     const [user_id, setUserId] = useState(null)
     const { listing_id } = useParams()
-    const [offer, setOffer] = useState(0)
+    const [offer, setOffer] = useState(null)
     const [predictedRentPrice, setPredictedRentPrice] = useState([])
     const [timeframe, setTimeframe] = useState(1)
     const [predictedResalePrice, setPredicetedResalePrice] = useState([])
@@ -61,7 +76,6 @@ function ListingDetails() {
 
     }, [])
 
-    console.log(listingData.sale_or_rent === 1 ? predictedResalePrice : predictedRentPrice)
 
     function changeTimeframe(e) {
         // get the new data
@@ -124,7 +138,7 @@ function ListingDetails() {
         });
         var config = {
             method: 'post',
-            url: 'http://localhost:8000/api/add-offer/',
+            url: baseURL + '/add-offer/',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -153,7 +167,6 @@ function ListingDetails() {
             return "Rent"
         }
     }
-    console.log(user_id, listing_id)
 
     function deleteListing() {
         var config = {
@@ -248,43 +261,35 @@ function ListingDetails() {
             <>
             <Swiper
                 centeredSlides={true}
+                autoplay = {{
+                    delay: 2500,
+                    disableOnInteraction: true,
+                }}
                 navigation
                 loop
+                pagination={{
+                    clickable: true,
+                }}
+                slidesPerView={3}
+                spaceBetween={10}
                 className="mySwiper"
-                modules={[Navigation]}
+                modules={[Autoplay, Pagination, Navigation]}
             >
                 <SwiperSlide> 
-                        <img src={listingData.photo_main} id = "photo_main" class="d-block rounded 25 h-100 w-100"  alt="..." onClick={() => handleOpenModal(0)}/>
-                        
+                        <img src={listingData.photo_main} id = "photo_main" style = {{height: "100%", aspectRatio: "4/3",  borderRadius: "5px"}} alt="..." onClick={() => handleOpenModal(0)}/>
                 </SwiperSlide>
-                <SwiperSlide style={{display: "flex", alignItems:"center", justifyContent: "center"}}>
-                    <Swiper 
-                        autoplay = {{
-                            delay: 2500,
-                            disableOnInteraction: false,
-                        }}
-                        slidesPerView={3}
-                        spaceBetween = {5}
-                        loop
-                        pagination={{
-                            clickable: false,
-                        }}
-                        modules={[Autoplay, Pagination]}
-                        
-                    >
-                    {photos.map((photo, index) =>(
-                        <SwiperSlide class="swiper-slide img" style={{height: "100%"}}>
-                            <img src={photo} onClick={() => handleOpenModal(index + 1)} class="d-block rounded 25 h-100 w-100"  alt="..." />
-                        </SwiperSlide>
-                    ))}
-                    </Swiper>
-                </SwiperSlide>
+                {photos.map((photo, index) =>(
+                    <SwiperSlide class="swiper-slide img"  >
+                        <img src={photo} onClick={() => handleOpenModal(index + 1)} style = {{height: "100%", aspectRatio: "4/3",  borderRadius: "5px"}} alt="..." />
+                    </SwiperSlide>
+                ))}
+                
             </Swiper>
                 {isOpen &&
-                    <div className="listing-modal">
-                    <div className="listing-modal-content" >
-                        <span className="closeModal" onClick={handleCloseModal}>
-                            <button type = "button" style={{position: "absolute", top: "2%", left: "97%", backgroundColor: "transparent", border:'none', zIndex: "2", fontWeight: "bold"}} onClick={handleCloseModal}> X </button>
+                    <div className="modal">
+                    <div className="modal-content" >
+                        <span className="closeModal" >
+                            <button type = "button" style={{position: "absolute", top: "2%", left: "97%", color:"#999", backgroundColor: "white", borderRadius: "50%", border:'none', zIndex: "2", fontWeight: "bold"}} onClick={handleCloseModal}> X </button>
                             <Swiper
                             id="modalSwiper"
                             style={{ width: '100%', height: '100%', zIndex: "1"}}
@@ -321,6 +326,10 @@ function ListingDetails() {
      */
     const mymap = useRef(null);
     
+    /**
+     * This shifts the map api to where the address is
+     * The address is based on the street 
+     */
     useEffect(()=>{
         const map = L.map(mymap.current).setView([1.3521, 103.8198], 12);
         // Add a tile layer to the map
@@ -352,7 +361,6 @@ function ListingDetails() {
         
         
         return () => {
-            // Clean up the map when the component unmounts
             map.remove();
         };
     },[listingData])
@@ -361,88 +369,94 @@ function ListingDetails() {
         <div className='container mt-4'>
             <h1 className='listing--details--title'>{ listingData.title }</h1>
             <div className="listing--details">
-            
                 <div>{SwiperModal()}</div>
-            
-                {/*
-                {/* Carousel Start }
-                
-                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
 
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    {
-                        photos.map((photo, index) => (
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to={index + 1} aria-label={`Slide ${index + 2}`}></button>
-                        ))
-                    }
-                </div>
-
-                <div class="carousel-inner">
-                    <div class="carousel-item active"> 
-                        <img src={listingData.photo_main} class="d-block rounded 10 w-100"  alt="..." />
-                    </div>
-                    {photoCards.map((photo, index) => (
-                        <div class="carousel-item">
-                            <img src={photo[0]} class="carousel-item-left" alt="..." />
-                            <img src={photo[1]} class="carousel-item-mid" alt="..." />
-                            <img src={photo[2]} class="carousel-item-right" alt="..." />
+                <div style={{display: "flex"}}>
+                    <div className = "listing--details--title-details" > 
+                        <h1>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}
+                        
+                        { user_id && listing_id && 
+                        <b style={{marginLeft: "20px"}}>
+                        <LikeButton
+                            user_id={user_id}
+                            listing_id={listing_id}
+                            />
+                            </b>
+                        } 
+                        
+                        </h1>
+                        
+                        <h2><b>Price: </b> <FontAwesomeIcon icon={ faDollarSign } />{ listingData.price }</h2>
+                        
+                        
+                        <div style={{ fontSize: "16px", display:"inline"}}>
+                            <b>Number of Bedrooms: </b>{listingData.bedrooms}<b> </b><FontAwesomeIcon icon={ faBed } style={{paddingRight: "30px"}}/>
+                            <b>Number of Bathrooms: </b>{listingData.bathrooms}<b> </b><FontAwesomeIcon icon={ faBath } />
                         </div>
-                    ))}
+                    </div>
+                    <div className = "listing--details--owner-card">
+                        <div className = "listing--details--owner-card-details" >
+                            <div>
+                                <FontAwesomeIcon className = "listing--details--owner-card-profile" icon={faUser} />
+                            </div>
+
+                            <div className = "listing--details--owner-card-content" >
+                                <div>
+                                    <b>Owner Name:</b>
+                                    <Link to={'/user-profile/' + listingData.owner}>{listingData.owner_name}</Link>
+                                </div>
+                                { isOwner &&
+                                    <div>
+                                        <Link to={'/edit-listing/' + listing_id}>
+                                            <button type="button" className = "listing--details--owner-card-edit-listing" style={{backgroundColor: primaryColor}}>Edit Listing</button>
+                                        </Link>
+                                        <button type="button" className = "listing--details--owner-card-delete-listing" style={{backgroundColor: secondaryColor}} onClick={deleteListing}>Delete Listing</button>
+                                    </div>
+                                }
+
+                                {user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
+                                <div className = "listing--details--owner-card-buyer" >
+
+                                    <div className = "listing--details--owner-card-buyer-options" >
+                                        <input  className = "listing--details--owner-card-offer-input" name="offer" value={offer} onChange={handleChange} type="number" />
+                                        <button 
+                                        className = "listing--details--owner-card-offer-button"
+                                        type="button" 
+                                        onClick={ !offer || 
+                                            (offer && offer <= 0) ||
+                                            (offer && offer > 0 && offer <= 0.8 * listingData.price) ||
+                                            (offer && offer >= 1.2 * listingData.price)
+                                            ? null : makeOffer} //If invalid offer do nothing else make offer
+                                        style={{
+                                        backgroundColor:  
+                                                !offer || (offer && offer <= 0) ||
+                                                (offer && offer > 0 && offer <= 0.8 * listingData.price) ||
+                                                (offer && offer >= 1.2 * listingData.price)
+                                                ? secondaryColor: primaryColor //If invalid offer button appears red else green
+                                        }}>Make Offer</button>
+                                    </div>
+
+                                    <div className = "listing--details--owner-card-chat" >
+                                        <button className = "listing--details--owner-card-chat-button" type="button" onClick={createChat}>Chat with Owner</button>
+                                        {offer && offer <= 0 && <p className = "listing--details--owner-card-warning">Invalid offer value</p>}
+                                        {offer && offer > 0 && offer<= 0.8 * listingData.price && <p className = "listing--details--owner-card-warning">Offer is too low</p>}
+                                        {offer && offer >= 1.2 * listingData.price && <p className = "listing--details--owner-card-warning">Offer is too high</p>}
+                                    </div>
+
+                                </div>
+                                }
+                            </div>
+                        </div>
+                </div> 
                 </div>
                 
-                
-
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-
-                    </div> */}
                 
             <div className="listing--details--info">
-                <h1>{listingData.property_type === 1 ? "HDB" : listingData.property_type === 2 ? "Condo" : "Landed"} for {listingData.sale_or_rent === 1 ? "Sale" : "Rent"}
                 
-                { user_id && listing_id && 
-                <b style={{marginLeft: "20px"}}>
-                <LikeButton
-                    user_id={user_id}
-                    listing_id={listing_id}
-                    />
-                    </b>
-                } 
-                
-                </h1>
-                
-                <h2><b>Price: </b> <FontAwesomeIcon icon={ faDollarSign } />{ listingData.price }</h2>
-                
-                <div style={{position: "absolute", top: "65%", left: "70%"}}>
-                        <b>Owner Name: </b> <Link to={/user-profile/ + listingData.owner}>{ listingData.owner_name }</Link>
-                        { user_id && listing_id && listingData.owner && listingData.owner !== user_id && 
-                        <div>
-                            <input name="offer" value={offer} onChange={handleChange} type="number" />
-                            <button type="button" onClick={makeOffer}>Make Offer</button>
-                        </div>
-                        }
-                        {
-                            user_id && listing_id && listingData.owner && listingData.owner !== user_id &&
-                            <button type="button" onClick={createChat}>Chat with Owner</button>
-                        }
-                </div> 
-                <div style={{ fontSize: "16px"}}>
-                    <b>Number of Bedrooms: </b>{listingData.bedrooms}<b> </b><FontAwesomeIcon icon={ faBed } style={{paddingRight: "30px"}}/>
-                    <b>Number of Bathrooms: </b>{listingData.bathrooms}<b> </b><FontAwesomeIcon icon={ faBath } />
-                    
-                </div>
                 <hr></hr>
-                <div style={{height: '400px' , fontSize: "20px"}}>
-                    <div style={{ float: 'right', aspectRatio: '1/1', height: '100%' }}>
-                        <div ref={mymap} style={{ height: '100%', width: '100%' , zIndex: "0" }} />
+                <div  className="listing--details--info-location">
+                    <div className="listing--details--info-map-container">
+                        <div className="listing--details--info-map" ref={mymap}/>
                     </div>
                     <p> <FontAwesomeIcon icon={faLocationDot} style={{fontSize: "1.5em"}}/> <b style={{fontSize: "32px"}}> Address: </b> </p>
                     <p><strong>Street: </strong>{ listingData.address }</p>
@@ -477,21 +491,6 @@ function ListingDetails() {
                     />
                 </div> 
                 : null
-            }
-
-            
-            
-            { isOwner &&
-                <div>
-                <Link to={'/edit-listing/' + listing_id}>
-                <button type="button">Edit Listing</button>
-                </Link>
-                </div>
-            }
-            {isOwner &&
-                <div>
-                <button type="button" onClick={deleteListing}>Delete Listing</button>
-                </div>
             }
         </div>
     )
