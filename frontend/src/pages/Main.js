@@ -20,7 +20,7 @@ import ProtectedRoute from '../utils/ProtectedRoute'
 
 import '../styles.css'
 
-import {Routes, Route} from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 
 function Main() {
 

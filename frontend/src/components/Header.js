@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
@@ -10,18 +10,18 @@ function Header() {
 
   useEffect(() => {
     var config = {
-        method: 'get',
-        url: baseURL + '/user/',
-        withCredentials: true
+      method: 'get',
+      url: baseURL + '/user/',
+      withCredentials: true
     };
-    
+
     axios(config)
-    .then(function (response) {
+      .then(function(response) {
         setAuth(response.data)
-    })
-    .catch(function (error) {
+      })
+      .catch(function(error) {
         console.log(error);
-    });
+      });
 
   }, [])
 
@@ -34,10 +34,10 @@ function Header() {
           <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             User
           </a>
-            <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><Link className="dropdown-item" to="/dashboard">Dashboard</Link></li>
-              <li><Link className="dropdown-item" to="/logout">Logout</Link></li>
-            </ul>
+          <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><Link className="dropdown-item" to="/dashboard">Dashboard</Link></li>
+            <li><Link className="dropdown-item" to="/logout">Logout</Link></li>
+          </ul>
         </li>
       </>
     )
@@ -49,15 +49,15 @@ function Header() {
           <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             User
           </a>
-            <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><Link className="dropdown-item" to="/login">Login</Link></li>
-              <li><Link className="dropdown-item" to="/register">Register</Link></li>
-            </ul>
+          <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><Link className="dropdown-item" to="/login">Login</Link></li>
+            <li><Link className="dropdown-item" to="/register">Register</Link></li>
+          </ul>
         </li>
       </>
     )
   }
-    
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light ">
       <div className="container">
