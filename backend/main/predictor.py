@@ -26,7 +26,6 @@ def get_rent_from_hist(town, flat_type=None):
         assert flat_type in FLAT_TYPE
     hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
     if hist_name not in os.listdir(rent_path): return None
-    print(os.path.join(rent_path, hist_name))
     return pd.read_pickle(os.path.join(rent_path, hist_name))
         
 def get_resale_from_hist(town, flat_type=None):
@@ -36,7 +35,6 @@ def get_resale_from_hist(town, flat_type=None):
         assert flat_type in FLAT_TYPE
     hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
     if hist_name not in os.listdir(resale_path): return None
-    print(os.path.join(resale_path, hist_name))
     return pd.read_pickle(os.path.join(resale_path, hist_name))
 
 def rent_predictor(months:int =0, town=None, flat_type=None):
@@ -119,12 +117,12 @@ def rent_predictor(months:int =0, town=None, flat_type=None):
     
     model = ARIMA(data, order=(5,1,2))
     results = model.fit()
-    future = results.forecast(steps=132)
+    future = results.forecast(steps=132).to_frame()
     hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
     hist_name = hist_name.replace('/', '-')
     future.to_pickle(os.path.join(rent_path, hist_name))
     
-    return future[:months]
+    return future[:months+1]
 
 def resale_predictor(months:int =0, town=None, flat_type=None):
     assert months >= 0
@@ -184,12 +182,12 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
         
     model = ARIMA(data, order=(5,1,2))
     results = model.fit()
-    future = results.forecast(steps=132)
+    future = results.forecast(steps=132).to_frame()
     hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
     hist_name = hist_name.replace('/', '-')
     future.to_pickle(os.path.join(resale_path, hist_name))
     
-    return future[:months]
+    return future[:months+1]
 
 def rent_mean(town=None, flat_type=None):
     
