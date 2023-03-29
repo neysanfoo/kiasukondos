@@ -57,13 +57,6 @@ function EditListing() {
           bathrooms: res.bathrooms,
           garage: res.garage,
           sqmeters: res.sqmeters,
-          photo_main: res.photo_main,
-          photo_1: res.photo_1,
-          photo_2: res.photo_2,
-          photo_3: res.photo_3,
-          photo_4: res.photo_4,
-          photo_5: res.photo_5,
-          photo_6: res.photo_6,
           is_published: res.is_published,
         })
         setOwner(res.owner)

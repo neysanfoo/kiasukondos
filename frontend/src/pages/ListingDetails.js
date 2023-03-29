@@ -260,13 +260,11 @@ function ListingDetails() {
     return (
       <>
         <Swiper
-          centeredSlides={true}
           autoplay={{
             delay: 2500,
             disableOnInteraction: true,
           }}
           navigation
-          loop
           pagination={{
             clickable: true,
           }}
@@ -292,9 +290,8 @@ function ListingDetails() {
                 <button type="button" style={{ position: "absolute", top: "2%", left: "97%", color: "#999", backgroundColor: "white", borderRadius: "50%", border: 'none', zIndex: "2", fontWeight: "bold" }} onClick={handleCloseModal}> X </button>
                 <Swiper
                   id="modalSwiper"
-                  style={{ width: '100%', height: '100%', zIndex: "1" }}
+                  style={{ width: '100%', height: '100%', zIndex: "2" }}
                   initialSlide={activeIndex}
-                  loop={true}
                   navigation={true}
                   pagination={{
                     clickable: true,
@@ -469,7 +466,7 @@ function ListingDetails() {
 
           <hr></hr>
           <b style={{ fontSize: "32px" }} >Description: </b>
-          <p>{listingData.description}</p>
+          <p style={{whiteSpace:'pre-wrap'}}>{listingData.description}</p>
           <hr></hr>
         </div>
       </div>
