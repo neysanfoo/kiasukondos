@@ -9,8 +9,6 @@ from dateutil.relativedelta import relativedelta
 from statsmodels.tsa.arima.model import ARIMA
 import pandas as pd
 
-import matplotlib.pyplot as plt
-
 TOWNS = ['PUNGGOL', 'JURONG WEST', 'BEDOK', 'BUKIT MERAH', 'CHOA CHU KANG', 'TAMPINES',
          'SENGKANG', 'ANG MO KIO', 'HOUGANG', 'TOA PAYOH', 'JURONG EAST', 'WOODLANDS',
          'BUKIT BATOK', 'SEMBAWANG', 'CENTRAL', 'QUEENSTOWN', 'BISHAN', 'CLEMENTI',
