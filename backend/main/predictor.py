@@ -25,7 +25,6 @@ def get_rent_from_hist(town, flat_type=None):
     if flat_type is not None:
         assert flat_type in FLAT_TYPE
     hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
-    hist_name = hist_name.replace('/', '-')
     if hist_name not in os.listdir(rent_path): return None
     return pd.read_pickle(os.path.join(rent_path, hist_name))
         
@@ -35,9 +34,7 @@ def get_resale_from_hist(town, flat_type=None):
     if flat_type is not None:
         assert flat_type in FLAT_TYPE
     hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
-    hist_name = hist_name.replace('/', '-')
     if hist_name not in os.listdir(resale_path): return None
-    print(os.path.join(resale_path, hist_name))
     return pd.read_pickle(os.path.join(resale_path, hist_name))
 
 def rent_predictor(months:int =0, town=None, flat_type=None):
@@ -120,12 +117,12 @@ def rent_predictor(months:int =0, town=None, flat_type=None):
     
     model = ARIMA(data, order=(5,1,2))
     results = model.fit()
-    future = results.forecast(steps=132)
+    future = results.forecast(steps=132).to_frame()
     hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
     hist_name = hist_name.replace('/', '-')
     future.to_pickle(os.path.join(rent_path, hist_name))
     
-    return future[:months]
+    return future[:months+1]
 
 def resale_predictor(months:int =0, town=None, flat_type=None):
     assert months >= 0
@@ -185,9 +182,63 @@ def resale_predictor(months:int =0, town=None, flat_type=None):
         
     model = ARIMA(data, order=(5,1,2))
     results = model.fit()
-    future = results.forecast(steps=132)
+    future = results.forecast(steps=132).to_frame()
     hist_name = '_'.join([town, flat_type]) if flat_type is not None else town
     hist_name = hist_name.replace('/', '-')
     future.to_pickle(os.path.join(resale_path, hist_name))
     
-    return future[:months]
+    return future[:months+1]
+
+def rent_mean(town=None, flat_type=None):
+    
+    filters={}
+    if town is not None: 
+        assert town in TOWNS
+        filters['town'] = town
+    if flat_type is not None:
+        assert flat_type in FLAT_TYPE
+        filters['flat_type'] = flat_type
+
+    url_cur = 'https://data.gov.sg/api/action/datastore_search?resource_id=9caa8451-79f3-4cd6-a6a7-9cecc6d59544&limit=77000'
+
+    if bool(filters): 
+        filters = dumps(filters)
+        url_cur += f'&filters={filters}'
+    
+    req = Request(
+        quote(url_cur, safe=':/?&='), 
+        headers={'User-Agent': 'Mozilla/5.0'}
+    )
+    
+    rent_cur = pd.DataFrame(loads(urlopen(req).read().decode("utf-8").replace('ROOM', 'RM').replace('UTIVE', ''))["result"]["records"])
+    if rent_cur.empty:
+        return -1
+    rent_cur = rent_cur[rent_cur["rent_approval_date"] >= "2022"]
+    rent_cur["monthly_rent"] = rent_cur["monthly_rent"].astype(float)
+    return rent_cur["monthly_rent"].mean()
+
+def resale_mean(town=None, flat_type=None):
+    
+    filters={}
+    if town is not None: 
+        assert town in TOWNS
+        filters['town'] = town
+    if flat_type is not None:
+        assert flat_type in FLAT_TYPE
+        filters['flat_type'] = flat_type
+    tags = ['f1765b54-a209-4718-8d38-a39237f502b3']
+    resale_prices = []
+    for tag in tags:
+        url = f"https://data.gov.sg/api/action/datastore_search?resource_id={tag}&limit=500000"
+        if bool(filters): url += f"&filters={dumps(filters).replace('-', ' ')}"
+        req = Request(
+            quote(url, safe=':/?&='), 
+            headers={'User-Agent': 'Mozilla/5.0'}
+        )
+        df = pd.DataFrame(loads(urlopen(req).read().decode("utf-8"))["result"]["records"])
+        if not df.empty: resale_prices.append(pd.DataFrame(loads(urlopen(req).read().decode("utf-8"))["result"]["records"])[['month', 'resale_price']])
+    if df.empty:
+        return -1
+    df = df[df["month"] >= "2021"]
+    df["resale_price"] = df["resale_price"].astype(float)
+    return df["resale_price"].mean()
