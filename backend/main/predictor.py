@@ -18,7 +18,6 @@ FLAT_TYPE = ['1-ROOM', '2-ROOM', '3-ROOM', '4-ROOM', '5-ROOM', 'EXECUTIVE']
 
 rent_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), 'rent_hist')
 resale_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), 'resale_hist')
-params_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), 'params')
 
 def get_rent_from_hist(town, flat_type=None):
     if town is not None: 
