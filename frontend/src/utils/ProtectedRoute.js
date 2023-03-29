@@ -11,25 +11,25 @@ function ProtectedRoute({ component: Component, ...rest }) {
 
   useEffect(() => {
     var config = {
-        method: 'get',
-        url: baseURL + '/user/',
-        withCredentials: true
+      method: 'get',
+      url: baseURL + '/user/',
+      withCredentials: true
     };
-    
+
     axios(config)
-    .then(function (response) {
+      .then(function(response) {
         setIsAuth("true")
         setIsLoading(false)
-    })
-    .catch(function (error) {
+      })
+      .catch(function(error) {
         setIsLoading(false)
-    });
+      });
 
-}, [])
+  }, [])
 
-  return(
+  return (
     <div>
-        {isLoading ? ( <div>Loading...</div> ) : ( isAuth ? ( <Outlet /> ) : ( <Navigate to="/login" /> ) )}
+      {isLoading ? (<div>Loading...</div>) : (isAuth ? (<Outlet />) : (<Navigate to="/login" />))}
     </div>
   )
 }

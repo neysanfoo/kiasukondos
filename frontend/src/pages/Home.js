@@ -19,15 +19,15 @@ function Home() {
       withCredentials: true
     };
     axios(config)
-    .then(function (response) {
+      .then(function(response) {
         setUserId(response.data.id)
         console.log("HI")
         console.log(response.data.id)
-    }
-    ).catch(function (error) {
+      }
+      ).catch(function(error) {
         console.log(error);
-    }
-    );
+      }
+      );
     axios.get(baseURL + "/listings/").then((response) => {
       setListing(response.data)
     })
@@ -40,13 +40,13 @@ function Home() {
     <div className='container mt-4'>
       <SearchBar
         setListing={setListing}
-       />
+      />
       <div className="listing--container">
         {listing.map((item) => (
-            <div className='listing--in--container'>
-            <ListingCard 
-              id = {item.id}
-              current_user_id = {userId}
+          <div className='listing--in--container'>
+            <ListingCard
+              id={item.id}
+              current_user_id={userId}
               photo_main={item.photo_main}
               title={item.title}
               address={item.address}
@@ -57,7 +57,7 @@ function Home() {
               sale_or_rent={item.sale_or_rent}
               is_sold={item.is_sold}
             />
-            </div>
+          </div>
         ))}
       </div>
     </div>

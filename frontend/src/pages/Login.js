@@ -5,95 +5,95 @@ import axios from 'axios';
 const baseURL = process.env.REACT_APP_BACKEND_URL + "/api";
 
 function Login() {
-    const [loginData, setLoginData] = useState({
-        "email": "",
-        "password": ""
-    })
-    const [auth, setAuth] = useState({})
+  const [loginData, setLoginData] = useState({
+    "email": "",
+    "password": ""
+  })
+  const [auth, setAuth] = useState({})
 
-    const [error, setError] = useState('')
+  const [error, setError] = useState('')
 
-    useEffect(() => {
-        var config = {
-            method: 'get',
-            url: baseURL + '/user/',
-            withCredentials: true
-        };
-        
-        axios(config)
-        .then(function (response) {
-          window.location.href = "/homes"
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-  
+  useEffect(() => {
+    var config = {
+      method: 'get',
+      url: baseURL + '/user/',
+      withCredentials: true
+    };
 
-    }, [])
-
-    function handleChange(event) {
-        setLoginData({
-        ...loginData,
-        [event.target.name]: event.target.value
-        })
-    }
-
-    const submitForm = async (e) =>{
-      e.preventDefault()
-
-      let data = JSON.stringify({
-        "email": loginData.email,
-        "password": loginData.password
+    axios(config)
+      .then(function(response) {
+        window.location.href = "/homes"
+      })
+      .catch(function(error) {
+        console.log(error);
       });
 
 
-      let config = {
-        method: 'post',
-        url: baseURL + '/login/',
-        headers: { 
-          'Content-Type': 'application/json'
-        },
-        data : data,
-        withCredentials: true
-      };
+  }, [])
 
-      axios(config)
-      .then(function (response) {
+  function handleChange(event) {
+    setLoginData({
+      ...loginData,
+      [event.target.name]: event.target.value
+    })
+  }
+
+  const submitForm = async (e) => {
+    e.preventDefault()
+
+    let data = JSON.stringify({
+      "email": loginData.email,
+      "password": loginData.password
+    });
+
+
+    let config = {
+      method: 'post',
+      url: baseURL + '/login/',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data,
+      withCredentials: true
+    };
+
+    axios(config)
+      .then(function(response) {
         window.location.href = "/homes"
       })
-      .catch(function (error) {
+      .catch(function(error) {
         setError(error.response.data.error)
         console.log(error);
       });
 
 
-    }
-      
-
-    // function submitForm(e) {
-    //     e.preventDefault()
+  }
 
 
+  // function submitForm(e) {
+  //     e.preventDefault()
 
-    //     axios.post(baseURL + '/login/', {
-    //         email: loginData.email,
-    //         password: loginData.password
-    //     }, {
-    //       withCredentials: true
-    //     }
-    //     ).then((response) => {
-    //         console.log(response.data)
-    //         if (response.data.jwt) {
-    //           Cookies.save('jwt', response.data.jwt)
-    //         }
-    //         localStorage.setItem('jwt', response.data.jwt)
-    //         setRedirect(true)
-    //     }).catch((error) => {
-    //         console.log(error.response.data.error)
-    //         setError(error.response.data.error)
-    //     }
-    //     )
-    // }
+
+
+  //     axios.post(baseURL + '/login/', {
+  //         email: loginData.email,
+  //         password: loginData.password
+  //     }, {
+  //       withCredentials: true
+  //     }
+  //     ).then((response) => {
+  //         console.log(response.data)
+  //         if (response.data.jwt) {
+  //           Cookies.save('jwt', response.data.jwt)
+  //         }
+  //         localStorage.setItem('jwt', response.data.jwt)
+  //         setRedirect(true)
+  //     }).catch((error) => {
+  //         console.log(error.response.data.error)
+  //         setError(error.response.data.error)
+  //     }
+  //     )
+  // }
 
 
   return (
@@ -125,7 +125,7 @@ function Login() {
         </div>
         <button type="submit" className='btn btn-primary mt-4'>Login</button>
         <p className="mt-4">
-            Don't have an account? <Link to="/register" className="link">Register here</Link>
+          Don't have an account? <Link to="/register" className="link">Register here</Link>
         </p>
       </form>
     </div>
