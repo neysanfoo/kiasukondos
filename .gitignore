@@ -7,5 +7,5 @@ db.sqlite3
 */photos
 kiasukondo.pem
 *.pem
-*.env
 *static/
+/backend/.env
