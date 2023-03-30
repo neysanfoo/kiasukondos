@@ -255,6 +255,7 @@ function ListingDetails() {
     const handleOpenModal = (index) => {
       setActiveIndex(index);
       setIsOpen(true);
+      console.log(isOpen);
     };
 
     return (
@@ -283,14 +284,15 @@ function ListingDetails() {
           ))}
 
         </Swiper>
+      
         {isOpen &&
           <div className="modal">
             <div className="modal-content" >
               <span className="closeModal" >
-                <button type="button" style={{ position: "absolute", top: "2%", left: "97%", color: "#999", backgroundColor: "white", borderRadius: "50%", border: 'none', zIndex: "2", fontWeight: "bold" }} onClick={handleCloseModal}> X </button>
+                <button type="button" style={{position: "absolute", top: "2%", left: "97%", color: "#999", backgroundColor: "white", borderRadius: "50%", border: 'none', zIndex: "3", fontWeight: "bold" }} onClick={handleCloseModal}> X </button>
                 <Swiper
                   id="modalSwiper"
-                  style={{ width: '100%', height: '100%', zIndex: "2" }}
+                  style={{ display:'block',  width: '100%', height: '100%', zIndex: "3" }}
                   initialSlide={activeIndex}
                   navigation={true}
                   pagination={{

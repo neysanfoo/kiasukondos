@@ -3,8 +3,8 @@
     "model": "main.user",
     "pk": 1,
     "fields": {
-      "username": "user1",
-      "email": "user1@example.com",
+      "username": "John",
+      "email": "John@example.com",
       "password": "hashed_password"
     }
   },
@@ -12,8 +12,8 @@
     "model": "main.user",
     "pk": 2,
     "fields": {
-      "username": "user2",
-      "email": "user2@example.com",
+      "username": "Sally",
+      "email": "Sally@example.com",
       "password": "hashed_password"
     }
   },
@@ -21,8 +21,8 @@
     "model": "main.user",
     "pk": 3,
     "fields": {
-      "username": "user3",
-      "email": "user3@example.com",
+      "username": "Gary",
+      "email": "Gary@example.com",
       "password": "hashed_password"
     }
   },
@@ -30,8 +30,8 @@
     "model": "main.user",
     "pk": 4,
     "fields": {
-      "username": "user4",
-      "email": "user4@example.com",
+      "username": "Luke",
+      "email": "Luke@example.com",
       "password": "hashed_password"
     }
   },
@@ -39,8 +39,8 @@
     "model": "main.user",
     "pk": 5,
     "fields": {
-      "username": "user5",
-      "email": "user5@example.com",
+      "username": "Ali",
+      "email": "Ali@example.com",
       "password": "hashed_password"
     }
   },
