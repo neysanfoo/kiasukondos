@@ -253,8 +253,10 @@ function ListingDetails() {
     };
 
     const handleOpenModal = (index) => {
+      console.log("hi");
       setActiveIndex(index);
       setIsOpen(true);
+      console.log(isOpen);
     };
 
     return (
@@ -284,13 +286,14 @@ function ListingDetails() {
 
         </Swiper>
         {isOpen &&
-          <div className="modal">
-            <div className="modal-content" >
+          <div className="listing-modal">
+            
+            <div className="listing-modal-content" >
               <span className="closeModal" >
-                <button type="button" style={{ position: "absolute", top: "2%", left: "97%", color: "#999", backgroundColor: "white", borderRadius: "50%", border: 'none', zIndex: "2", fontWeight: "bold" }} onClick={handleCloseModal}> X </button>
+                <button type="button" style={{ position: "absolute", top: "5%", right: "11%", color: "#999", backgroundColor: "white", borderRadius: "50%", border: 'none', zIndex: "2", fontWeight: "bold" }} onClick={handleCloseModal}> X </button>
                 <Swiper
                   id="modalSwiper"
-                  style={{ width: '100%', height: '100%', zIndex: "2" }}
+                  style={{ width: '100%', height: '100%', zIndex:'1'}}
                   initialSlide={activeIndex}
                   navigation={true}
                   pagination={{
@@ -304,7 +307,7 @@ function ListingDetails() {
                   </SwiperSlide>
                   {photos.map((photo, index) => (
                     <SwiperSlide key={index} class="swiper-slide img" >
-                      <img src={photo} alt="..." />
+                      <img src={photo}   alt="..." />
                     </SwiperSlide>
                   ))}
 
