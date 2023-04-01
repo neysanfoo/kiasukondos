@@ -653,7 +653,7 @@ Start of swiper modal in listing details page css styling
   overflow: hidden;
   border: 1px solid #888;
   border-radius: 20px;
-  object-fit: contain;
+  object-fit: fill;
   aspect-ratio: 16/9;
   width: 80%; 
 }
