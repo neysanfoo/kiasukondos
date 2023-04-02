@@ -86,8 +86,8 @@ function CreateListing() {
     const base = "photo_"
     const newFormData = { ...formData };
     const newPhotoUrls = { ...photoUrls };
-    for (let i = 0; i < e.length; i++) {
-      const file = e[i];
+    for (let i = 0, j = 0; i < 7, j < e.length; i++) {
+      const file = e[j];
       if (file) {
         const imageUrl = URL.createObjectURL(file);
         const img = new Image();
@@ -96,12 +96,18 @@ function CreateListing() {
           URL.revokeObjectURL(img.src);
         };
         if (i === 0) {
-          newFormData["photo_main"] = file;
-          newPhotoUrls["photo_main"] = imageUrl;
+          if(!newFormData["photo_main"]){
+            newFormData["photo_main"] = file;
+            newPhotoUrls["photo_main"] = imageUrl;
+            j++;
+          }
         }
         else {
-          newFormData[base + i.toString()] = file;
-          newPhotoUrls[base + i.toString()] = imageUrl;
+          if(!newFormData[base + i.toString()]){
+            newFormData[base + i.toString()] = file;
+            newPhotoUrls[base + i.toString()] = imageUrl;
+            j++;
+          }
         }
       }
     }
@@ -275,7 +281,7 @@ function CreateListing() {
             />
           </div>
 
-          {formData.garage && formData.garage <= 0 && <p className="edit-listing-field-warning">Error: Please enter a valid number of garage</p>}
+          {formData.garage && formData.garage < 0 && <p className="edit-listing-field-warning">Error: Please enter a valid number of garage</p>}
 
           {/*<label htmlFor="sqmeters">Sq Meters:</label>*/}
           <div style={{ position: "relative" }} >

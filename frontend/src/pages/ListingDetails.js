@@ -253,20 +253,20 @@ function ListingDetails() {
     };
 
     const handleOpenModal = (index) => {
+      console.log("hi");
       setActiveIndex(index);
       setIsOpen(true);
+      console.log(isOpen);
     };
 
     return (
       <>
         <Swiper
-          centeredSlides={true}
           autoplay={{
             delay: 2500,
             disableOnInteraction: true,
           }}
           navigation
-          loop
           pagination={{
             clickable: true,
           }}
@@ -285,16 +285,17 @@ function ListingDetails() {
           ))}
 
         </Swiper>
+      
         {isOpen &&
-          <div className="modal">
-            <div className="modal-content" >
+          <div className="listing-modal">
+            
+            <div className="listing-modal-content" >
               <span className="closeModal" >
-                <button type="button" style={{ position: "absolute", top: "2%", left: "97%", color: "#999", backgroundColor: "white", borderRadius: "50%", border: 'none', zIndex: "2", fontWeight: "bold" }} onClick={handleCloseModal}> X </button>
+                <button type="button" style={{ position: "absolute", top: "5%", right: "11%", color: "#999", backgroundColor: "white", borderRadius: "50%", border: 'none', zIndex: "3", fontWeight: "bold" }} onClick={handleCloseModal}> X </button>
                 <Swiper
                   id="modalSwiper"
-                  style={{ width: '100%', height: '100%', zIndex: "1" }}
+                  style={{ width: '100%', height: '100%', zIndex: "2" }}
                   initialSlide={activeIndex}
-                  loop={true}
                   navigation={true}
                   pagination={{
                     clickable: true,
@@ -303,11 +304,11 @@ function ListingDetails() {
                   modules={[Navigation, Pagination]}
                 >
                   <SwiperSlide>
-                    <img src={listingData.photo_main} id="photo_main" alt="..." />
+                    <img src={listingData.photo_main} style={{height:"100%", width:"100%"}} class="swiper-slide img" id="photo_main" alt="..." />
                   </SwiperSlide>
                   {photos.map((photo, index) => (
-                    <SwiperSlide key={index} class="swiper-slide img" >
-                      <img src={photo} alt="..." />
+                    <SwiperSlide key={index} >
+                      <img src={photo} style={{height:"100%", width:"100%"}} class="swiper-slide img"  alt="..." />
                     </SwiperSlide>
                   ))}
 
@@ -469,7 +470,7 @@ function ListingDetails() {
 
           <hr></hr>
           <b style={{ fontSize: "32px" }} >Description: </b>
-          <p>{listingData.description}</p>
+          <p style={{whiteSpace:'pre-wrap'}}>{listingData.description}</p>
           <hr></hr>
         </div>
       </div>

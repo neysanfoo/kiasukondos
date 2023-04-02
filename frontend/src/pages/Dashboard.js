@@ -11,6 +11,9 @@ function Dashboard() {
   const [myListings, setMyListings] = useState([])
   const [myLikes, setMyLikes] = useState([])
   const [user, setUser] = useState(null)
+  const [name, setName] = useState(null)
+  const [rating, setRating] = useState(null)
+  const [email, setEmail] = useState(null)
   const [profilePic, setProfilePic] = useState(null)
 
   useEffect(() => {
@@ -62,7 +65,10 @@ function Dashboard() {
     };
     axios(config)
       .then(function(response) {
+        console.log(response);
         setUser(response.data.user.id)
+        setName(response.data.user.username)
+        setEmail(response.data.user.email)
         setProfilePic(response.data.profile.profile_picture)
       }).catch(function(error) {
         console.log(error);
@@ -72,15 +78,19 @@ function Dashboard() {
 
 
 
-
+console.log(user)
 
   return (
     <div className="container mt-4">
       <div className="row">
         <div className="col-3">
+          
           <UserInformation
             profilePic={profilePic}
+            name = {name}
+            email = {email}
           />
+        
         </div>
         <div className="col-9">
           <Tabs

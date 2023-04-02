@@ -630,10 +630,11 @@ Start of swiper modal in listing details page css styling
   border-color: transparent transparent transparent #999;
 }
 
+
 .listing-modal {
   display: block;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   left: 0px;
   top: 0px;
   width: 100%; 
@@ -644,7 +645,7 @@ Start of swiper modal in listing details page css styling
 }
 
 .listing-modal-content {
-  display: flex;
+  display: block;
   justify-content: center;
   background-color: #fefefe;
   margin-top: 5%;
@@ -652,7 +653,7 @@ Start of swiper modal in listing details page css styling
   overflow: hidden;
   border: 1px solid #888;
   border-radius: 20px;
-  object-fit: cover;
+  object-fit: fill;
   aspect-ratio: 16/9;
   width: 80%; 
 }

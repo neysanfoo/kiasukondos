@@ -3,10 +3,10 @@
 *.pyc
 __pycache__/
 db.sqlite3
-media
 *.DS_Store
 */photos
 kiasukondo.pem
 *.pem
-*.env
 *static/
+/backend/.env
+/backend/media/

@@ -84,7 +84,7 @@ function PriceTable({ analytics, timeframe }) {
             ))}
           </tr>
           <tr>
-            {analyticsByTimeframe(timeframe, analytics).map((price, index) => (
+            { analyticsByTimeframe(timeframe, analytics) && analyticsByTimeframe(timeframe, analytics).map((price, index) => (
               // map by the timeframeHeaders
               <td key={index}>{round2dp(price)}</td>
             ))}
