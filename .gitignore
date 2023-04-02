@@ -9,3 +9,4 @@ kiasukondo.pem
 *.pem
 *static/
 /backend/.env
+/backend/media/
