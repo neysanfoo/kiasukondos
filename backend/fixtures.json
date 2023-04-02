@@ -56,7 +56,7 @@
       "sale_or_rent": 2,
       "description": "This beautiful 2-bedroom townhouse is located in the heart of downtown and has been recently renovated with modern and stylish finishes. The main level boasts an open concept living and dining area with large windows and plenty of natural light. The kitchen features high-end stainless steel appliances, granite countertops, and ample storage. Upstairs, the primary bedroom features a walk-in closet and en-suite bathroom with a spacious walk-in shower. The second bedroom is perfect for a home office or guest room, and is located next to the second full bathroom with a bathtub. The townhouse also has a private rooftop terrace with city views, perfect for entertaining. The home comes with one designated parking spot in the attached garage. Don't miss this opportunity to live in luxury in the heart of the city!",
       "price": 4500,
-      "bedrooms": 2,
+      "bedrooms": 1,
       "bathrooms": 2,
       "garage": 1,
       "sqmeters": 120,
@@ -65,7 +65,8 @@
       "photo_main": "testPhotos/1.jpg",
       "photo_1": "testPhotos/2.jpg",
       "photo_2": "testPhotos/3.jpg",
-      "is_sold": false
+      "is_sold": false,
+      "town": "CHUA CHU KANG"
     }
   },
   {
@@ -77,9 +78,9 @@
         "address": "654 Joo Chiat Rd",
         "zipcode": "427968",
         "property_type": 1,
-        "sale_or_rent": 1,
+        "sale_or_rent": 2,
         "description": "This cozy 3-bedroom bungalow is situated on a quiet street and features a large, fenced-in backyard perfect for gardening, playing with pets, or entertaining. The main level features an open concept living and dining area with large windows and plenty of natural light. The kitchen features stainless steel appliances, granite countertops, and ample storage. The primary bedroom is located on the main level and features a walk-in closet and en-suite bathroom with a spacious walk-in shower. The second and third bedrooms are located on the second level and are perfect for a home office or guest room. The home also has a full basement with a laundry room and plenty of storage space. The home comes with one designated parking spot in the attached garage. Don't miss this opportunity to live in luxury in the heart of the city!",
-        "price": 300000,
+        "price": 3000,
         "bedrooms": 3,
         "bathrooms": 2,
         "garage": 1,
@@ -89,7 +90,8 @@
         "photo_main": "testPhotos/4.jpg",
         "photo_1": "testPhotos/5.jpg",
         "photo_2": "testPhotos/6.jpg",
-        "is_sold": false
+        "is_sold": false,
+        "town": "CHUA CHU KANG"
       }
     },
     {
@@ -100,7 +102,7 @@
         "title": "Peak Residence",
         "address": "333 Thomson Road 307675 Newton / Novena (D11)",
         "zipcode": "307675",
-        "property_type": 2,
+        "property_type": 1,
         "sale_or_rent": 2,
         "description": "Marvel at the beauty of living along Thomson Road, one of the longest major roads on the island. Peak Residence will connect residents directly to the commercial centerpiece of Singapore’s city centre, as it borders breathtaking oases. At your doorstep, there are food haunts offering traditional to global menus. Within minutes are schools of international repute. Malls, museums and eclectic merchant shops line your paths. Health-related infrastructures are just a skip and a hop away. Peak Residence is designed to enrich life at your own pace. Peak Residence, a freehold development condominium with 90 exclusive units along Thomson Road, one of the longest major roads on the island. Even as it stands on a charming hilltop with a spectacular view of the panoramic scenery. Residents of Peak Residence can relax in the calming atmosphere while enjoying the rooftop facilities which include a lap pool, gym, clubhouse and a gourmet terrace with BBQ.",
         "price": 5000,
@@ -113,7 +115,11 @@
         "photo_main": "testPhotos/7.jpg",
         "photo_1": "testPhotos/8.jpg",
         "photo_2": "testPhotos/9.jpg",
-        "is_sold": false
+        "photo_3": "testPhotos/10.jpg",
+        "photo_4": "testPhotos/11.jpg",
+        "photo_5": "testPhotos/12.jpg",
+        "is_sold": false,
+        "town": "BUKIT MERAH"
       }
     },
     {
@@ -134,10 +140,12 @@
         "sqmeters": 100,
         "is_published": true,
         "list_date": "2022-02-18T10:00:00Z",
-        "photo_main": "testPhotos/10.jpg",
-        "photo_1": "testPhotos/11.jpg",
-        "photo_2": "testPhotos/12.jpg",
-        "is_sold": false
+        "photo_main": "testPhotos/13.jpg",
+        "photo_1": "testPhotos/14.jpg",
+        "photo_2": "testPhotos/15.jpg",
+        "photo_3": "testPhotos/16.jpg",
+        "is_sold": false,
+        "town": "TAMPINES"
       }
     },
     {
@@ -148,20 +156,23 @@
         "title": "Spacious 3-Bedroom Condo in the Heart of Downtown",
         "address": "123 Main Street",
         "zipcode": "10001",
-        "property_type": 2,
-        "sale_or_rent": 2,
+        "property_type": 1,
+        "sale_or_rent": 1,
         "description": "This beautiful 3-bedroom condo is located in the heart of downtown and has been recently renovated with modern and stylish finishes. The main level boasts an open concept living and dining area with large windows and plenty of natural light. The kitchen features high-end stainless steel appliances, granite countertops, and ample storage. Upstairs, the primary bedroom features a walk-in closet and en-suite bathroom with a spacious walk-in shower. The second and third bedrooms are located on the second level and are perfect for a home office or guest room. The condo also has a private rooftop terrace with city views, perfect for entertaining. The home comes with one designated parking spot in the attached garage. Don't miss this opportunity to live in luxury in the heart of the city!",
-        "price": 5000,
-        "bedrooms": 3,
+        "price": 500000,
+        "bedrooms": 2,
         "bathrooms": 2,
         "garage": 1,
         "sqmeters": 150,
         "is_published": true,
         "list_date": "2022-02-19T16:30:00Z",
-        "photo_main": "testPhotos/13.jpg",
-        "photo_1": "testPhotos/14.jpg",
-        "photo_2": "testPhotos/15.jpg",
-        "is_sold": true
+        "photo_main": "testPhotos/17.jpg",
+        "photo_1": "testPhotos/18.jpg",
+        "photo_2": "testPhotos/19.jpg",
+        "photo_3": "testPhotos/20.jpg",
+        "photo_4": "testPhotos/21.jpg",
+        "is_sold": true,
+        "town": "SENGKANG"
       }
     },
     {
@@ -182,10 +193,13 @@
         "sqmeters": 100,
         "is_published": true,
         "list_date": "2022-02-18T10:00:00Z",
-        "photo_main": "testPhotos/16.jpg",
-        "photo_1": "testPhotos/17.jpg",
-        "photo_2": "testPhotos/18.jpg",
-        "is_sold": false
+        "photo_main": "testPhotos/22.jpg",
+        "photo_1": "testPhotos/23.jpg",
+        "photo_2": "testPhotos/24.jpg",
+        "photo_3": "testPhotos/25.jpg",
+        "photo_4": "testPhotos/26.jpg",
+        "is_sold": false,
+        "town": "GEYLANG"
         }
     },
     {
@@ -209,7 +223,8 @@
         "photo_main": "testPhotos/19.jpg",
         "photo_1": "testPhotos/20.jpg",
         "photo_2": "testPhotos/21.jpg",
-        "is_sold": false
+        "is_sold": false,
+        "town": "JURONG WEST"
       }
     },
     {
@@ -233,7 +248,54 @@
         "photo_main": "testPhotos/22.jpg",
         "photo_1": "testPhotos/23.jpg",
         "photo_2": "testPhotos/24.jpg",
-        "is_sold": false
+        "is_sold": false,
+        "town": "PUNGGOL"
+      }
+    },
+    {
+      "model": "main.userprofile",
+      "pk": 1,
+      "fields": {
+        "phone_number": "98221122",
+        "profile_picture": "photos/default/default_profile_picture.jpeg",
+        "user_id": 1
+      }
+    },
+
+    {
+      "model": "main.userprofile",
+      "pk": 2,
+      "fields": {
+        "phone_number": "98111111",
+        "profile_picture": "photos/default/default_profile_picture.jpeg",
+        "user_id": 2
+      }
+    },
+    {
+      "model": "main.userprofile",
+      "pk": 3,
+      "fields": {
+        "phone_number": "98221123",
+        "profile_picture": "photos/default/default_profile_picture.jpeg",
+        "user_id": 3
+      }
+    },
+    {
+      "model": "main.userprofile",
+      "pk": 4,
+      "fields": {
+        "phone_number": "98221132",
+        "profile_picture": "photos/default/default_profile_picture.jpeg",
+        "user_id": 4
+      }
+    },
+    {
+      "model": "main.userprofile",
+      "pk": 5,
+      "fields": {
+        "phone_number": "98223214",
+        "profile_picture": "photos/default/default_profile_picture.jpeg",
+        "user_id": 5
       }
     }
 ]
